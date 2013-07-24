@@ -1,4 +1,4 @@
-leap
-====
+Gestiftication
+==============
 
-for LeapMotion apps
+Apps for the Leap Motion device
