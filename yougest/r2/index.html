@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang=en>
+<head>
+<title>Leap Motion ~ Leap.js API Data Display</title>
+<meta charset=utf-8>
+</head>
+<body>
+<script src='http://js.leapmotion.com/0.2.0-beta6/leap.min.js'></script>
+<script src='http://mrdoob.github.com/three.js/build/three.min.js'></script>
+<script src='http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js'></script>
+<script src='http://mrdoob.github.com/three.js/examples/js/libs/stats.min.js'></script>
+<script>
+// Theo Armour ~ 2013-07-23 ~ MIT License
+
+	var renderer, scene, camera, controls;
+
+	var infos = [];
+	var interactionBoxes = [];
+	var palms = [];
+	var sphereCenters = [];
+	var sphereRadii = [];
+	var fingers = [];
+
+	var swipes = [];
+	var circles = [];
+	var keyTaps =[];
+	var screenTaps = [];
+
+	init();
+	animate();
+
+	function init() {
+		var geometry, material, mesh, css;
+
+		// renderer = new THREE.WebGLRenderer( { setClearColor: 0x000000, antialias: true } );
+		renderer = new THREE.WebGLRenderer();
+		renderer.setSize( window.innerWidth, window.innerHeight );
+
+		document.body.appendChild( renderer.domElement );
+		scene = new THREE.Scene();
+
+		camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 2000 );
+		camera.position.set( 0, 250, 700 );
+		controls = new THREE.TrackballControls( camera, renderer.domElement );
+		controls.target.set( 0, 200, 0 );
+
+		stats = new Stats();
+		stats.domElement.style.cssText = 'position: absolute;right: 0; top: 0; zIndex: 100; ';
+		document.body.appendChild( stats.domElement );
+
+		css = document.body.appendChild( document.createElement('style') );
+		css.innerHTML = 'body { font: 600 12pt monospace; margin: 0; overflow: hidden; }' ;
+
+		var info = document.body.appendChild( document.createElement( 'div' ) );
+		info.style.cssText = 'position: absolute; right: 0; top: 0; width: 25% ';
+		info.innerHTML = '<p></p>';
+		infos.push( info );
+		
+		info = document.body.appendChild( document.createElement( 'div' ) );
+		info.style.cssText = 'position: absolute; left: 0; top: 0; width: 25% ';
+		info.innerHTML = '<p></p>';
+		infos.push( info );
+
+		var light = new THREE.DirectionalLight( 0xffffff, 2 );
+		light.position.set( 1, 1, 1 ).normalize();
+		scene.add( light );
+
+		light = new THREE.DirectionalLight( 0xffffff );
+		light.position.set( -1, 1, -1 ).normalize();
+		scene.add( light );
+
+		var axisHelper = new THREE.AxisHelper( 500 );
+		scene.add( axisHelper );
+
+		geometry = new THREE.CubeGeometry( 500, 20, 300 );
+		// geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
+		material = new THREE.MeshLambertMaterial( {color: Math.random() * 0x888888} );
+		var plane = new THREE.Mesh( geometry, material );
+		plane.position.y = -10;
+		scene.add( plane );
+
+		geometry = new THREE.CubeGeometry( 80, 16, 30);
+		material = new THREE.MeshLambertMaterial( {color: 0x888888 } );
+		var device = new THREE.Mesh( geometry, material );
+		device.position.y = 8;
+		scene.add( device );
+
+		for (var i = 0; i < 2; i++) {
+			geometry = new THREE.CubeGeometry( 1, 1, 1, 5, 5, 5 );
+			material = new THREE.MeshBasicMaterial( {color: 0x888888, wireframe: true } );
+			mesh = new THREE.Mesh( geometry, material );
+			scene.add( mesh );
+			interactionBoxes.push( mesh );
+
+			geometry = new THREE.CubeGeometry( 80, 20, 100 );
+			// material = new THREE.MeshNormalMaterial();
+			material = new THREE.MeshLambertMaterial( { } );
+			material.color.setHSL( 0.99, 1, 0.5 );
+			var palm = new THREE.Mesh( geometry, material );
+			scene.add( palm );
+			palms.push( palm );
+
+			geometry = new THREE.SphereGeometry( 10 );
+			material = new THREE.MeshNormalMaterial( { wireframe: true } );
+			var sphereCenter = new THREE.Mesh( geometry, material );
+			scene.add( sphereCenter );
+			sphereCenters.push( sphereCenter );
+			
+			geometry = new THREE.CubeGeometry( 8, 8, 20 );
+			material = new THREE.MeshNormalMaterial();
+			for (var j = 0; j < 5; j++) {
+				var finger = new THREE.Mesh( geometry, material );
+				scene.add( finger );
+				fingers.push( finger );
+			}	
+
+			geometry = new THREE.CubeGeometry( 200, 20, 20 );
+			material = new THREE.MeshBasicMaterial( {color: 0xff8888, opacity: 0.5, side: THREE.DoubleSide, transparent: true } );
+			var swipe = new THREE.Mesh( geometry, material );
+			swipe.position.x = 150 - i * 300;
+			swipe.position.y = 430;
+			scene.add( swipe );
+			swipes.push( swipe );
+
+			geometry = new THREE.TorusGeometry( 70, 15, 20, 20 );
+			material = new THREE.MeshBasicMaterial( {color: 0xff8888, opacity: 0.5, side: THREE.DoubleSide, transparent: true } );
+			var circle = new THREE.Mesh( geometry, material );
+			circle.position.x = 150 - i * 300;
+			circle.position.y = 430;
+			scene.add( circle );
+			circles.push( circle );
+
+			geometry = new THREE.CubeGeometry( 20, 200, 20 );
+			material = new THREE.MeshBasicMaterial( {color: 0xff8888, opacity: 0.5, side: THREE.DoubleSide, transparent: true } );
+			var keyTap = new THREE.Mesh( geometry, material );
+			keyTap.position.x = 150 - i * 300;
+			keyTap.position.y = 430;
+			scene.add( keyTap );
+			keyTaps.push( keyTap );
+
+			geometry = new THREE.CubeGeometry( 20, 20, 200 );
+			material = new THREE.MeshBasicMaterial( {color: 0xff8888, opacity: 0.5, side: THREE.DoubleSide, transparent: true } );
+			var screenTap = new THREE.Mesh( geometry, material );
+			screenTap.position.x = 150 - i * 300;
+			screenTap.position.y = 430;
+			scene.add( screenTap );
+			screenTaps.push( screenTap );
+		}
+	}
+
+	var fr;
+
+	Leap.loop( { enableGestures: true }, function( frame ) {
+		fr = frame;  // to get a global for debugging...
+
+		for (var i = 0; i < 2; i++) {
+			if (frame.hands[i] ) {
+				drawHand( frame, i );
+			} else {
+				hideHand( i );
+			}
+		}
+	});
+
+	function hideHand( index ) {
+			palms[index].visible = false;
+			sphereCenters[index].visible = false;
+	}
+
+	function drawHand( frame, index) {
+		var handString, pointableString, dir;
+
+		hand = frame.hands[index];
+		var info = infos[index];
+		var palm = palms[index];
+		var interactionBox = interactionBoxes[index];
+		var palm = palms[index];
+		var sphereCenter = sphereCenters[index];
+		var sphereRadius = sphereRadii[index];
+		//var fingers = [];
+
+		var swipe = swipes[index];
+		var circle = circles[index];
+		var keyTap = keyTaps[index];
+		var screenTap = screenTaps[index];
+		var strings = [ '<h2>Hand 1</h2>', '<h2>Hand 2</h2>'];
+		handString = strings[index];
+
+		handString += 'Interaction box center: ' + vectorToString(frame.interactionBox.center, 2) + '<br />';
+		handString += 'Interaction box size: ' + vectorToString(frame.interactionBox.size, 2) + '<br />';
+		handString += 'Hand ID: ' + hand.id + '<br />';
+		handString += 'Direction: ' + vectorToString(hand.direction, 2) + '<br />';
+		handString += 'Palm normal: ' + vectorToString(hand.palmNormal, 2) + '<br />';
+		handString += 'Palm position: ' + vectorToString(hand.palmPosition) + '<br />';
+		handString += 'Palm velocity: ' + vectorToString(hand.palmVelocity) + '<br />';
+		handString += 'Sphere center: ' + vectorToString(hand.sphereCenter) + '<br />';
+		handString += 'Sphere radius: ' + hand.sphereRadius.toFixed(1) + '<br />';
+		info.innerHTML = handString;
+
+		interactionBox.position.set( frame.interactionBox.center[0], frame.interactionBox.center[1], frame.interactionBox.center[2] );
+		interactionBox.scale.set( frame.interactionBox.size[0], frame.interactionBox.size[1], frame.interactionBox.size[2] );
+
+		palm.position.set( hand.palmPosition[0], hand.palmPosition[1], hand.palmPosition[2] );
+		// var nor = v( 2 * hand.palmNormal[0], 2 * hand.palmNormal[1], 2 * hand.palmNormal[2]);
+		// var dir = v( hand.palmNormal[2], hand.palmNormal[1], hand.palmNormal[0] );
+		// var dir = v( 1, -hand.direction[1], 1 );
+		// var dir = v( hand.direction[1], hand.direction[0], hand.palmNormal[0] );
+		// var dir = v( hand.sphereCenter[0], hand.sphereCenter[1], hand.sphereCenter[2] );
+		dir = v( hand.direction[0], hand.direction[1], hand.direction[2] );  // best so far
+		// palm.lookAt( dir );
+		palm.lookAt( dir.add( palm.position ) );
+
+		palm.scale.z = hand.sphereRadius / 100;
+		palm.visible = true;
+		
+		var vel = 1.0 - 100.0 / v( hand.palmVelocity[0], hand.palmVelocity[1], hand.palmVelocity[2] ).length();
+		if ( vel < 0.1 ) vel = 0.1
+
+		
+		var hue = hand.palmVelocity[1];
+		hue = 0.0005 * (hue + 1000);
+		
+		var saturation = hand.palmVelocity[0];
+		saturation = 0.0005 * (saturation + 1000);
+		
+		var luminence = hand.palmVelocity[2];
+		luminence = 0.0005 * (luminence + 1000);
+		
+// console.log( hue, saturation, luminence) ;				
+		palm.material.color.setHSL( hue, saturation, luminence );
+
+		sphereCenter.position.set( hand.sphereCenter[0], hand.sphereCenter[1], hand.sphereCenter[2] );
+		var scl = 0.05 * hand.sphereRadius;
+		sphereCenter.scale.set( scl, scl, scl );
+		sphereCenter.visible = true;
+
+		var gesture;
+		var gestureString;
+
+// can't seem to pick up handIds for the second hand...
+		if ( frame.gestures.length > 0 ) {
+			for (var i = 0, len = frame.gestures.length; i < len; i++) {
+// console.log( frame.gestures[i].handIds );		
+				if ( frame.gestures[i].handIds.indexOf( hand.id ) > -1 ) {
+			
+					gesture = frame.gestures[i].type;
+
+					gestureString = '<br>New gesture: ' + gesture + '<br>';
+					info.innerHTML += gestureString;
+
+					if ( gesture === 'swipe' ) {
+						swipe.visible = true;
+					} else {
+						swipe.visible = false;
+					}
+					if ( gesture === 'circle' ) {
+						circle.visible = true;
+					} else {
+						circle.visible = false;
+					}
+					if ( gesture === 'keyTap' ) {
+						keyTap.visible = true;
+					} else {
+						keyTap.visible = false;
+					}
+					if ( gesture === 'screenTap' ) {
+						screenTap.visible = true;
+					} else {
+						screenTap.visible = false;
+					}
+				} else if ( frame.hands.length > 0 ) {
+					gestureString = '<br>Latest gesture: ' + gesture + '<br>';
+					info.innerHTML += gestureString;
+				}
+			}
+		}
+		
+		var len = frame.pointables.length;
+		for (var i = 0; i < len; i++) {
+			finger = fingers[i];
+			if ( i < len ) {
+				pointable = frame.pointables[i];
+				pointableString = '<br>';
+				// pointableString += 'Pointable ID: ' + pointable.id + '<br />';
+				// pointableString += 'Belongs to hand with ID: ' + pointable.handId + '<br />';
+
+				pointableString += 'Tip[' + i + '] direction: ' + vectorToString(pointable.direction, 2) + '<br />';
+				pointableString += 'Tip[' + i + '] position: ' + vectorToString(pointable.tipPosition) + '<br />';
+				pointableString += 'Tip[' + i + '] length: ' + pointable.length + '<br />';
+				info.innerHTML += pointableString;
+
+				finger.visible = true;
+				finger.position.set( pointable.tipPosition[0], pointable.tipPosition[1], pointable.tipPosition[2] );
+
+				dir = v( pointable.direction[0], pointable.direction[1], pointable.direction[2]);  // best so far
+				finger.lookAt( dir.add( finger.position ) );
+				finger.scale.z = 0.05 * pointable.length;
+			} else {
+				finger.visible = false;
+			}
+		}
+	}
+
+   function v(x,y,z){ return new THREE.Vector3(x,y,z); }
+
+   function vectorToString(vector, digits) {
+		if (typeof digits === 'undefined') {
+			digits = 1;
+		}
+		return '(' + vector[0].toFixed(digits) + ', ' + vector[1].toFixed(digits) + ', ' + vector[2].toFixed(digits) + ')';
+	}
+
+	function animate() {
+		requestAnimationFrame( animate );
+		controls.update();
+		renderer.render( scene, camera );
+		stats.update();
+	}
+</script>
+</body>
+</html>
