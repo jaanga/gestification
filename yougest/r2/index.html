@@ -201,21 +201,18 @@
 		interactionBox.scale.set( frame.interactionBox.size[0], frame.interactionBox.size[1], frame.interactionBox.size[2] );
 
 		palm.position.set( hand.palmPosition[0], hand.palmPosition[1], hand.palmPosition[2] );
-		// var nor = v( 2 * hand.palmNormal[0], 2 * hand.palmNormal[1], 2 * hand.palmNormal[2]);
-		// var dir = v( hand.palmNormal[2], hand.palmNormal[1], hand.palmNormal[0] );
-		// var dir = v( 1, -hand.direction[1], 1 );
-		// var dir = v( hand.direction[1], hand.direction[0], hand.palmNormal[0] );
-		// var dir = v( hand.sphereCenter[0], hand.sphereCenter[1], hand.sphereCenter[2] );
 		dir = v( hand.direction[0], hand.direction[1], hand.direction[2] );  // best so far
-		// palm.lookAt( dir );
 		palm.lookAt( dir.add( palm.position ) );
 
+		// Thanka to Joe Ward
+		var roll = Math.atan2( hand.palmNormal[0], -hand.palmNormal[1] );
+		palm.rotateOnAxis(new THREE.Vector3( 0, 0, -1 ), roll); 
+		
 		palm.scale.z = hand.sphereRadius / 100;
 		palm.visible = true;
 		
 		var vel = 1.0 - 100.0 / v( hand.palmVelocity[0], hand.palmVelocity[1], hand.palmVelocity[2] ).length();
 		if ( vel < 0.1 ) vel = 0.1
-
 		
 		var hue = hand.palmVelocity[1];
 		hue = 0.0005 * (hue + 1000);
