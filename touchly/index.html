@@ -14,7 +14,9 @@
 <script>
 // Theo Armour ~ 2013-07-24 ~ MIT License
 
-	var renderer, scene, camera, controls, info, cube, assets;
+	var renderer, scene, camera, controls; 
+	var info, pointer, assets;
+	var pointerPlaneX, pointerPlaneY, pointerPlaneZ;
 
 	var score = 0;
 	var scoreCard;
@@ -34,7 +36,7 @@
 		scene = new THREE.Scene();
 
 		camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 500 );
-		camera.position.set( 100, 100, 100 );
+		camera.position.set( 0, 100, 100 );
 		controls = new THREE.TrackballControls( camera, renderer.domElement );
 
 		stats = new Stats();
@@ -58,69 +60,88 @@
 		var light = new THREE.DirectionalLight( 0xffffff );
 		light.position.set( -1, -1, -1 ).normalize();
 		scene.add( light );
-
+		
+		geometry = new THREE.AxisHelper( 50 )
+		scene.add( geometry );
+		
 		geometry = new THREE.PlaneGeometry( 100, 100, 1, 1 );
 		geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
 		material = new THREE.MeshBasicMaterial( {color: Math.random() * 0xffffff, side: THREE.DoubleSide } );
 		plane = new THREE.Mesh( geometry, material );
-		plane.position.y = -30;
 		scene.add( plane );
+		
+		geometry = new THREE.PlaneGeometry( 100, 100, 1, 1 );
+		// geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
+		material = new THREE.MeshBasicMaterial( {color: 0x000000, opacity: 0.1, side: THREE.DoubleSide, transparent: true } );
+		pointerPlaneX = new THREE.Mesh( geometry, material );
+		scene.add( pointerPlaneX );
+		
+		geometry = new THREE.PlaneGeometry( 100, 100, 1, 1 );
+		geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
+		material = new THREE.MeshBasicMaterial( {color: 0x000000, opacity: 0.1, side: THREE.DoubleSide, transparent: true } );
+		pointerPlaneY = new THREE.Mesh( geometry, material );
+		scene.add( pointerPlaneY );
 
+		geometry = new THREE.PlaneGeometry( 100, 100, 1, 1 );
+		geometry.applyMatrix( new THREE.Matrix4().makeRotationY( - Math.PI / 2 ) );
+		material = new THREE.MeshBasicMaterial( {color: 0x000000, opacity: 0.1, side: THREE.DoubleSide, transparent: true } );
+		pointerPlaneZ = new THREE.Mesh( geometry, material );
+		scene.add( pointerPlaneZ );
+		
 		geometry = new THREE.CubeGeometry( 10, 10, 10);
 
 		assets = new THREE.Object3D();
 		for (var i = 0; i < 10; i++) {
 			material =  new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } )
 			mesh = new THREE.Mesh(geometry, material);
-			mesh.position.set(100 * Math.random() - 50, -30, 100 * Math.random() - 50);
+			mesh.position.set(100 * Math.random() - 50, 0, 100 * Math.random() - 50);
 			mesh.rotation.set( Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI );
 			mesh.touching = false;
 			assets.add(mesh);
 		}
 		scene.add(assets);
 
-		geometry = new THREE.SphereGeometry( 5, 5, 5 );
+		geometry = new THREE.CubeGeometry( 10, 5, 60 );
+		geometry.applyMatrix( new THREE.Matrix4().makeTranslation( -0, 0, -30 ) );
 		material = new THREE.MeshNormalMaterial();
-		cube = new THREE.Mesh( geometry, material );
-		scene.add( cube );
+		pointer = new THREE.Mesh( geometry, material );
+		scene.add( pointer );
 	}
 
 	Leap.loop( function( frame ) {
-		var handString = "";
-		if (frame.hands.length > 0) {
-			var hand = frame.hands[0];
-/*
-			handString += "Hand ID: " + hand.id + "<br />";
-			handString += "Direction: " + vectorToString(hand.direction, 2) + "<br />";
-			handString += "Palm normal: " + vectorToString(hand.palmNormal, 2) + "<br />";
-			handString += "Palm position: " + vectorToString(hand.palmPosition) + " mm<br />";
-			handString += "Palm velocity: " + vectorToString(hand.palmVelocity) + " mm/s<br />";
-			handString += "Sphere center: " + vectorToString(hand.sphereCenter) + " mm<br />";
-			handString += "Sphere radius: " + hand.sphereRadius.toFixed(1) + " mm<br />";
-			info.innerHTML = handString;
-*/
-
-			cube.position.set( hand.palmPosition[0], 0.3 * hand.palmPosition[1] - 70, hand.palmPosition[2] );
-			var scale = hand.sphereRadius;
-			//camera.position.set( hand.direction[0] * 2 * scale, hand.direction[1] * 2 * scale, hand.direction[2] * 2 * scale );
+		var pointable;
+		var hand;
+		hand = frame.hands[0];
+		if (frame.pointables.length > 0) {
+			pointable = frame.pointables[0];
+			pointer.position.set( pointable.tipPosition[0], 0.3 * pointable.tipPosition[1] - 50, pointable.tipPosition[2] );
+			pointerPlaneX.position.z = pointer.position.z;
+			pointerPlaneY.position.y = pointer.position.y;
+			pointerPlaneZ.position.x = pointer.position.x;
+			var dir = v( pointable.direction[0], pointable.direction[1], pointable.direction[2] );  // best so far
+			pointer.lookAt( dir.add( pointer.position ) );
+			if ( hand ) {
+				var roll = Math.atan2( hand.palmNormal[0], -hand.palmNormal[1] );
+				pointer.rotateOnAxis(new THREE.Vector3( 0, 0, -1 ), roll); 
+			}
+			pointerPlaneX.visible = true;
+			pointerPlaneY.visible = true;
+			pointerPlaneZ.visible = true;
+		} else {
+			pointerPlaneX.visible = false;
+			pointerPlaneY.visible = false;
+			pointerPlaneZ.visible = false;
 		}
 		animate();
 
    })
-
-	function vectorToString(vector, digits) {
-		if (typeof digits === "undefined") {
-			digits = 1;
-		}
-		return "(" + vector[0].toFixed(digits) + ", " + vector[1].toFixed(digits) + ", " + vector[2].toFixed(digits) + ")";
-	}
 
 	function animate() {
 		controls.update();
 		renderer.render( scene, camera );
 		stats.update();
 
-		var pos = cube.position, childs = assets.children;
+		var pos = pointer.position, childs = assets.children;
 		for (var i = 0, len = childs.length; i < len; i++) {
 			child = childs[i];
 			//if ( child.touching === false && pos.distanceTo( child.position ) < 6 ) {
@@ -141,12 +162,21 @@
 				//}
 			}
 			if ( score < 499 ) {
-				scoreCard.innerHTML ='Murgatroyds you have created: ' + score + ' out of 500';
+				scoreCard.innerHTML ='Objects you have touched: ' + score + ' out of 10';
 			} else {
 				scoreCard.innerHTML ='Muy goodness, you are heavenly!';
 			}
 		}
 	}
+	
+	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }
+	function vectorToString(vector, digits) {
+		if (typeof digits === "undefined") {
+			digits = 1;
+		}
+		return "(" + vector[0].toFixed(digits) + ", " + vector[1].toFixed(digits) + ", " + vector[2].toFixed(digits) + ")";
+	}
+	   
 </script>
 </body>
 </html>
