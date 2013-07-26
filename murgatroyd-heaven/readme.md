@@ -1,6 +1,8 @@
 'Heavens to Murgatroyd'
 =======================
 
+Demo: http://jaanga.github.io/gestification/murgatroyd-heaven/
+
 See also http://www.phrases.org.uk/meanings/heavens-to-murgatroyd.html
 
 Move hand in XYZ: moves the player sphere in XYZ  
