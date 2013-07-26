@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang=en>
 <head>
-<title>touchly</title>
+<title>Touchly</title>
 <meta charset=utf-8>
 </head>
 <body>
@@ -10,9 +10,14 @@
 <script src='http://mrdoob.github.com/three.js/build/three.min.js'></script>
 <script src='http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js'></script>
 <script src='http://mrdoob.github.com/three.js/examples/js/libs/stats.min.js'></script>
+<!--
+<script src='http://jaanga.github.io/gestification/motion-device-detector/motion-device-detector.js'></script>
+-->
+<script src='../motion-device-detector/motion-device-detector.js'></script>
 
 <script>
 // Theo Armour ~ 2013-07-24 ~ MIT License
+	if ( ! MotionDeviceDetector.motionDevice ) { MotionDeviceDetector.addGetMotionDeviceMessage(); }
 
 	var renderer, scene, camera, controls; 
 	var info, pointer, assets;
@@ -30,13 +35,14 @@
 		var geometry, material, mesh, css;
 
 		renderer = new THREE.WebGLRenderer( { antialias: true }  );
+		renderer.shadowMapEnabled = true;
 		renderer.setSize( window.innerWidth, window.innerHeight );
 
 		document.body.appendChild( renderer.domElement );
 		scene = new THREE.Scene();
 
 		camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 500 );
-		camera.position.set( 0, 100, 100 );
+		camera.position.set( 0, 100, 150 );
 		controls = new THREE.TrackballControls( camera, renderer.domElement );
 
 		stats = new Stats();
@@ -52,41 +58,60 @@
 
 		scoreCard =   document.body.appendChild( document.createElement( 'div' ) );
 		scoreCard.style.cssText = 'font: bold 36pt monospace; position: absolute; top: 0px; width: 100% ';
-
+/*
 		var light = new THREE.DirectionalLight( 0xffffff, 2 );
 		light.position.set( 1, 1, 1 ).normalize();
+		light.castShadow = true;
+		light.shadowCameraVisible = true;
 		scene.add( light );
 
 		var light = new THREE.DirectionalLight( 0xffffff );
 		light.position.set( -1, -1, -1 ).normalize();
+		light.castShadow = true;
 		scene.add( light );
+*/
+		
+		var light = new THREE.SpotLight( 0xffffff, 1.5 );
+		light.position.set( 30, 200, 200 );
+		light.castShadow = true;
+		
+		light.shadowMapWidth = 1024;
+		light.shadowMapHeight = 1024;
+		light.shadowCameraNear = 100;
+		light.shadowCameraFar = 500;
+		light.shadowCameraFov = 20;		
+		scene.add( light );  	
+light.shadowCameraVisible = true;
 		
 		geometry = new THREE.AxisHelper( 50 )
 		scene.add( geometry );
 		
 		geometry = new THREE.PlaneGeometry( 100, 100, 1, 1 );
 		geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
-		material = new THREE.MeshBasicMaterial( {color: Math.random() * 0xffffff, side: THREE.DoubleSide } );
+		material = new THREE.MeshLambertMaterial( {color: Math.random() * 0xffffff, side: THREE.DoubleSide } );
 		plane = new THREE.Mesh( geometry, material );
+		plane.receiveShadow = true;
 		scene.add( plane );
+		
+
 		
 		geometry = new THREE.PlaneGeometry( 100, 100, 1, 1 );
 		// geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
 		material = new THREE.MeshBasicMaterial( {color: 0x000000, opacity: 0.1, side: THREE.DoubleSide, transparent: true } );
 		pointerPlaneX = new THREE.Mesh( geometry, material );
-		scene.add( pointerPlaneX );
+		// scene.add( pointerPlaneX );
 		
 		geometry = new THREE.PlaneGeometry( 100, 100, 1, 1 );
 		geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
 		material = new THREE.MeshBasicMaterial( {color: 0x000000, opacity: 0.1, side: THREE.DoubleSide, transparent: true } );
 		pointerPlaneY = new THREE.Mesh( geometry, material );
-		scene.add( pointerPlaneY );
+		// scene.add( pointerPlaneY );
 
 		geometry = new THREE.PlaneGeometry( 100, 100, 1, 1 );
 		geometry.applyMatrix( new THREE.Matrix4().makeRotationY( - Math.PI / 2 ) );
 		material = new THREE.MeshBasicMaterial( {color: 0x000000, opacity: 0.1, side: THREE.DoubleSide, transparent: true } );
 		pointerPlaneZ = new THREE.Mesh( geometry, material );
-		scene.add( pointerPlaneZ );
+		//scene.add( pointerPlaneZ );
 		
 		geometry = new THREE.CubeGeometry( 10, 10, 10);
 
@@ -94,19 +119,38 @@
 		for (var i = 0; i < 10; i++) {
 			material =  new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } )
 			mesh = new THREE.Mesh(geometry, material);
-			mesh.position.set(100 * Math.random() - 50, 0, 100 * Math.random() - 50);
+			mesh.position.set(100 * Math.random() - 50, 0, 100 * Math.random() - 50 );
 			mesh.rotation.set( Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI );
-			mesh.touching = false;
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
 			assets.add(mesh);
 		}
 		scene.add(assets);
 
+		pointer = new THREE.Object3D();
+		
+		
+		geometry = new THREE.CylinderGeometry( 1, 10, 20, 5 );
+		geometry.applyMatrix( new THREE.Matrix4().makeRotationX( Math.PI / 2 ) );
+		material = new THREE.MeshLambertMaterial();
+		mesh = new THREE.Mesh( geometry, material );
+		mesh.position.set( 0, 0, -20);
+		mesh.castShadow = true;
+		mesh.receiveShadow = true;
+		pointer.add( mesh );
+		
 		geometry = new THREE.CubeGeometry( 10, 5, 60 );
-		geometry.applyMatrix( new THREE.Matrix4().makeTranslation( -0, 0, -30 ) );
-		material = new THREE.MeshNormalMaterial();
-		pointer = new THREE.Mesh( geometry, material );
+		material = new THREE.MeshLambertMaterial();
+		mesh = new THREE.Mesh( geometry, material );
+		mesh.position.set( 0, 0, -60 );
+		mesh.castShadow = true;
+		mesh.receiveShadow = true;
+		pointer.add( mesh );
+		
 		scene.add( pointer );
+		
 	}
+	
 		var pointable;
 		var hand;
 	Leap.loop( function( frame ) {
@@ -114,7 +158,7 @@
 		hand = frame.hands[0];
 		if (frame.pointables.length > 0) {
 			pointable = frame.pointables[0];
-			pointer.position.set( pointable.tipPosition[0], 0.3 * pointable.tipPosition[1] - 50, pointable.tipPosition[2] );
+			pointer.position.set( pointable.tipPosition[0], 0.3 * pointable.tipPosition[1] -50, pointable.tipPosition[2] );
 			pointerPlaneX.position.z = pointer.position.z;
 			pointerPlaneY.position.y = pointer.position.y;
 			pointerPlaneZ.position.x = pointer.position.x;

@@ -1,17 +1,12 @@
 var MotionDeviceDetector = {
 
 	// motionDevice: ( function () { try { return !! window.WebGLRenderingContext && !! document.createElement( 'canvas' ).getContext( 'experimental-webgl' ); } catch( e ) { return false; } } )(),
-	
-	// motionDevice: ( function () { try { return !! window.Leap ; } catch( e ) { return false; } } )(),
-	
 	motionDevice: window.Leap,
-	
-	
 	
 	getMotionDeviceErrorMessage: function () {
 
 		var element = document.createElement( 'div' );
-		//element.id = 'motion-device-error-message';
+		element.id = 'motion-device-error-message';
 		element.style.fontFamily = 'monospace';
 		element.style.fontSize = '13px';
 		element.style.fontWeight = 'normal';
@@ -25,10 +20,8 @@ var MotionDeviceDetector = {
 		if ( ! this.motionDevice ) {
 			element.innerHTML = 'Your system does not seem to support motion detection.<br />' +
 				'Find out how to obtain a motion detection device at <a href="http://leapmotion.com" style="color:#000">Leap Motion</a>.';
-				
-		} else {
-			element.innerHTML = 'Motion Device looking good!';
 		}
+		
 		return element;
 	},
 
@@ -45,6 +38,5 @@ var MotionDeviceDetector = {
 		element.id = id;
 
 		parent.appendChild( element );
-
 	}
 };
