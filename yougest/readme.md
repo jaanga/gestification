@@ -11,7 +11,7 @@ Total hand has better display of motion
 Palm does display gymbol lock issues  
 Provide 'in-world' objects to touch and manipulate  
 Provide a mesh that looks like a hand that overlays the 'bones'  
-Have that mesh animate in unison with the bones  
+Have that hand mesh animate in unison with the bones  
 Bones change color in relation to their velocity in a visible and useful manner  
 
 

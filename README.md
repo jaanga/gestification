@@ -1,4 +1,4 @@
 Gestiftication
 ==============
 
-Apps for the Leap Motion device
+Apps from Jaanga for the [Leap Motion](http://leapmotion.com) device

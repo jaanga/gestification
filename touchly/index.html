@@ -107,10 +107,10 @@
 		pointer = new THREE.Mesh( geometry, material );
 		scene.add( pointer );
 	}
-
-	Leap.loop( function( frame ) {
 		var pointable;
 		var hand;
+	Leap.loop( function( frame ) {
+
 		hand = frame.hands[0];
 		if (frame.pointables.length > 0) {
 			pointable = frame.pointables[0];
@@ -123,6 +123,7 @@
 			if ( hand ) {
 				var roll = Math.atan2( hand.palmNormal[0], -hand.palmNormal[1] );
 				pointer.rotateOnAxis(new THREE.Vector3( 0, 0, -1 ), roll); 
+				console.log( hand, hand.direction.yaw );
 			}
 			pointerPlaneX.visible = true;
 			pointerPlaneY.visible = true;
