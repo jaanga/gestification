@@ -61,7 +61,7 @@
 
 		scoreCard =   document.body.appendChild( document.createElement( 'div' ) );
 		scoreCard.style.cssText = 'font: bold 36pt monospace; position: absolute; top: 0px; width: 100% ';
-		scoreCard.innerHTML = 'Touchly: a very touching effort';
+		scoreCard.innerHTML = 'Touchly: a very touching effort<hr width=600>Point your finger at the cubes';
 		
 /*
 		var light = new THREE.DirectionalLight( 0xffffff, 2 );
@@ -77,7 +77,7 @@
 */
 
 		var light = new THREE.SpotLight( 0xffffff, 1.5 );
-		light.position.set( 30, 200, 200 );
+		light.position.set( 200, 250, 200 );
 		light.castShadow = true;
 
 		light.shadowMapWidth = 1024;
@@ -156,15 +156,17 @@ light.shadowCameraVisible = true;
 
 		var pointable;
 		var hand;
+		
 	Leap.loop( function( frame ) {
 
 		hand = frame.hands[0];
 		if (frame.pointables.length > 0) {
 			pointable = frame.pointables[0];
-			pointer.position.set( pointable.tipPosition[0], 0.3 * pointable.tipPosition[1] -50, pointable.tipPosition[2] );
-			pointerPlaneX.position.z = pointer.position.z;
-			pointerPlaneY.position.y = pointer.position.y;
-			pointerPlaneZ.position.x = pointer.position.x;
+			// pointer.position.set( pointable.tipPosition[0], 0.3 * pointable.tipPosition[1] -50, pointable.tipPosition[2] );
+			pointer.position.set( pointable.stabilizedTipPosition[0], 0.3 * pointable.stabilizedTipPosition[1] -50, pointable.stabilizedTipPosition[2] );
+			//pointerPlaneX.position.z = pointer.position.z;
+			//pointerPlaneY.position.y = pointer.position.y;
+			//pointerPlaneZ.position.x = pointer.position.x;
 			var dir = v( pointable.direction[0], pointable.direction[1], pointable.direction[2] );  // best so far
 			pointer.lookAt( dir.add( pointer.position ) );
 			if ( hand ) {
@@ -172,19 +174,18 @@ light.shadowCameraVisible = true;
 				pointer.rotateOnAxis(new THREE.Vector3( 0, 0, -1 ), roll);
 // console.log( hand, hand.direction.yaw );
 			}
-			pointerPlaneX.visible = true;
-			pointerPlaneY.visible = true;
-			pointerPlaneZ.visible = true;
+			//pointerPlaneX.visible = true;
+			//pointerPlaneY.visible = true;
+			//pointerPlaneZ.visible = true;
 		} else {
-			pointerPlaneX.visible = false;
-			pointerPlaneY.visible = false;
-			pointerPlaneZ.visible = false;
+			//pointerPlaneX.visible = false;
+			//pointerPlaneY.visible = false;
+			//pointerPlaneZ.visible = false;
 		}
 		animate();
-
    })
 
-   var point;
+	var point;
 	function animate() {
 		controls.update();
 		renderer.render( scene, camera );
@@ -192,25 +193,21 @@ light.shadowCameraVisible = true;
 
 		point = pointer.children[0];
 		var originPoint = pointer.position.clone();
-
 		for (var vertexIndex = 0; vertexIndex < point.geometry.vertices.length; vertexIndex++) {
 			var localVertex = point.geometry.vertices[vertexIndex].clone();
 			var globalVertex = localVertex.applyMatrix4( point.matrix );
 			var directionVector = globalVertex.sub( point.position );
-
+// Big Thanks to Lee Stemkoski for the following code
 			var ray = new THREE.Raycaster( originPoint, directionVector.clone().normalize() );
 			var collisionResults = ray.intersectObjects( collidableMeshList );
 			if ( collisionResults.length > 0 && collisionResults[0].distance < directionVector.length() ) {
 				var obj = collisionResults[0].object;
 				if (obj.scale.y != 5 ) {
-					console.log(" Hit ", collisionResults, collisionResults[0].object);
-					// collisionResults[0].object.material.color = 0xffffff;
+					// console.log(" Hit ", collisionResults, collisionResults[0].object);
 					obj.scale.set( 1, 5, 1 );
-					// collisionResults[0].object.needsUpdate = true;
-
-					soundPlus.play();
 					obj.currentHex = obj.material.emissive.getHex();
 					obj.material.emissive.setHex( 0xff0000 );
+					soundPlus.play();
 					score++;
 					if ( score < 10 ) {
 						scoreCard.innerHTML ='Objects you have touched: ' + score + ' out of 10<br>' + clock.getElapsedTime().toFixed(2) ;
@@ -231,20 +228,13 @@ light.shadowCameraVisible = true;
 		material = new THREE.MeshLambertMaterial();
 		mesh = new THREE.Mesh( geometry, material );
 		mesh.position.set( -100, 0, 0);
-		mesh.castShadow = true;
+		// mesh.castShadow = true;
 		mesh.receiveShadow = true;
 		scene.add( mesh );
 		collidableMeshList.push( mesh );
 	}
 
 	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }
-	
-	function vectorToString(vector, digits) {
-		if (typeof digits === "undefined") {
-			digits = 1;
-		}
-		return "(" + vector[0].toFixed(digits) + ", " + vector[1].toFixed(digits) + ", " + vector[2].toFixed(digits) + ")";
-	}
 </script>
 </body>
 </html>

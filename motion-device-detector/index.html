@@ -5,6 +5,7 @@
 <meta charset=utf-8>
 </head>
 <body>
+<script src="http://js.leapmotion.com/0.2.0-beta5/leap.min.js"></script>
 <script src="motion-device-detector.js"></script>
 <script>
 	if ( ! MotionDeviceDetector.motionDevice ) { MotionDeviceDetector.addGetMotionDeviceMessage(); }
@@ -12,7 +13,7 @@
 	document.body.style.cssText = ' font: bold 12pt monospace; ';
 	var info = document.body.appendChild( document.createElement( 'div' ) );
 	info.innerHTML = '<h1>Howdy</h1>';
-
+	if ( MotionDeviceDetector.motionDevice ) { info.innerHTML += 'Good to go...'; };
 </script>
 </body>
 </html>
