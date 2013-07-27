@@ -21,7 +21,6 @@ var MotionDeviceDetector = {
 			element.innerHTML = 'Your system does not seem to support motion detection.<br />' +
 				'Find out how to obtain a motion detection device at <a href="http://leapmotion.com" style="color:#000">Leap Motion</a>.';
 		}
-		
 		return element;
 	},
 
