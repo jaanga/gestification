@@ -19,13 +19,12 @@
 // Theo Armour ~ 2013-07-24 ~ MIT License
 	if ( ! MotionDeviceDetector.motionDevice ) { MotionDeviceDetector.addGetMotionDeviceMessage(); }
 
-	var renderer, scene, camera, controls;
-	var clock = new THREE.Clock();
+	var renderer, scene, camera, controls; 
 	var info, pointer, assets;
 	var pointerPlaneX, pointerPlaneY, pointerPlaneZ;
 
 	var collidableMeshList = [];
-
+	
 	var score = 0;
 	var scoreCard;
 
@@ -57,12 +56,10 @@
 
 		info = document.body.appendChild( document.createElement( 'div' ) );
 		info.style.cssText = 'position: absolute; top: 0px; width: 100% ';
-		// info.innerHTML = '<p>Touchly: a very touching effort</p>';
+		info.innerHTML = '<p></p>';
 
 		scoreCard =   document.body.appendChild( document.createElement( 'div' ) );
 		scoreCard.style.cssText = 'font: bold 36pt monospace; position: absolute; top: 0px; width: 100% ';
-		scoreCard.innerHTML = 'Touchly: a very touching effort';
-		
 /*
 		var light = new THREE.DirectionalLight( 0xffffff, 2 );
 		light.position.set( 1, 1, 1 ).normalize();
@@ -75,35 +72,37 @@
 		light.castShadow = true;
 		scene.add( light );
 */
-
+		
 		var light = new THREE.SpotLight( 0xffffff, 1.5 );
 		light.position.set( 30, 200, 200 );
 		light.castShadow = true;
-
+		
 		light.shadowMapWidth = 1024;
 		light.shadowMapHeight = 1024;
 		light.shadowCameraNear = 100;
 		light.shadowCameraFar = 500;
-		light.shadowCameraFov = 20;
-		scene.add( light );
+		light.shadowCameraFov = 20;		
+		scene.add( light );  	
 light.shadowCameraVisible = true;
-
+		
 		geometry = new THREE.AxisHelper( 50 )
 		scene.add( geometry );
-
+		
 		geometry = new THREE.PlaneGeometry( 100, 100, 1, 1 );
 		geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
 		material = new THREE.MeshLambertMaterial( {color: Math.random() * 0xffffff, side: THREE.DoubleSide } );
 		plane = new THREE.Mesh( geometry, material );
 		plane.receiveShadow = true;
 		scene.add( plane );
+		
 
+		
 		geometry = new THREE.PlaneGeometry( 100, 100, 1, 1 );
 		// geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
 		material = new THREE.MeshBasicMaterial( {color: 0x000000, opacity: 0.1, side: THREE.DoubleSide, transparent: true } );
 		pointerPlaneX = new THREE.Mesh( geometry, material );
 		// scene.add( pointerPlaneX );
-
+		
 		geometry = new THREE.PlaneGeometry( 100, 100, 1, 1 );
 		geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
 		material = new THREE.MeshBasicMaterial( {color: 0x000000, opacity: 0.1, side: THREE.DoubleSide, transparent: true } );
@@ -115,7 +114,7 @@ light.shadowCameraVisible = true;
 		material = new THREE.MeshBasicMaterial( {color: 0x000000, opacity: 0.1, side: THREE.DoubleSide, transparent: true } );
 		pointerPlaneZ = new THREE.Mesh( geometry, material );
 		//scene.add( pointerPlaneZ );
-
+		
 		geometry = new THREE.CubeGeometry( 10, 10, 10);
 
 		assets = new THREE.Object3D();
@@ -132,8 +131,8 @@ light.shadowCameraVisible = true;
 		scene.add(assets);
 
 		pointer = new THREE.Object3D();
-		pointer.position.y = -500;
-
+		
+		
 		geometry = new THREE.CylinderGeometry( 1, 10, 20, 5 );
 		geometry.applyMatrix( new THREE.Matrix4().makeRotationX( Math.PI / 2 ) );
 		material = new THREE.MeshLambertMaterial();
@@ -142,7 +141,7 @@ light.shadowCameraVisible = true;
 		mesh.castShadow = true;
 		mesh.receiveShadow = true;
 		pointer.add( mesh );
-
+		
 		geometry = new THREE.CubeGeometry( 10, 5, 60 );
 		material = new THREE.MeshLambertMaterial();
 		mesh = new THREE.Mesh( geometry, material );
@@ -150,10 +149,11 @@ light.shadowCameraVisible = true;
 		mesh.castShadow = true;
 		mesh.receiveShadow = true;
 		pointer.add( mesh );
-
+		
 		scene.add( pointer );
+		
 	}
-
+	
 		var pointable;
 		var hand;
 	Leap.loop( function( frame ) {
@@ -169,7 +169,7 @@ light.shadowCameraVisible = true;
 			pointer.lookAt( dir.add( pointer.position ) );
 			if ( hand ) {
 				var roll = Math.atan2( hand.palmNormal[0], -hand.palmNormal[1] );
-				pointer.rotateOnAxis(new THREE.Vector3( 0, 0, -1 ), roll);
+				pointer.rotateOnAxis(new THREE.Vector3( 0, 0, -1 ), roll); 
 // console.log( hand, hand.direction.yaw );
 			}
 			pointerPlaneX.visible = true;
@@ -189,62 +189,75 @@ light.shadowCameraVisible = true;
 		controls.update();
 		renderer.render( scene, camera );
 		stats.update();
+/*
+		var pos = pointer.position, childs = assets.children;
+		for (var i = 0, len = childs.length; i < len; i++) {
+			child = childs[i];
+			//if ( child.touching === false && pos.distanceTo( child.position ) < 6 ) {
+			// 	if ( childs.scale.x != 3 ) {
+				
+			if ( child.scale.x != 3 && pos.distanceTo( child.position ) < 6 ) {
+					child.scale.x = 3;
+					soundPlus.play();
+					child.currentHex = child.material.emissive.getHex();
+					child.material.emissive.setHex( 0xff0000 );
+					score++;
 
+				//} else {
+					//childs[i].scale.x = 1;
+					//childs[i].material =  new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } );
+					//soundMinus.play();
+					// score--;
+				//}
+			}
+			if ( score < 499 ) {
+				scoreCard.innerHTML ='Objects you have touched: ' + score + ' out of 10';
+			} else {
+				scoreCard.innerHTML ='Muy goodness, you are heavenly!';
+			}
+		}
+*/
 		point = pointer.children[0];
 		var originPoint = pointer.position.clone();
-
+	
 		for (var vertexIndex = 0; vertexIndex < point.geometry.vertices.length; vertexIndex++) {
 			var localVertex = point.geometry.vertices[vertexIndex].clone();
 			var globalVertex = localVertex.applyMatrix4( point.matrix );
 			var directionVector = globalVertex.sub( point.position );
-
+			
 			var ray = new THREE.Raycaster( originPoint, directionVector.clone().normalize() );
 			var collisionResults = ray.intersectObjects( collidableMeshList );
 			if ( collisionResults.length > 0 && collisionResults[0].distance < directionVector.length() ) {
 				var obj = collisionResults[0].object;
-				if (obj.scale.y != 5 ) {
+				if (obj.scale.y != 5 ) { 
 					console.log(" Hit ", collisionResults, collisionResults[0].object);
 					// collisionResults[0].object.material.color = 0xffffff;
 					obj.scale.set( 1, 5, 1 );
 					// collisionResults[0].object.needsUpdate = true;
-
+					
 					soundPlus.play();
 					obj.currentHex = obj.material.emissive.getHex();
 					obj.material.emissive.setHex( 0xff0000 );
 					score++;
-					if ( score < 10 ) {
-						scoreCard.innerHTML ='Objects you have touched: ' + score + ' out of 10<br>' + clock.getElapsedTime().toFixed(2) ;
-					} else if ( score < 11 ) {
-						scoreCard.innerHTML ='My goodness, you won!<br>' + clock.getElapsedTime().toFixed(2) + '<br>Touch the pentagon to play again';
-						newGame();
-					} else  {
-						window.location.reload();
-					}
+					if ( score < 499 ) {
+						scoreCard.innerHTML ='Objects you have touched: ' + score + ' out of 10';
+					} else {
+						scoreCard.innerHTML ='My goodness, you are heavenly!';
+					}				
 				}
 			}
 		}
-	}
-	
-	function newGame() {
-		geometry = new THREE.CylinderGeometry( 20, 20, 30, 5 );
-		// geometry.applyMatrix( new THREE.Matrix4().makeRotationX( Math.PI / 2 ) );
-		material = new THREE.MeshLambertMaterial();
-		mesh = new THREE.Mesh( geometry, material );
-		mesh.position.set( -100, 0, 0);
-		mesh.castShadow = true;
-		mesh.receiveShadow = true;
-		scene.add( mesh );
-		collidableMeshList.push( mesh );
-	}
 
-	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }
+	}
 	
+	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }
 	function vectorToString(vector, digits) {
 		if (typeof digits === "undefined") {
 			digits = 1;
 		}
 		return "(" + vector[0].toFixed(digits) + ", " + vector[1].toFixed(digits) + ", " + vector[2].toFixed(digits) + ")";
 	}
+	   
 </script>
 </body>
 </html>
