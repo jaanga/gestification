@@ -58,6 +58,22 @@
 	animate();
 
 	function init() {
+		css = document.body.appendChild( document.createElement('style') );
+
+		var col1 = "#" + Math.random().toString(16).slice(2, 8);
+		var col2 = "#" + Math.random().toString(16).slice(2, 8);
+		var col3 = "#" + Math.random().toString(16).slice(2, 8);
+		var X = ( Math.random() * window.innerWidth ).toFixed(0);
+		var Y = (Math.random() * window.innerHeight).toFixed(0);
+		var center =  20 + (Math.random() * 60).toFixed(0);
+		css.innerHTML = 'body { font: 600 36pt monospace; margin: 0; height: 1000px; overflow: hidden; text-align: center; ' +
+			'text-shadow: 2px 2px 2px pink, 2px -2px 2px #444; ' +
+			'background: -webkit-radial-gradient(' + X + 'px ' + Y + 'px, farthest-corner, ' + col1 + ' 0%, ' + col2 + ' 50%, ' + col3 + ' 100%);' +
+			'background: -moz-radial-gradient(' + X + 'px ' + Y + 'px, farthest-corner, ' + col1 + ' 0%, ' + col2 + ' 50%, ' + col3 + ' 100%);' +
+			'background: radial-gradient(' + X + 'px ' + Y + 'px, farthest-corner, ' + col1 + ' 0%, ' + col2 + ' 50%, ' + col3 + ' 100%);' +
+		'';
+		
+				
 		var geometry, material, mesh, css;
 
 		renderer = new THREE.WebGLRenderer( { antialias: true }  );
@@ -75,20 +91,7 @@
 		stats.domElement.style.cssText = 'position: absolute; top: 0px; zIndex: 100; ';
 		document.body.appendChild( stats.domElement );
 
-		css = document.body.appendChild( document.createElement('style') );
 
-		var col1 = "#" + Math.random().toString(16).slice(2, 8);
-		var col2 = "#" + Math.random().toString(16).slice(2, 8);
-		var col3 = "#" + Math.random().toString(16).slice(2, 8);
-		var X = ( Math.random() * window.innerWidth ).toFixed(0);
-		var Y = (Math.random() * window.innerHeight).toFixed(0);
-		var center =  20 + (Math.random() * 60).toFixed(0);
-		css.innerHTML = 'body { font: 600 36pt monospace; margin: 0; height: 1000px; overflow: hidden; text-align: center; ' +
-			'text-shadow: 2px 2px 2px pink, 2px -2px 2px #444; ' +
-			'background: -webkit-radial-gradient(' + X + 'px ' + Y + 'px, farthest-corner, ' + col1 + ' 0%, ' + col2 + ' 50%, ' + col3 + ' 100%);' +
-			'background: -moz-radial-gradient(' + X + 'px ' + Y + 'px, farthest-corner, ' + col1 + ' 0%, ' + col2 + ' 50%, ' + col3 + ' 100%);' +
-			'background: radial-gradient(' + X + 'px ' + Y + 'px, farthest-corner, ' + col1 + ' 0%, ' + col2 + ' 50%, ' + col3 + ' 100%);' +
-		'';
 		
 		headsUp = document.body.appendChild( document.createElement( 'div' ) );
 		headsUp.style.cssText = 'background-color: #aaa; border-radius: 8px; font: 600 14pt monospace; display: block; left: -10px; ' +
