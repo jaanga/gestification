@@ -53,8 +53,9 @@
 		noises.push( noise );
 	}
 
+		var aniRas = true;
 	init();
-	// animate();
+	animate();
 
 	function init() {
 		var geometry, material, mesh, css;
@@ -280,6 +281,7 @@
 		}
 	}
 
+
 	Leap.loop( function( frame ) {
 		var pointable;
 		var hand;
@@ -294,13 +296,20 @@
 				pointer.rotateOnAxis(new THREE.Vector3( 0, 0, -1 ), roll);
 			}
 		}
+		aniRas = false;
 		animate();
+		// console.log( new Date() );
    })
 
 	var prevObj;
+	
 	function animate() {
+		if ( aniRas === true ) {
+			requestAnimationFrame( animate );
+			aniRas = true;
+		}
+		
 		var point;
-// requestAnimationFrame( animate );
 		controls.update();
 		renderer.render( scene, camera );
 		stats.update();
