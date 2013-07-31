@@ -57,7 +57,7 @@
 
 		info = document.body.appendChild( document.createElement( 'div' ) );
 		info.style.cssText = 'position: absolute; top: 0px; width: 100% ';
-		// info.innerHTML = '<p>Touchly: a very touching effort</p>';
+		// info.innerHTML = '<p>&#x2302 Touchly: a very touching effort</p>';
 
 		scoreCard =   document.body.appendChild( document.createElement( 'div' ) );
 		scoreCard.style.cssText = 'font: bold 36pt monospace; position: absolute; top: 0px; width: 100% ';
@@ -86,7 +86,7 @@
 		light.shadowCameraFar = 500;
 		light.shadowCameraFov = 20;
 		scene.add( light );
-light.shadowCameraVisible = true;
+// light.shadowCameraVisible = true;
 
 		geometry = new THREE.AxisHelper( 50 )
 		scene.add( geometry );
@@ -152,6 +152,8 @@ light.shadowCameraVisible = true;
 		pointer.add( mesh );
 
 		scene.add( pointer );
+		
+		buildHome();
 	}
 
 		var pointable;
@@ -174,13 +176,21 @@ light.shadowCameraVisible = true;
 				pointer.rotateOnAxis(new THREE.Vector3( 0, 0, -1 ), roll);
 // console.log( hand, hand.direction.yaw );
 			}
-			//pointerPlaneX.visible = true;
-			//pointerPlaneY.visible = true;
-			//pointerPlaneZ.visible = true;
+/*
+			if ( pointable && pointable.handId > -1 && pointable.stabilizedTipPosition ) {
+		
+				var pos = v( pointable.stabilizedTipPosition[0], pointable.stabilizedTipPosition[1], pointable.stabilizedTipPosition[2] );
+				// var pos = fingers[0].position;
+				var dis = pos.distanceTo( iconHome.position );
+				
+				if ( dis < 50 ) {
+	// console.log( 'home', dis, pos, iconHome.position );			
+	// console.log( 'home xxxxxxxxxxxxxxxxxxxxxxxxxxxxx' );
+					window.location.assign("../../index.html");
+				}
+			}
+*/			
 		} else {
-			//pointerPlaneX.visible = false;
-			//pointerPlaneY.visible = false;
-			//pointerPlaneZ.visible = false;
 		}
 		animate();
    })
@@ -202,6 +212,9 @@ light.shadowCameraVisible = true;
 			var collisionResults = ray.intersectObjects( collidableMeshList );
 			if ( collisionResults.length > 0 && collisionResults[0].distance < directionVector.length() ) {
 				var obj = collisionResults[0].object;
+				if ( obj.doIt) {
+					obj.doIt();
+				}
 				if (obj.scale.y != 5 ) {
 					// console.log(" Hit ", collisionResults, collisionResults[0].object);
 					obj.scale.set( 1, 5, 1 );
@@ -235,6 +248,31 @@ light.shadowCameraVisible = true;
 	}
 
 	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }
+	
+	var iconHome;
+	
+	function buildHome() {
+		var line = new THREE.Shape();
+		line.moveTo(5, 0);
+		line.lineTo(5, 10);
+		line.lineTo(7, 10);
+		line.lineTo(0, 20);
+		line.lineTo(-7, 10);
+		line.lineTo(-5, 10);
+		line.lineTo(-5, 0);
+		
+		geometry = line.extrude( {	amount: 10, bevelEnabled: false,} );	
+		material = new THREE.MeshLambertMaterial( { color: 0xff0000, ambient: 0xff0000, opacity: 0.7});
+		iconHome = new THREE.Mesh( geometry, material );
+		iconHome.doIt = function() { window.location.assign("../index.html"); }
+		collidableMeshList.push( iconHome );
+		iconHome.scale.set( 1, 1, 1 );
+		// iconHome.rotation.y = 1.0;
+		iconHome.position.set( 100, -30, -50);
+		iconHome.castShadow = true;
+		iconHome.receiveShadow = true;
+		scene.add( iconHome );	
+	}
 </script>
 </body>
 </html>

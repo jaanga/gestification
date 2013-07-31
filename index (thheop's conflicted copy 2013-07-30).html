@@ -16,11 +16,13 @@
 -->
 <script src="http://mrdoob.github.com/three.js/examples/fonts/optimer_bold.typeface.js"></script>
 <script src="http://mrdoob.github.com/three.js/examples/fonts/optimer_regular.typeface.js"></script>
-<!--
+
 <script src="http://mrdoob.github.com/three.js/examples/fonts/helvetiker_bold.typeface.js"></script>
 <script src="http://mrdoob.github.com/three.js/examples/fonts/helvetiker_regular.typeface.js"></script>
+<!--
 <script src="http://mrdoob.github.com/three.js/examples/fonts/droid/droid_sans_regular.typeface.js"></script>
 <script src="http://mrdoob.github.com/three.js/examples/fonts/droid/droid_sans_bold.typeface.js"></script>
+
 <script src="http://mrdoob.github.com/three.js/examples/fonts/droid/droid_serif_regular.typeface.js"></script>
 <script src="http://mrdoob.github.com/three.js/examples/fonts/droid/droid_serif_bold.typeface.js"></script>
 -->
@@ -35,26 +37,19 @@
 	// if ( ! MotionDeviceDetector.motionDevice ) { MotionDeviceDetector.addGetMotionDeviceMessage(); }
 
 	var renderer, scene, camera, controls;
-	var headsUp;
-	var homeText = '<h1>Applets that explore the Leap Motion&trade; device</h1>' +
-		'<p>Use your hand to control the pointer and touch things.</p>' +
-		'<p>Touch \'Demo\' to run the applet.</p>' +
-		'<p style="color:red;">In the demos, touch the red house to return here.</p>' +
-		'<p>Touch \'Code\' to see the source on GitHub.</p>' +
-		'<p>Reload page to update the color scheme.</p>' +
-	'';
+	var clock = new THREE.Clock();
+	var info, pointer, assets;
+
 	var collidableMeshList = [];
-	
-	var src = 'http://ie.microsoft.com/testdrive/Graphics/IEBeatz/assets/sounds/mp3/';
-	var names = ['hihat','snare','kick','scratch','crash','bonga','effect','bass2','bass1'];
-	var noises = [];
-	for (var i = 0, len = names.length; i < len; i++) {
-		var noise = new Audio( src + names[i] + '.mp3');
-		noises.push( noise );
-	}
+
+	var score = 0;
+	var scoreCard;
+
+	var soundPlus = new Audio('http://ie.microsoft.com/testdrive/Graphics/IEBeatz/assets/sounds/mp3/effect.mp3');
+	var soundMinus = new Audio('http://ie.microsoft.com/testdrive/Graphics/IEBeatz/assets/sounds/mp3/bonga.mp3');
 
 	init();
-	// animate();
+	animate();
 
 	function init() {
 		var geometry, material, mesh, css;
@@ -75,6 +70,9 @@
 		document.body.appendChild( stats.domElement );
 
 		css = document.body.appendChild( document.createElement('style') );
+		// css.innerHTML = 'body { font: 600 12pt monospace; margin: 0; overflow: hidden; text-align: center; }' ;
+
+		css = document.body.appendChild( document.createElement('style') );
 
 		var col1 = "#" + Math.random().toString(16).slice(2, 8);
 		var col2 = "#" + Math.random().toString(16).slice(2, 8);
@@ -82,115 +80,95 @@
 		var X = ( Math.random() * window.innerWidth ).toFixed(0);
 		var Y = (Math.random() * window.innerHeight).toFixed(0);
 		var center =  20 + (Math.random() * 60).toFixed(0);
+// console.log( col1, col2, X, Y );
 		css.innerHTML = 'body { font: 600 36pt monospace; margin: 0; height: 1000px; overflow: hidden; text-align: center; ' +
 			'text-shadow: 2px 2px 2px pink, 2px -2px 2px #444; ' +
 			'background: -webkit-radial-gradient(' + X + 'px ' + Y + 'px, farthest-corner, ' + col1 + ' 0%, ' + col2 + ' 50%, ' + col3 + ' 100%);' +
 			'background: -moz-radial-gradient(' + X + 'px ' + Y + 'px, farthest-corner, ' + col1 + ' 0%, ' + col2 + ' 50%, ' + col3 + ' 100%);' +
 			'background: radial-gradient(' + X + 'px ' + Y + 'px, farthest-corner, ' + col1 + ' 0%, ' + col2 + ' 50%, ' + col3 + ' 100%);' +
+			// 'background: radial-gradient(45px 45px, cover, rgb(255, 0, 0) 0%, rgb(0, 0, 255) 100%); }' +
 		'';
-		
-		headsUp = document.body.appendChild( document.createElement( 'div' ) );
-		headsUp.style.cssText = 'background-color: #aaa; border-radius: 8px; font: 600 14pt monospace; display: block; left: -10px; ' +
-			'opacity: 0.85; padding: 5px 5px 20px 20px; ' +
-			'position: absolute; text-align: left; top: 170px; width: 280px;';
-		headsUp.innerHTML = homeText;
+
+		info = document.body.appendChild( document.createElement( 'div' ) );
+		info.style.cssText = 'position: absolute; top: 0px; width: 100% ';
+		// info.innerHTML = '<p>Touchly: a very touching effort</p>';
+
+		scoreCard =   document.body.appendChild( document.createElement( 'div' ) );
+		scoreCard.style.cssText = 'font: bold 36pt monospace; position: absolute; top: 0px; width: 100% ';
+		// scoreCard.innerHTML = 'Touchly: a very touching effort<hr width=600>Point your finger at the cubes';
 
 		var light = new THREE.SpotLight( 0xffffff, 1.5 );
 		light.position.set( 200, 250, 200 );
 		light.castShadow = true;
+
 		light.shadowMapWidth = 1024;
 		light.shadowMapHeight = 1024;
 		light.shadowCameraNear = 100;
 		light.shadowCameraFar = 500;
-		light.shadowCameraFov = 50;
+		light.shadowCameraFov = 20;
 		scene.add( light );
 // light.shadowCameraVisible = true;
 
-//geometry = new THREE.AxisHelper( 50 )
-//scene.add( geometry );
+		geometry = new THREE.AxisHelper( 50 )
+		scene.add( geometry );
 
-		var codes = [];
-		codes.push( function() { window.location.assign("https://github.com/jaanga/gestification/tree/gh-pages/murgatroyd-heaven/"); } );
-		codes.push( function() { window.location.assign("https://github.com/jaanga/gestification/tree/gh-pages/touchly/index.html"); } );
-		codes.push( function() { window.location.assign("https://github.com/jaanga/gestification/tree/gh-pages/yougest/r2/index.html"); } );
-		codes.push( function() { window.location.assign("https://github.com/jaanga/gestification/tree/gh-pages/index.html"); } );
-		
+// plane & music cubes
+		geometry = new THREE.PlaneGeometry( 100, 100, 1, 1 );
+		geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
+		material = new THREE.MeshLambertMaterial( {color: Math.random() * 0xffffff, side: THREE.DoubleSide } );
+		mesh = new THREE.Mesh( geometry, material );
+		mesh.position.set( 50, 0, 0 );
+		mesh.receiveShadow = true;
+		scene.add( mesh );
+
+		geometry = new THREE.CubeGeometry( 10, 10, 10);
+
+		assets = new THREE.Object3D();
+		for (var i = 0; i < 10; i++) {
+			material =  new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } )
+			mesh = new THREE.Mesh(geometry, material);
+			mesh.position.set(100 * Math.random() - 0, 0, 100 * Math.random() - 50 );
+			mesh.rotation.set( Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI );
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			assets.add(mesh);
+			// collidableMeshList.push( mesh );
+		}
+		scene.add(assets);
+
 // title and tag line
 		geometry = new THREE.TextGeometry( "Gestification", {
 			size: 20,
 			height: 10,
-			curveSegments: 5,
+			curveSegments: 3,
 			// font: "gentilis"  // smoothest
-			font: "optimer"
-			// font: "helvetiker" // smallest file size
+			// font: "optimer"
+			font: "helvetiker" // smallest file size
 			// font: "droid sans",
 			// font: "droid serif"
-			// weight: "bold",
-			// style: "normal", // needs italic font?
-			// bevelEnabled: true,
-			// bevelThickness: 2,
-			// bevelSize: 2
-			// bend: true,
-			// bendPath: aBendPath
+			//weight: "bold",
+			//style: "normal", // needs italic font?
+			//bevelEnabled: true,
+			//bevelThickness: 2,
+			//bevelSize: 2
+			//bend: true,
+			//bendPath: aBendPath
 		});
 		material = new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff, shading: THREE.SmoothShading });
 		mesh = new THREE.Mesh( geometry, material );
 		mesh.position.set( -110, 30, -50);
 		mesh.receiveShadow = true;
 		scene.add( mesh );
+// collidableMeshList.push( mesh );
 
-		geometry = new THREE.PlaneGeometry( 200, 15, 1, 1 );
-		var texture = canvasText('Your happy place for motion detectors  ⓘ', { color: '#888', fontSize: '36pt', height: 75, lineWidth: 3, width: 1000, X: 10, Y: 10} );
+		geometry = new THREE.PlaneGeometry( 200, 20, 1, 1 );
+//geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
+// keep height and with in same ratio as the geometry
+		var texture = canvasText('Your happy place for motion detectors', { color: '#888', fontSize: '36pt', height: 100, lineWidth: 3, width: 1000, X: 10, Y: 10} );
 		material = new THREE.MeshBasicMaterial( { map: texture, shading: THREE.SmoothShading, side: THREE.DoubleSide, transparent: true } );
 		mesh = new THREE.Mesh( geometry, material );
-		mesh.position.set( -10, 12, -80);
-		mesh.doIt = function() { 
-			headsUp.innerHTML = homeText; 
-		};
-		collidableMeshList.push( mesh );
+		mesh.position.set( 20, 10, -60);
 		scene.add( mesh );
-		
-		geometry = new THREE.PlaneGeometry( 40, 10, 1, 1 );
-		var texture = canvasText('Code', { color: '#888', fontSize: '36pt', height: 80, lineWidth: 3, width: 160, X: 10, Y: 10} );
-		material = new THREE.MeshBasicMaterial( { map: texture, shading: THREE.SmoothShading, side: THREE.DoubleSide, transparent: true } );
-		mesh = new THREE.Mesh( geometry, material );
-		mesh.position.set( 60, 30, -90 );
-		mesh.receiveShadow = true;
-		mesh.doIt = codes[3];
-		collidableMeshList.push( mesh );
-		scene.add( mesh );
-
-
-// plane & music cubes
-		geometry = new THREE.PlaneGeometry( 200, 100, 1, 1 );
-		geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
-		material = new THREE.MeshLambertMaterial( {color: Math.random() * 0xffffff, side: THREE.DoubleSide } );
-		mesh = new THREE.Mesh( geometry, material );
-		mesh.position.set( 10, -20, 10 );
-		mesh.receiveShadow = true;
-		scene.add( mesh );
-
-		geometry = new THREE.CubeGeometry( 10, 10, 10);
-		for (var i = 0; i < 9; i++) {
-			material =  new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } )
-			mesh = new THREE.Mesh(geometry, material);
-			mesh.position.set( 80 * Math.random() + 50, 0, 100 * Math.random() - 50 );
-			mesh.rotation.set( Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI );
-			mesh.castShadow = true;
-			mesh.receiveShadow = true;
-			function snd( i ) { return noises[ i ]; };
-			mesh.doIt = function() { 
-				headsUp.innerHTML = '<h1>Practice moving and aiming the pointer...</h1>' +
-					'<p>Best interaction:</p>' +
-					'<p>point with just one finger and one hand.</p>' + 
-				''; 
-				// headsUp.style.display = 'block';
-				noises[ parseInt( 9 * Math.random() ) ].play();
-			};
-			collidableMeshList.push( mesh );
-			scene.add(mesh);
-			
-		}
 
 
 // pointer
@@ -217,67 +195,54 @@
 
 
 // Menu
-		var titles = [ 'Murgatroyd', 'Touchly', 'youGest' ];
-		var demos = [];
-		demos.push( function() { window.location.assign("murgatroyd-heaven/index.html"); } );
-		demos.push( function() { window.location.assign("touchly/index.html"); } );
-		demos.push( function() { window.location.assign("yougest/r2/index.html"); } );
-		
-		var toolTips = [];
-		toolTips.push ( function() { headsUp.innerHTML = '<h1>Murgatroyd</h1>' +
-			'<p>The first app we made for LM.</p>' +
-			'<p>Now supports two hands.</p>' +
-			'<p>Still way too complex...</p>' +
-		''} );
-		toolTips.push ( function() { headsUp.innerHTML = '<h1>Touchly</h1>' +
-			'<p>Point your finger at the cubes and watch them pop.</p>' +
-			'<p>The code explores touching events.</p>' +
-			'<p>A good place to start...</p>' +
-		''} );
-		toolTips.push ( function() { headsUp.innerHTML = '<h1>youGest</h1>' + 
-			'<p>This app explores the Leap Motion API with the incoming numeric data represented as 3D objects.</p>' +
-			'<p>Much data still not yet exposed.</p>' +
-			'<p>Not for the timid. </p>' + 
-		''; } );
+		var titles = [ 'Murgtroyd', 'Touchly', 'youGest' ];
+		var tasks = [];
+		tasks.push( function() { window.location.assign("murgatroyd-heaven/index.html"); } );
+		tasks.push( function() { window.location.assign("touchly/index.html"); } );
+		tasks.push( function() { window.location.assign("yougest/r2/index.html"); } );
 
 		for (var i = 0, len = titles.length; i < len; i++) {
 			geometry = new THREE.TextGeometry( titles[i], { bevelEnabled: true, bevelThickness: 0.35, bevelSize: 0.35, size: 20, height: 5, curveSegments: 6, font: "optimer", weight: 'bold' });
 			material = new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff, shading: THREE.SmoothShading });
 			mesh = new THREE.Mesh( geometry, material );
-			mesh.position.set( -80, -10, -50 + i * 50);
-			mesh.receiveShadow = true;
+			mesh.position.set( -100, -10, -50 + i * 50);
+			mesh.doIt = tasks[i];
 			scene.add( mesh );
-			
-			geometry = new THREE.PlaneGeometry( 40, 10, 1, 1 );
-			var texture = canvasText('Demo', { color: '#888', fontSize: '36pt', height: 80, lineWidth: 3, width: 160, X: 10, Y: 10} );
-			material = new THREE.MeshBasicMaterial( { map: texture, shading: THREE.SmoothShading, side: THREE.DoubleSide, transparent: true } );
-			mesh = new THREE.Mesh( geometry, material );
-			mesh.position.set( -10, 10, -52 + i * 50);
 			mesh.receiveShadow = true;
-			mesh.doIt = demos[i];
 			collidableMeshList.push( mesh );
-			scene.add( mesh );
-			
-			geometry = new THREE.PlaneGeometry( 40, 10, 1, 1 );
-			var texture = canvasText('Code', { color: '#888', fontSize: '36pt', height: 80, lineWidth: 3, width: 160, X: 10, Y: 10} );
-			material = new THREE.MeshBasicMaterial( { map: texture, shading: THREE.SmoothShading, side: THREE.DoubleSide, transparent: true } );
-			mesh = new THREE.Mesh( geometry, material );
-			mesh.position.set( -55, 10, -52 + i * 50);
-			mesh.receiveShadow = true;
-			mesh.doIt = codes[i];
-			collidableMeshList.push( mesh );
-			scene.add( mesh );
-			
-			geometry = new THREE.PlaneGeometry( 100, 30, 1, 1 );
-			// var texture = canvasText('', { color: '#888', fontSize: '36pt', height: 300, lineWidth: 3, width: 1000, X: 10, Y: 10} );
-			material = new THREE.MeshNormalMaterial( { side: THREE.BackSide, opacity: 0.01 } );
-			mesh = new THREE.Mesh( geometry, material );
-			mesh.position.set( -10, -10, -45 + i * 50);
-			mesh.receiveShadow = true;
-			mesh.doIt = toolTips[i];
-			collidableMeshList.push( mesh );
-			scene.add( mesh );
 		}
+
+
+/*
+		geometry = new THREE.TextGeometry( 'Touchly', { size: 30, height: 10, curveSegments: 3, font: "helvetiker" });
+		material = new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff, shading: THREE.SmoothShading });
+		mesh = new THREE.Mesh( geometry, material );
+		mesh.position.set( -100, -10, 50);
+		mesh.doIt = function() { window.location.assign("touchly/index.html"); }
+		scene.add( mesh );
+		mesh.receiveShadow = true;
+		collidableMeshList.push( mesh );
+
+		geometry = new THREE.TextGeometry( 'youGest', { size: 30, height: 10, curveSegments: 3, font: "helvetiker" });
+		material = new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff, shading: THREE.SmoothShading });
+		mesh = new THREE.Mesh( geometry, material );
+		mesh.position.set( 100, 10, -100);
+		mesh.rotation.set( 0, -1.51, 0);
+		mesh.receiveShadow = true;
+		mesh.doIt = function() { window.location.assign("yougest/r2/index.html"); }
+		scene.add( mesh );
+		collidableMeshList.push( mesh );
+
+		geometry = new THREE.TextGeometry( 'Murgatroyd', { size: 30, height: 10, curveSegments: 3, font: "helvetiker" });
+		material = new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff, shading: THREE.SmoothShading });
+		mesh = new THREE.Mesh( geometry, material );
+		mesh.position.set( -140, 40, -20);
+		mesh.rotation.set( 0, 0, -0.7);
+		mesh.receiveShadow = true;
+		mesh.doIt = function() { window.location.assign("murgatroyd-heaven/index.html"); }
+		scene.add( mesh );
+		collidableMeshList.push( mesh );
+*/
 	}
 
 	Leap.loop( function( frame ) {
@@ -294,13 +259,11 @@
 				pointer.rotateOnAxis(new THREE.Vector3( 0, 0, -1 ), roll);
 			}
 		}
-		animate();
    })
 
-	var prevObj;
 	function animate() {
 		var point;
-// requestAnimationFrame( animate );
+		requestAnimationFrame( animate );
 		controls.update();
 		renderer.render( scene, camera );
 		stats.update();
@@ -317,9 +280,9 @@
 			var collisionResults = ray.intersectObjects( collidableMeshList );
 			if ( collisionResults.length > 0 && collisionResults[0].distance < directionVector.length() ) {
 				var obj = collisionResults[0].object;
-				if (obj != prevObj ) {
-						obj.doIt();
-						prevObj = obj;
+				if (obj.scale.y != 5 ) {
+					soundPlus.play();
+					obj.doIt();
 				}
 			}
 		}

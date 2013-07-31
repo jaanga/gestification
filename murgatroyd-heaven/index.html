@@ -77,12 +77,15 @@
 			mesh.rotation.set( Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI );
 			assets.add(mesh);
 		}
+		buildHome();
 		scene.add(assets);
 
 		geometry = new THREE.SphereGeometry( 5, 5, 5 );
 		material = new THREE.MeshNormalMaterial();
 		cube = new THREE.Mesh( geometry, material );
 		scene.add( cube );
+		
+		
 	}
 
 	Leap.loop( function( frame ) {
@@ -101,8 +104,12 @@
 */
 
 			cube.position.set( hand.palmPosition[0], 0.3 * hand.palmPosition[1] - 70, hand.palmPosition[2] );
-			var scale = hand.sphereRadius;
-			camera.position.set( hand.direction[0] * 2 * scale, hand.direction[1] * 2 * scale, hand.direction[2] * 2 * scale );
+			
+			if ( frame.hands.length > 1) {
+				hand = frame.hands[1];
+				var scale = hand.sphereRadius;
+				camera.position.set( hand.direction[0] * 2 * scale, hand.direction[1] * 2 * scale, hand.direction[2] * 2 * scale );
+			}
 		}
 		animate();
 
@@ -126,6 +133,10 @@
 		for (var i = 0, len = childs.length; i < len; i++) {
 			if ( pos.distanceTo( childs[i].position ) < 3 ) {
 				if ( childs[i].scale.x != 3 ) {
+				
+					if ( childs[i].doIt) {
+						childs[i].doIt();
+					}
 					childs[i].scale.x = 3;
 					soundPlus.play();
 					childs[i].currentHex = childs[i].material.emissive.getHex();
@@ -145,6 +156,32 @@
 			}
 		}
 	}
+	
+	var iconHome;
+	
+	function buildHome() {
+		var line = new THREE.Shape();
+		line.moveTo(5, 0);
+		line.lineTo(5, 10);
+		line.lineTo(7, 10);
+		line.lineTo(0, 20);
+		line.lineTo(-7, 10);
+		line.lineTo(-5, 10);
+		line.lineTo(-5, 0);
+		
+		geometry = line.extrude( {	amount: 10, bevelEnabled: false,} );	
+		material = new THREE.MeshLambertMaterial( { color: 0xff0000, ambient: 0xff0000, opacity: 0.7});
+		iconHome = new THREE.Mesh( geometry, material );
+		iconHome.doIt = function() { window.location.assign("../index.html"); }
+		// collidableMeshList.push( iconHome );
+		assets.add( iconHome );
+		iconHome.scale.set( 1, 1, 1 );
+		// iconHome.rotation.y = 1.0;
+		iconHome.position.set( 60, 0, -40);
+		iconHome.castShadow = true;
+		iconHome.receiveShadow = true;
+		// scene.add( iconHome );	
+	}	
 </script>
 </body>
 </html>
