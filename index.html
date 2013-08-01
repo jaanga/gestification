@@ -35,6 +35,15 @@
 		'<p>Touch \'Code\' to see the source on GitHub.</p>' +
 		'<p>Reload page to update the color scheme.</p>' +
 	'';
+	var tipOfTheMoment = [];
+	tipOfTheMoment.push('<h1>Just use your pointing finger for best results<h1>');
+	tipOfTheMoment.push('<h1>This revision only supports one hand</h1>');
+	tipOfTheMoment.push('<h1>Theo Armour built it ~ 2013-07-31 ~ San Francisco</h1>');
+	tipOfTheMoment.push('<h1>Thank you Mr.doob & Leap Motion</h1>');
+	tipOfTheMoment.push('<h1>Happy Leaping!</h1>');
+	tipOfTheMoment.push('<h1>Use your mouse to pan, rotate and zoom!</h1>');
+	// tipOfTheMoment.push('');
+	
 	var collidableMeshList = [];
 
 	var src = 'http://ie.microsoft.com/testdrive/Graphics/IEBeatz/assets/sounds/mp3/';
@@ -158,6 +167,8 @@
 		mesh = new THREE.Mesh( geometry, material );
 		mesh.position.set( 10, -20, 10 );
 		mesh.receiveShadow = true;
+		mesh.doIt = function() { headsUp.innerHTML = tipOfTheMoment[parseInt( Math.random() * tipOfTheMoment.length) ]; };
+		collidableMeshList.push( mesh );
 		scene.add( mesh );
 
 		geometry = new THREE.CubeGeometry( 10, 10, 10);
@@ -203,6 +214,8 @@
 			'<p>Much data still not yet exposed.</p>' +
 			'<p>Not for the timid. </p>' +
 		''; } );
+		
+
 
 		for (var i = 0, len = titles.length; i < len; i++) {
 			geometry = new THREE.TextGeometry( titles[i], { bevelEnabled: true, bevelThickness: 0.35, bevelSize: 0.35, size: 20, height: 5, curveSegments: 6, font: "optimer", weight: 'bold' });
@@ -244,7 +257,7 @@
 
 		buildPointer();
 	}
-
+var INTERSECTED;
 	Leap.loop( function( frame ) {
 		var pointable;
 		var hand;
@@ -270,6 +283,22 @@
 					if (obj.doIt ) {
 						obj.doIt();
 					}
+					if ( INTERSECTED != collisionResults[ 0 ].object ) {
+						if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+						INTERSECTED = collisionResults[ 0 ].object;
+// if no getHex causes non-critical error...						
+						INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
+						INTERSECTED.material.emissive.setHex( 0xff0000 );
+						
+						headsUp.innerText = 'Object id: ' + INTERSECTED.uuid;
+						noises[ parseInt( 9 * Math.random() ) ].play();
+						if ( INTERSECTED.doIt ) {
+							INTERSECTED.doIt();
+						}
+					}
+				} else {
+					if ( INTERSECTED && INTERSECTED.material.emissive) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+					INTERSECTED = null;
 				}
 			}
 		}
