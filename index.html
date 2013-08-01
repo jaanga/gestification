@@ -10,13 +10,12 @@
 <script src='http://mrdoob.github.com/three.js/build/three.min.js'></script>
 <script src='http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js'></script>
 <script src='http://mrdoob.github.com/three.js/examples/js/libs/stats.min.js'></script>
-<!--
-<script src="http://mrdoob.github.com/three.js/examples/fonts/gentilis_bold.typeface.js"></script>
-<script src="http://mrdoob.github.com/three.js/examples/fonts/gentilis_regular.typeface.js"></script>
--->
+
 <script src="http://mrdoob.github.com/three.js/examples/fonts/optimer_bold.typeface.js"></script>
 <script src="http://mrdoob.github.com/three.js/examples/fonts/optimer_regular.typeface.js"></script>
 <!--
+<script src="http://mrdoob.github.com/three.js/examples/fonts/gentilis_bold.typeface.js"></script>
+<script src="http://mrdoob.github.com/three.js/examples/fonts/gentilis_regular.typeface.js"></script>
 <script src="http://mrdoob.github.com/three.js/examples/fonts/helvetiker_bold.typeface.js"></script>
 <script src="http://mrdoob.github.com/three.js/examples/fonts/helvetiker_regular.typeface.js"></script>
 <script src="http://mrdoob.github.com/three.js/examples/fonts/droid/droid_sans_regular.typeface.js"></script>
@@ -24,11 +23,12 @@
 <script src="http://mrdoob.github.com/three.js/examples/fonts/droid/droid_serif_regular.typeface.js"></script>
 <script src="http://mrdoob.github.com/three.js/examples/fonts/droid/droid_serif_bold.typeface.js"></script>
 -->
+<script src=modec-threejs-utlis/r1/modec-threejs-utils.js ></script>
 <script>
 // Theo Armour ~ 2013-07-27 ~ MIT License
 	var renderer, scene, camera, controls;
-	var headsUp;
-	var homeText = '<h1>Applets that explore the Leap Motion&trade; device</h1>' +
+	// var headsUp;
+	var homeText = '<h1>Apps toexplore the Leap Motion&trade; device</h1>' +
 		'<p>Use your hand to control the pointer and touch things.</p>' +
 		'<p>Touch \'Demo\' to run the applet.</p>' +
 		'<p style="color:red;">In the demos, touch the red house to return here.</p>' +
@@ -36,7 +36,7 @@
 		'<p>Reload page to update the color scheme.</p>' +
 	'';
 	var collidableMeshList = [];
-	
+
 	var src = 'http://ie.microsoft.com/testdrive/Graphics/IEBeatz/assets/sounds/mp3/';
 	var names = ['hihat','snare','kick','scratch','crash','bonga','effect','bass2','bass1'];
 	var noises = [];
@@ -68,20 +68,18 @@
 		var geometry, material, mesh, css;
 
 		renderer = new THREE.WebGLRenderer( { antialias: true }  );
-		renderer.shadowMapEnabled = true;
 		renderer.setSize( window.innerWidth, window.innerHeight );
-
+		renderer.shadowMapEnabled = true;
 		document.body.appendChild( renderer.domElement );
 		scene = new THREE.Scene();
 
-		camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 500 );
-		camera.position.set( 0, 100, 150 );
-		controls = new THREE.TrackballControls( camera, renderer.domElement );
+		camZ = 200;
+		resetCamera( camX, camY, camZ );
 
 		stats = new Stats();
 		stats.domElement.style.cssText = 'position: absolute; top: 0px; zIndex: 100; ';
 		document.body.appendChild( stats.domElement );
-		
+
 		headsUp = document.body.appendChild( document.createElement( 'div' ) );
 		headsUp.style.cssText = 'background-color: #aaa; border-radius: 8px; font: 600 14pt monospace; display: block; left: -10px; ' +
 			'opacity: 0.85; padding: 5px 5px 20px 20px; ' +
@@ -107,7 +105,7 @@
 		codes.push( function() { window.location.assign("https://github.com/jaanga/gestification/tree/gh-pages/touchly/index.html"); } );
 		codes.push( function() { window.location.assign("https://github.com/jaanga/gestification/tree/gh-pages/yougest/r2/index.html"); } );
 		codes.push( function() { window.location.assign("https://github.com/jaanga/gestification/tree/gh-pages/index.html"); } );
-		
+
 // title and tag line
 		geometry = new THREE.TextGeometry( "Gestification", {
 			size: 20,
@@ -137,12 +135,12 @@
 		material = new THREE.MeshBasicMaterial( { map: texture, shading: THREE.SmoothShading, side: THREE.DoubleSide, transparent: true } );
 		mesh = new THREE.Mesh( geometry, material );
 		mesh.position.set( -10, 12, -80);
-		mesh.doIt = function() { 
-			headsUp.innerHTML = homeText; 
+		mesh.doIt = function() {
+			headsUp.innerHTML = homeText;
 		};
 		collidableMeshList.push( mesh );
 		scene.add( mesh );
-		
+
 		geometry = new THREE.PlaneGeometry( 40, 10, 1, 1 );
 		var texture = canvasText('Code', { color: '#888', fontSize: '36pt', height: 80, lineWidth: 3, width: 160, X: 10, Y: 10} );
 		material = new THREE.MeshBasicMaterial( { map: texture, shading: THREE.SmoothShading, side: THREE.DoubleSide, transparent: true } );
@@ -152,7 +150,6 @@
 		mesh.doIt = codes[3];
 		collidableMeshList.push( mesh );
 		scene.add( mesh );
-
 
 // plane & music cubes
 		geometry = new THREE.PlaneGeometry( 200, 100, 1, 1 );
@@ -172,42 +169,16 @@
 			mesh.castShadow = true;
 			mesh.receiveShadow = true;
 			function snd( i ) { return noises[ i ]; };
-			mesh.doIt = function() { 
+			mesh.doIt = function() {
 				headsUp.innerHTML = '<h1>Practice moving and aiming the pointer...</h1>' +
 					'<p>Best interaction:</p>' +
-					'<p>point with just one finger and one hand.</p>' + 
-				''; 
-				// headsUp.style.display = 'block';
+					'<p>point with just one finger and one hand.</p>' +
+				'';
 				noises[ parseInt( 9 * Math.random() ) ].play();
 			};
 			collidableMeshList.push( mesh );
 			scene.add(mesh);
-			
 		}
-
-
-// pointer
-		pointer = new THREE.Object3D();
-		pointer.position.y = -500;
-
-		geometry = new THREE.CylinderGeometry( 1, 10, 20, 5 );
-		geometry.applyMatrix( new THREE.Matrix4().makeRotationX( Math.PI / 2 ) );
-		material = new THREE.MeshLambertMaterial();
-		mesh = new THREE.Mesh( geometry, material );
-		mesh.position.set( 0, 0, -20);
-		mesh.castShadow = true;
-		mesh.receiveShadow = true;
-		pointer.add( mesh );
-
-		geometry = new THREE.CubeGeometry( 10, 5, 60 );
-		material = new THREE.MeshLambertMaterial();
-		mesh = new THREE.Mesh( geometry, material );
-		mesh.position.set( 0, 0, -60 );
-		mesh.castShadow = true;
-		mesh.receiveShadow = true;
-		pointer.add( mesh );
-		scene.add( pointer );
-
 
 // Menu
 		var titles = [ 'Murgatroyd', 'Touchly', 'youGest' ];
@@ -215,7 +186,7 @@
 		demos.push( function() { window.location.assign("murgatroyd-heaven/index.html"); } );
 		demos.push( function() { window.location.assign("touchly/index.html"); } );
 		demos.push( function() { window.location.assign("yougest/r2/index.html"); } );
-		
+
 		var toolTips = [];
 		toolTips.push ( function() { headsUp.innerHTML = '<h1>Murgatroyd</h1>' +
 			'<p>The first app we made for LM.</p>' +
@@ -227,10 +198,10 @@
 			'<p>The code explores touching events.</p>' +
 			'<p>A good place to start...</p>' +
 		''} );
-		toolTips.push ( function() { headsUp.innerHTML = '<h1>youGest</h1>' + 
+		toolTips.push ( function() { headsUp.innerHTML = '<h1>youGest</h1>' +
 			'<p>This app explores the Leap Motion API with the incoming numeric data represented as 3D objects.</p>' +
 			'<p>Much data still not yet exposed.</p>' +
-			'<p>Not for the timid. </p>' + 
+			'<p>Not for the timid. </p>' +
 		''; } );
 
 		for (var i = 0, len = titles.length; i < len; i++) {
@@ -241,7 +212,7 @@
 			mesh.castShadow = true;
 			mesh.receiveShadow = true;
 			scene.add( mesh );
-			
+
 			geometry = new THREE.PlaneGeometry( 40, 10, 1, 1 );
 			var texture = canvasText('Demo', { color: '#888', fontSize: '36pt', height: 80, lineWidth: 3, width: 160, X: 10, Y: 10} );
 			material = new THREE.MeshBasicMaterial( { map: texture, shading: THREE.SmoothShading, side: THREE.DoubleSide, transparent: true } );
@@ -251,7 +222,7 @@
 			mesh.doIt = demos[i];
 			collidableMeshList.push( mesh );
 			scene.add( mesh );
-			
+
 			geometry = new THREE.PlaneGeometry( 40, 10, 1, 1 );
 			var texture = canvasText('Code', { color: '#888', fontSize: '36pt', height: 80, lineWidth: 3, width: 160, X: 10, Y: 10} );
 			material = new THREE.MeshBasicMaterial( { map: texture, shading: THREE.SmoothShading, side: THREE.DoubleSide, transparent: true } );
@@ -261,19 +232,18 @@
 			mesh.doIt = codes[i];
 			collidableMeshList.push( mesh );
 			scene.add( mesh );
-			
+// invisible - for use to call up tooltps
 			geometry = new THREE.PlaneGeometry( 100, 30, 1, 1 );
-			// var texture = canvasText('', { color: '#888', fontSize: '36pt', height: 300, lineWidth: 3, width: 1000, X: 10, Y: 10} );
-			material = new THREE.MeshNormalMaterial( { side: THREE.BackSide, opacity: 0.01 } );
+			material = new THREE.MeshNormalMaterial( { side: THREE.BackSide, opacity: 0.01, transparent: true } );
 			mesh = new THREE.Mesh( geometry, material );
 			mesh.position.set( -10, -10, -45 + i * 50);
-			mesh.receiveShadow = true;
 			mesh.doIt = toolTips[i];
 			collidableMeshList.push( mesh );
 			scene.add( mesh );
 		}
-	}
 
+		buildPointer();
+	}
 
 	Leap.loop( function( frame ) {
 		var pointable;
@@ -284,87 +254,39 @@
 			pointer.position.set( pointable.stabilizedTipPosition[0], 0.3 * pointable.stabilizedTipPosition[1] -50, pointable.stabilizedTipPosition[2] );
 			var dir = v( pointable.direction[0], pointable.direction[1], pointable.direction[2] );  // best so far
 			pointer.lookAt( dir.add( pointer.position ) );
-			if ( hand ) {
-				var roll = Math.atan2( hand.palmNormal[0], -hand.palmNormal[1] );
-				pointer.rotateOnAxis(new THREE.Vector3( 0, 0, -1 ), roll);
+
+// Big thanks to Lee Stemkoski for the following code
+			point = pointer.children[0];
+			var originPoint = pointer.position.clone();
+			for (var vertexIndex = 0; vertexIndex < point.geometry.vertices.length; vertexIndex++) {
+				var localVertex = point.geometry.vertices[vertexIndex].clone();
+				var globalVertex = localVertex.applyMatrix4( point.matrix );
+				var directionVector = globalVertex.sub( point.position );
+
+				var ray = new THREE.Raycaster( originPoint, directionVector.clone().normalize() );
+				var collisionResults = ray.intersectObjects( collidableMeshList );
+				if ( collisionResults.length > 0 && collisionResults[0].distance < directionVector.length() ) {
+					var obj = collisionResults[0].object;
+					if (obj.doIt ) {
+						obj.doIt();
+					}
+				}
 			}
 		}
 		aniRas = false;
 		animate();
 		aniRas = true;
-   })
+	})
 
-	var prevObj;
-	
 	function animate() {
 		if ( aniRas === true ) {
 			requestAnimationFrame( animate );
 			aniRas = true;
 		}
-		
 		var point;
 		controls.update();
 		renderer.render( scene, camera );
 		stats.update();
-
-// Big thanks to Lee Stemkoski for the following code
-		point = pointer.children[0];
-		var originPoint = pointer.position.clone();
-		for (var vertexIndex = 0; vertexIndex < point.geometry.vertices.length; vertexIndex++) {
-			var localVertex = point.geometry.vertices[vertexIndex].clone();
-			var globalVertex = localVertex.applyMatrix4( point.matrix );
-			var directionVector = globalVertex.sub( point.position );
-
-			var ray = new THREE.Raycaster( originPoint, directionVector.clone().normalize() );
-			var collisionResults = ray.intersectObjects( collidableMeshList );
-			if ( collisionResults.length > 0 && collisionResults[0].distance < directionVector.length() ) {
-				var obj = collisionResults[0].object;
-				if (obj != prevObj ) {
-						obj.doIt();
-						prevObj = obj;
-				}
-			}
-		}
-	}
-
-// utilities
-
-	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }
-
-	function canvasText ( text, parameters ) {
-// must have at least one parameter given in calling function
-		var canvas = document.createElement("canvas");
-		var height = ( parameters.height ) ? parameters.height : 150 ;
-		canvas.height = height;
-		var width = ( parameters.width ) ? parameters.width : 300 ;
-		canvas.width = width;
-
-		var context = canvas.getContext("2d");
-		context.fillStyle =  ( parameters.backgroundColor !== undefined ) ? parameters.backgroundColor : 'transparent';
-		context.fillRect( 0, 0, width, height );
-
-		context.lineWidth = ( parameters.lineWidth ) ? parameters.lineWidth : 0 ;
-		context.strokeRect(0, 0, width, height);
-
-		var rotate = ( parameters.rotate ) ? parameters.rotate : 0 ;
-		context.rotate( rotate );
-
-		context.fillStyle = ( parameters.color ) ? parameters.color : '#000000';
-		var fontSize = ( parameters.fontSize ) ? parameters.fontSize : '48pt';
-		var fontFamily = ( parameters.fontFamily ) ? parameters.fontFamily : 'Arial';
-		var fontWeight = ( parameters.fontWeight ) ? parameters.fontWeight : 'bold';
-		context.font = fontSize + ' ' + fontFamily + ' ' + fontWeight;
-
-		context.textAlign = ( parameters.textAlign ) ? parameters.textAlign : 'left' ;
-		context.textBaseline = ( parameters.textBaseline ) ? parameters.textBaseline : 'top' ;
-		var X = ( parameters.X ) ? parameters.X : 5 ;
-		var Y = ( parameters.Y ) ? parameters.Y : 0 ;
-
-		context.fillText(text, X, Y);
-
-		var texture = new THREE.Texture( canvas );
-		texture.needsUpdate = true;
-		return texture;
 	}
 </script>
 </body>

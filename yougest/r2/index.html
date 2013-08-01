@@ -405,9 +405,8 @@
 	}
 	
 	var iconHome;
-	
 	function buildHome() {
-		// iconHome = new THREE.Object3D();
+		iconHome = new THREE.Object3D();
 		
 		var line = new THREE.Shape();
 		line.moveTo(5, 0);
@@ -422,8 +421,8 @@
 		material = new THREE.MeshLambertMaterial( { color: 0xff0000, ambient: 0xff0000, opacity: 0.7});
 		iconHome = new THREE.Mesh( geometry, material );
 		iconHome.scale.set( 3, 3, 3);
-		iconHome.rotation.y = 1.0;
-		iconHome.position.set( -200, 150, -50);
+		// iconHome.rotation.y = 1.0;
+		iconHome.position.set( 250, 150, -50);
 		iconHome.castShadow = true;
 		iconHome.receiveShadow = true;
 		scene.add( iconHome );	
