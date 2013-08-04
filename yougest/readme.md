@@ -32,6 +32,13 @@ Demo: http://jaanga.github.io/gestification/yougest/r2/
 
 ###Change Log###
 
+2013-08-01 ~ Theo
+* Added youGest r3 folder
+* Added r2 toolbar
+* Frame cubes have titles
+* Added ambient light
+* Added Stemkoski collision detection
+ 
 2013-07-27 ~ Theo
 & added stableized hands and pontables
 * Added light and shadows

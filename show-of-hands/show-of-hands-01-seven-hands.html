@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Show of Hands</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+</head>
+<body>
+
+<script src='http://mrdoob.github.com/three.js/examples/js/Detector.js'></script>
+<script src='http://mrdoob.github.com/three.js/build/three.min.js'></script>
+<script src='http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js'></script>
+<script src='http://mrdoob.github.com/three.js/examples/js/libs/stats.min.js'></script>
+<script src="http://mrdoob.github.com/three.js/examples/js/loaders/UTF8Loader.js"></script>
+<script src="http://mrdoob.github.com/three.js/examples/js/loaders/MTLLoader.js"></script>
+<script src="http://mrdoob.github.com/three.js/examples/js/Detector.js"></script>
+<script src="http://mrdoob.github.com/three.js/examples/js/libs/stats.min.js"></script>
+<script>
+	var renderer, scene, camera, controls, stats;
+
+	init();
+	animate();
+
+	function init() {
+		if ( ! Detector.webgl ) {
+			renderer = new THREE.CanvasRenderer( { antialias: true } );
+		} else {
+			renderer = new THREE.WebGLRenderer( { antialias: true } );
+		}
+
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		renderer.shadowMapEnabled = true;
+		document.body.appendChild( renderer.domElement );
+		scene = new THREE.Scene();
+
+		camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 5000 );
+		camera.position.set( 0, 150, 150);
+		controls = new THREE.TrackballControls( camera, renderer.domElement );
+
+		stats = new Stats();
+		stats.domElement.style.cssText = 'position: absolute; top: 0px; zIndex: 100; ';
+		document.body.appendChild( stats.domElement );
+
+		var ambient = new THREE.AmbientLight( 0x222222 );
+		scene.add( ambient );
+
+		var directionalLight = new THREE.DirectionalLight( 0xffffff, 1.1 );
+		directionalLight.position.set( 0, 100, 300 );
+		scene.add( directionalLight );
+		directionalLight.castShadow = true;
+		directionalLight.shadowCameraVisible = true;
+		directionalLight.shadowMapWidth = 2048;
+		directionalLight.shadowMaHeight = 2048;
+		var d = 150;
+		directionalLight.shadowCameraLeft = -d * 1.2;
+		directionalLight.shadowCameraRight = d * 1.2;
+		directionalLight.shadowCameraTop = d;
+		directionalLight.shadowCameraBottom = -d;
+		directionalLight.shadowCameraNear = 200;
+		directionalLight.shadowCameraFar = 500;
+		var geometry, material, mesh, col;
+		var loader = new THREE.JSONLoader();
+		loader.load( '../models/hands/skeleton-left.js ', function ( geometry ) {
+			var col = Math.random() * 0xffffff;
+			material = new THREE.MeshPhongMaterial( { ambient: col, color: col, specular: 0xffffff, shininess: 50, shading: THREE.SmoothShading } );
+			mesh = new THREE.Mesh( geometry, material );
+			mesh.position.set( -100, 0, 0 );
+			mesh.scale.set( 5, 5, 5);
+			scene.add( mesh );
+		});
+
+		loader.load( '../models/hands/mano-left-01.js ', function ( geometry ) {
+			col = Math.random() * 0xffffff;
+			material = new THREE.MeshPhongMaterial( { ambient: col, color: col, specular: 0xffffff, shininess: 50, shading: THREE.SmoothShading } );
+			mesh = new THREE.Mesh( geometry, material );
+			mesh.position.set( -50, 0, 10);
+			mesh.scale.set( 1.7, 1.7, 1.7);
+			scene.add( mesh );
+		});
+
+		loader.load( '../models/hands/robot-left-01.js ', function ( geometry ) {
+			col = Math.random() * 0xffffff;
+			material = new THREE.MeshPhongMaterial( { ambient: col, color: col, specular: 0xffffff, shininess: 50, shading: THREE.SmoothShading } );
+			mesh = new THREE.Mesh( geometry, material );
+			mesh.position.set( 100, 0, 0 );
+			mesh.scale.set( 2,2,2);
+			scene.add( mesh );
+		});
+
+		loader.load( '../models/hands/robo-artsy-01.js ', function ( geometry ) {
+			col = Math.random() * 0xffffff;
+			material = new THREE.MeshPhongMaterial( { ambient: 0x555555, color: col, specular: col, shininess: 50, shading: THREE.SmoothShading } );
+			mesh = new THREE.Mesh( geometry, material );
+			mesh.position.set( 50, 0, 0 );
+			mesh.scale.set( 2.5, 2.5, 2.5 );
+			scene.add( mesh );
+		});
+
+		loader.load( '../models/hands/w-hand-02-01.js ', function ( geometry ) {
+			col = Math.random() * 0xffffff;
+			material = new THREE.MeshPhongMaterial( { ambient: 0x555555, color: col, specular: col, shininess: 50, shading: THREE.SmoothShading } );
+			mesh = new THREE.Mesh( geometry, material );
+			mesh.position.set( 0, 0, 0 );
+			mesh.scale.set( 4, 4, 4 );
+			scene.add( mesh );
+		});
+
+		loader.load( '../models/hands/left-hand.js ', function ( geometry ) {
+			col = Math.random() * 0xffffff;
+			material = new THREE.MeshPhongMaterial( { ambient: 0x555555, color: col, specular: col, shininess: 50, shading: THREE.SmoothShading } );
+			mesh = new THREE.Mesh( geometry, material );
+			mesh.position.set( -150, 0, 0 );
+			mesh.scale.set( 4, 4, 4 );
+			scene.add( mesh );
+		});
+
+		var loader = new THREE.UTF8Loader();
+// loader.load( "http://mrdoob.github.com/three.js/examples/models/utf8/hand.js", function ( object ) {
+		loader.load( "../models/utf8/hand.js", function ( object ) {
+			object.rotation.set( 0, -1.51, 0 );
+			object.scale.set( 90, 90, 90);
+			object.position.set( 130, -40, 0);
+			scene.add( object );
+			object.traverse( function( node ) {
+				node.castShadow = true;
+				node.receiveShadow = true;
+				if ( node.material && node.material.name === "skin" ) {
+					node.material.wrapAround = true;
+					node.material.wrapRGB.set( 0.6, 0.2, 0.1 );
+				}
+			} );
+		}, { normalizeRGB: true } );
+	}
+
+	function animate() {
+		requestAnimationFrame( animate );
+		controls.update();
+		renderer.render( scene, camera );
+		stats.update();
+	}
+</script>
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang=en>
+<head>
+<title>Show of Hands</title>
+<meta charset=utf-8>
+</head>
+<body>
+<script src=http://js.leapmotion.com/0.2.0/leap.min.js></script>
+
+<script src=http://mrdoob.github.com/three.js/examples/js/Detector.js></script>
+<script src=http://mrdoob.github.com/three.js/build/three.min.js></script>
+<script src=http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js></script>
+<script src=http://mrdoob.github.com/three.js/examples/js/libs/stats.min.js></script>
+<script src=http://mrdoob.github.com/three.js/examples/js/loaders/UTF8Loader.js></script>
+<script src=http://mrdoob.github.com/three.js/examples/js/loaders/MTLLoader.js></script>
+<script src=http://mrdoob.github.com/three.js/examples/js/Detector.js></script>
+<script src=http://mrdoob.github.com/three.js/examples/js/libs/stats.min.js></script>
+<script>
+// Theo Armour ~ 2013-08-04 ~ MIT License
+
+	var renderer, scene, camera, controls, stats;
+	var claws = [], leadingClaw;
+
+	init();
+	animate();
+
+	function init() {
+		var css = document.body.appendChild( document.createElement('style') );
+		css.innerHTML = 'body { font: 600 12pt monospace; margin: 0; overflow: hidden; text-align: center; }' ;
+
+		if ( ! Detector.webgl ) {
+			renderer = new THREE.CanvasRenderer( { antialias: true } );
+		} else {
+			renderer = new THREE.WebGLRenderer( { antialias: true } );
+		}
+
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		renderer.shadowMapEnabled = true;
+		document.body.appendChild( renderer.domElement );
+		scene = new THREE.Scene();
+
+		camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 5000 );
+		camera.position.set( 0, 150, 150);
+		controls = new THREE.TrackballControls( camera, renderer.domElement );
+
+		stats = new Stats();
+		stats.domElement.style.cssText = 'position: absolute; top: 0px; zIndex: 100; ';
+		document.body.appendChild( stats.domElement );
+
+		var info = document.body.appendChild( document.createElement( 'div' ) );
+		info.style.cssText = 'position: absolute; top: 0px; width: 100% ';
+		info.innerHTML = '<p>Show of Hands</p>';
+
+		// LIGHTS
+		var ambient = new THREE.AmbientLight( 0x222222 );
+		scene.add( ambient );
+
+		var directionalLight = new THREE.DirectionalLight( 0xffffff, 1.1 );
+		directionalLight.position.set( 0, 100, 300 );
+		scene.add( directionalLight );
+		directionalLight.castShadow = true;
+// directionalLight.shadowCameraVisible = true;
+		directionalLight.shadowMapWidth = 2048;
+		directionalLight.shadowMaHeight = 2048;
+		var d = 150;
+		directionalLight.shadowCameraLeft = -d * 1.2;
+		directionalLight.shadowCameraRight = d * 1.2;
+		directionalLight.shadowCameraTop = d;
+		directionalLight.shadowCameraBottom = -d;
+		directionalLight.shadowCameraNear = 200;
+		directionalLight.shadowCameraFar = 500;
+		var geometry, material, mesh, col;
+
+// need to credit sources...
+		var geometry, material, mesh;
+		var loader = new THREE.JSONLoader();
+		loader.load( '../models/hands/skeleton-left.js ', function ( geometry ) {
+			var col = Math.random() * 0xffffff;
+			material = new THREE.MeshPhongMaterial( { ambient: col, color: col, specular: 0xffffff, shininess: 50, shading: THREE.SmoothShading } );
+			mesh = new THREE.Mesh( geometry, material );
+			mesh.position.set( -100, 0, 0 );
+			mesh.scale.set( 5, 5, 5);
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			claws.push( mesh );
+			scene.add( mesh );
+		});
+
+		loader.load( '../models/hands/mano-left-01.js ', function ( geometry ) {
+			col = Math.random() * 0xffffff;
+			material = new THREE.MeshPhongMaterial( { ambient: col, color: col, specular: 0xffffff, shininess: 50, shading: THREE.SmoothShading, wireframe: true, } );
+			mesh = new THREE.Mesh( geometry, material );
+			mesh.position.set( -50, 0, 10);
+			mesh.scale.set( 1.7, 1.7, 1.7);
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			claws.push( mesh );
+			scene.add( mesh );
+		});
+
+		loader.load( '../models/hands/robot-left-01.js ', function ( geometry ) {
+			col = Math.random() * 0xffffff;
+			material = new THREE.MeshPhongMaterial( { ambient: col, color: col, specular: 0xffffff, shininess: 50, shading: THREE.SmoothShading } );
+			mesh = new THREE.Mesh( geometry, material );
+			mesh.position.set( 100, 0, 0 );
+			mesh.scale.set( 2,2,2);
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			claws.push( mesh );
+			scene.add( mesh );
+		});
+
+		loader.load( '../models/hands/robo-artsy-01.js ', function ( geometry ) {
+			col = Math.random() * 0xffffff;
+			material = new THREE.MeshPhongMaterial( { ambient: 0x555555, color: col, specular: col, shininess: 50, shading: THREE.SmoothShading } );
+			mesh = new THREE.Mesh( geometry, material );
+			mesh.position.set( 50, 0, 0 );
+			mesh.scale.set( 2.5, 2.5, 2.5 );
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			claws.push( mesh );
+			scene.add( mesh );
+		});
+
+		loader.load( '../models/hands/w-hand-02-01.js ', function ( geometry ) {
+			col = Math.random() * 0xffffff;
+			material = new THREE.MeshPhongMaterial( { ambient: 0x555555, color: col, specular: col, shininess: 50, shading: THREE.SmoothShading } );
+			mesh = new THREE.Mesh( geometry, material );
+			mesh.position.set( 0, 0, 0 );
+			mesh.scale.set( 4, 4, 4 );
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			claws.push( mesh );
+			scene.add( mesh );
+		});
+
+		loader.load( '../models/hands/left-hand.js ', function ( geometry ) {
+			col = Math.random() * 0xffffff;
+			material = new THREE.MeshPhongMaterial( { ambient: 0x555555, color: col, specular: col, shininess: 50, shading: THREE.SmoothShading } );
+			mesh = new THREE.Mesh( geometry, material );
+			mesh.position.set( -150, 0, 0 );
+			mesh.scale.set( 4, 4, 4 );
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			claws.push( mesh );
+			scene.add( mesh );
+		});
+
+		loader = new THREE.UTF8Loader();
+		loader.load( '../models/utf8/hand.js', function ( object ) {
+			object.rotation.set( 0, -1.51, 0 );
+			object.scale.set( 90, 90, 90 );
+			object.position.set( 130, -40, 0 );
+			claws.push( object );
+			scene.add( object );
+			object.traverse( function( node ) {
+				node.castShadow = true;
+				node.receiveShadow = true;
+				if ( node.material && node.material.name === "skin" ) {
+					node.material.wrapAround = true;
+					node.material.wrapRGB.set( 0.6, 0.2, 0.1 );
+				}
+			} );
+		}, { normalizeRGB: true } );
+
+		geometry = new THREE.CubeGeometry( 300, 300, 10 );
+		col = Math.random() * 0xffffff;
+		material = new THREE.MeshPhongMaterial( { ambient: 0x555555, color: col, specular: col, shininess: 50, shading: THREE.SmoothShading } );
+		mesh = new THREE.Mesh( geometry, material );
+		mesh.position.set( 0, 0, -100);
+		mesh.castShadow = true;
+		mesh.receiveShadow = true;
+		scene.add( mesh );
+
+		geometry = new THREE.CubeGeometry( 1, 1, 1 );
+		material = new THREE.MeshNormalMaterial();
+		leadingClaw = new THREE.Mesh( geometry, material );
+		scene.add( leadingClaw );
+	}
+
+	var fr;
+	Leap.loop( function( frame ) {
+		fr = frame;
+		var hand, direction;
+		if ( frame.hands.length > 0) {
+			hand = frame.hands[0];
+			leadingClaw.position.set( hand.stabilizedPalmPosition[0], hand.stabilizedPalmPosition[1], hand.stabilizedPalmPosition[2] );
+			direction = v( hand.direction[0], hand.direction[1], hand.direction[2] );  // best so far
+			leadingClaw.lookAt( direction.add( leadingClaw.position ) );
+// Thanka to Joe Ward
+			var roll = Math.atan2( hand.palmNormal[0], -hand.palmNormal[1] );
+			leadingClaw.rotateOnAxis(new THREE.Vector3( 0, 0, -1 ), roll);
+			for (var i = 0, len = claws.length; i < len; i++) {
+				claws[i].position.set( leadingClaw.position.x - 150 + 50 * i, leadingClaw.position.y, leadingClaw.position.z );
+				claws[i].rotation.set( leadingClaw.rotation.x, -leadingClaw.rotation.y, leadingClaw.rotation.z);
+			}
+		}
+   });
+
+	function animate() {
+		requestAnimationFrame( animate );
+		controls.update();
+		renderer.render( scene, camera );
+		stats.update();
+	}
+
+	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }
+
+</script>
+</body>
+</html>
