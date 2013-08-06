@@ -1,7 +1,7 @@
 Touchly
 =======
 
-Demo: http://jaanga.github.io/gestification/work-in-progress/phalanges
+Demo: http://jaanga.github.io/gestification/work-in-hand/phalanges/
 
 ### Change Log
 2013-08-05 ~ Theo
