@@ -49,9 +49,9 @@
 		document.body.appendChild( renderer.domElement );
 		scene = new THREE.Scene();
 
-		camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 3000 );
-		camera.position.set( 0, 250, 700 );
-		controls = new THREE.TrackballControls( camera, renderer.domElement );
+		//camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 3000 );
+		//camera.position.set( 0, 250, 700 );
+		//controls = new THREE.TrackballControls( camera, renderer.domElement );
 		
 		camY = 250, camZ = 700, conY = 200;
 		// controls.target.set( 0, 200, 0 );
@@ -155,7 +155,6 @@
 			material = new THREE.MeshNormalMaterial();
 			for (var j = 0; j < 5; j++) {
 				mesh = new THREE.Mesh( geometry, material );
-				mesh.position,z = -20;
 				mesh.castShadow = true;
 				mesh.receiveShadow = true;			
 				finger.add( mesh );
