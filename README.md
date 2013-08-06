@@ -13,11 +13,15 @@ Copyright &copy; 2013 Jaanga authors
 
 MIT License
 
-###Change Lod
+###Change Log
+
+2013-08-05 ~ Theo
+* Added work-in-hand
+* Updated to youGest r4
 
 2013-08-04 ~ Theo
 * Restored mistakenly deleted Touchly
-* Currected misspelled 'utils' folder
+* Corrected misspelled 'utils' folder
 * Added Show of Hands demo app
 * Added home-page folder for retired home page files 
 * Added this log
