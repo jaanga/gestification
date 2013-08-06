@@ -1,0 +1,218 @@
+﻿<!doctype html>
+<html lang=en>
+<head>
+<title>phalanges</title>
+<meta charset=utf-8>
+<meta name='viewport' content='width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0'>
+</head>
+<body>
+<script src="http://js.leapmotion.com/0.2.0/leap.min.js"></script>
+<!--
+<script src=../../../git-repos/three.js/examples/js/Detector.js></script>
+<script src=../../../git-repos/three.js/build/three.min.js></script>
+<script src=../../../git-repos/three.js/examples/js/controls/TrackballControls.js></script>
+<script src=../../../git-repos/three.js/examples/js/libs/stats.min.js></script>
+-->
+<script src=http://mrdoob.github.com/three.js/examples/js/Detector.js></script>
+<script src=http://mrdoob.github.com/three.js/build/three.min.js></script>
+<script src=http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js></script>
+<script src=http://mrdoob.github.com/three.js/examples/js/libs/stats.min.js></script>
+
+<script src=../../modec-threejs-utils/r2/modec-threejs-utils.js ></script>
+<script>
+	if ( ! Detector.webgl ) { Detector.addGetWebGLMessage(); }
+
+	var renderer, scene, camera, controls, stats;
+	var palm, fingers = [], fingers2 = [], bases = [];
+	var objects;
+
+	init();
+	animate();
+
+	function init() {
+		var css = document.body.appendChild( document.createElement('style') );
+		css.innerHTML = 'body { font: 600 12pt monospace; margin: 0; overflow: hidden; text-align: center; }' +
+		'' ;
+
+		var info = document.body.appendChild( document.createElement( 'div' ) );
+		info.style.cssText = 'margin 0; position: absolute; top: 0px; width: 100% ';
+		info.innerHTML = '<p>phalanges</p>' +
+			'' +
+		'';
+		
+// Basics
+		if ( ! Detector.webgl ) {
+			renderer = new THREE.CanvasRenderer( { antialias: true } );
+		} else {
+			renderer = new THREE.WebGLRenderer( { antialias: true } );
+		}
+
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		renderer.shadowMapEnabled = true;
+		document.body.appendChild( renderer.domElement );
+		scene = new THREE.Scene();
+
+		camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 3000 );
+		camera.position.set( 0, 250, 600 );
+		controls = new THREE.TrackballControls( camera, renderer.domElement );
+		controls.target.set( 0, 100, 0 );
+
+		stats = new Stats();
+		stats.domElement.style.cssText = 'position: absolute; top: 0px; zIndex: 100; ';
+		document.body.appendChild( stats.domElement );
+
+//  Lights
+		var light, geometry, material, mesh;
+
+		light = new THREE.AmbientLight( 0xffffff);
+		light.color.setHSL( 0.1, 0.5, 0.3 );
+		scene.add( light );
+
+		light = new THREE.DirectionalLight( 0xffffff, 1 );
+		light.position.set( 1, 1, 1 ).normalize();
+		scene.add( light );
+
+		light = new THREE.DirectionalLight( 0xffffff, 1 );
+		light.position.set( -1, -1, -1 ).normalize();
+		scene.add( light );
+
+		light = new THREE.SpotLight( 0xffffff, 1.5 );
+		light.position.set( 0, 1700, 0 );
+		light.castShadow = true;
+
+		light.shadowMapWidth = 1024;
+		light.shadowMapHeight = 1024;
+		light.shadowCameraNear = 1000;
+		light.shadowCameraFar = 1900;
+		light.shadowCameraFov = 25;
+		scene.add( light );
+// light.shadowCameraVisible = true;
+
+// Assets
+		material = new THREE.MeshBasicMaterial( {color: Math.random() * 0xffffff, side: THREE.DoubleSide } );
+		geometry = new THREE.CubeGeometry( 600, 10, 500 );
+		mesh = new THREE.Mesh( geometry, material );
+		mesh.position.set( 0, -50, 0 );
+		mesh.castShadow = true;
+		mesh.receiveShadow = true;
+		scene.add( mesh );
+		
+		palm = new THREE.Object3D();
+		
+		geometry = new THREE.CubeGeometry( 90, 20, 80 );
+		geometry.applyMatrix( new THREE.Matrix4().makeTranslation( -15, 0, -55 ) );
+		material = new THREE.MeshNormalMaterial();
+		mesh = new THREE.Mesh( geometry, material );
+		mesh.castShadow = true;
+		mesh.receiveShadow = true;
+		palm.add( mesh);
+		
+		scene.add( palm );
+		var points = [ [ 30, 0, -70,], [ 20, 0, -10], [ -5, 0, -10], [ -30, 0, -10], [ -55, 0, -10 ] ];
+		
+		objects = new THREE.Object3D();
+		for (var i = 0, len = points.length; i < len; i++) {
+			geometry = new THREE.CubeGeometry( 2, 30, 2 );
+			// geometry.applyMatrix( new THREE.Matrix4().makeTranslation( -15, 0, -55 ) );
+			// geometry.applyMatrix( new THREE.Matrix4().makeTranslation( points[i][0], points[i][1], points[i][2] ) );
+			mesh = new THREE.Mesh( geometry, material );
+			scene.add( mesh );
+			bases.push( mesh );	
+		} 
+		bases.reverse();
+
+		
+		var fingerCount = 0;
+		for (var j = 0; j < 5; j++) {
+			geometry = new THREE.CubeGeometry( 16, 12, 1 );
+			var texture = canvasText( ++fingerCount, { backgroundColor: 'random', color: '#000000', fontSize: '48pt', globalAlpha: 0.8, height: 200, lineWidth: 2, textAlign: 'center', textBaseline: 'middle', width: 100, X: 50, Y: 100} );
+			material = new THREE.MeshPhongMaterial( { map: texture, color: Math.random() * 0xffffff, specular: 0x333333, shininess: 20, side: THREE.DoubleSide, transparent: true } );
+			
+			mesh = new THREE.Mesh( geometry, material );
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			scene.add( mesh );
+			fingers.push( mesh );
+			
+			geometry = new THREE.CubeGeometry( 10, 10, 1 );
+			mesh = new THREE.Mesh( geometry, material );
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			scene.add( mesh );
+			fingers2.push( mesh );
+		}
+	}
+
+	var fr;
+	var tranX = [ -10, 10, -30, -50, 30];
+	var tranZ = [ -15, -15, -15, -15, -70 ];
+	
+	Leap.loop( function( frame ) {
+		fr = frame;
+		var hand, direction, len, roll, finger, finger2, base, pointable, distance, clone;
+		if ( frame.hands.length > 0) {
+			hand = frame.hands[0];
+			palm.position.set( hand.stabilizedPalmPosition[0], hand.stabilizedPalmPosition[1], hand.stabilizedPalmPosition[2] );
+			direction = v( hand.direction[0], hand.direction[1], hand.direction[2] );  // best so far
+			palm.lookAt( direction.add( palm.position ) );
+			roll = Math.atan2( hand.palmNormal[0], -hand.palmNormal[1] );
+			palm.rotateOnAxis(new THREE.Vector3( 0, 0, -1 ), roll);
+			palm.visible = true;
+		} else {
+			palm.visible = false;
+		}
+
+		len = frame.pointables.length;
+		if ( len > 0) {
+			for (var i = 0; i < 5; i++) {
+				finger = fingers[i];
+				finger2 = fingers2[i];
+				base = bases[i];
+				if ( i < len ) {
+					pointable = frame.pointables[i];
+					finger.position.set( pointable.stabilizedTipPosition[0], pointable.stabilizedTipPosition[1], pointable.stabilizedTipPosition[2] );
+					direction = v( pointable.direction[0], pointable.direction[1], pointable.direction[2]);  // best so far
+					finger.lookAt( direction.add( finger.position ) );
+					finger.scale.z = pointable.length;
+					finger.translateZ( -0.5 * pointable.length  );
+					
+					finger2.position.set( pointable.stabilizedTipPosition[0], pointable.stabilizedTipPosition[1], pointable.stabilizedTipPosition[2] );
+					direction = v( pointable.direction[0], pointable.direction[1], pointable.direction[2]);  // best so far
+					finger2.lookAt( direction.add( finger2.position ) );
+					finger2.translateZ( -pointable.length );
+					
+					var clone = palm.clone();
+					base.position = clone.position;
+					base.rotation.set( clone.rotation.x, clone.rotation.y, clone.rotation.z ) ;
+					base.translateX( tranX[ i ] );
+					base.translateZ( tranZ[ i ] );
+					// base.translateX( 0 );
+					// base.translateZ( -80 );
+					
+					finger2.lookAt( base.position );
+					distance = finger2.position.distanceTo( base.position );
+					finger2.scale.z = distance;
+					finger2.translateZ( 0.5 * distance);
+					
+					finger.visible = true;
+					finger2.visible = true;
+					base.visible = true;
+				} else {
+					fingers[i].visible = false;
+					fingers2[i].visible = false;
+					bases[i].visible = false;
+				}
+			}
+		}
+	});
+
+	function animate() {
+		requestAnimationFrame( animate );
+		controls.update();
+		renderer.render( scene, camera );
+		stats.update();
+	}
+
+</script>
+</body>
+</html>
