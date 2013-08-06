@@ -1,7 +1,7 @@
 youGest
 =======
 
-Demo: http://jaanga.github.io/gestification/yougest/r2/ 
+Demo: http://jaanga.github.io/gestification/yougest/r4/ 
 
 
 ###Road Map###
@@ -31,6 +31,11 @@ Demo: http://jaanga.github.io/gestification/yougest/r2/
 
 
 ###Change Log###
+
+2013-08-05 ~ Theo
+* Added r4 folder
+* fingers are numbered
++ other minor cleanup
 
 2013-08-01 ~ Theo
 * Added youGest r3 folder
