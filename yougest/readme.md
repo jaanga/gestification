@@ -7,18 +7,18 @@ Demo: http://jaanga.github.io/gestification/yougest/r4/
 ###Road Map###
 * Add stableized hand and pointables << 2013-07-27
 * Add shadows << 2013-07-27
-* Display either custon strings or Leap.js toString() data
+* Display either custom strings or Leap.js toString() data
 * Better handling of gestures ~ first thing: define what 'better handling' means. ;-)  
 * Save and replay JSON data using normal OS file dialog boxes  
 * Export motion data as BVH files  
-* Display the data that relates to the Frame object  
-* Fingers have the correct roll  
-* Total hand has better display of motion  
+* Display the data that relates to the Frame object  << 2013-08-07
+* Fingers have the correct roll  << 2013-08-07 ~ 
+* Total hand has better display of motion  << 2013-08-07
 * Fix Palm to stop display of gymbol lock issues  
-* Provide 'in-world' objects to touch and manipulate  
+* Provide 'in-world' objects to touch and manipulate  << 2013-08-07 ~ 
 * Provide a mesh that looks like a hand that overlays the 'bones'  
 * Have that hand mesh animate in unison with the bones  
-* Bones change color in relation to their velocity in a visible and useful manner  
+* Bones change color in relation to their velocity in a more visible and useful manner  
 
 
 ###Contributions###
@@ -31,6 +31,15 @@ Demo: http://jaanga.github.io/gestification/yougest/r4/
 
 
 ###Change Log###
+
+2013-08-07 ~ Theo
+* Now calling modec utils r3 with improved toolbar
+* Light changed to from spot to direction
+* Comments added 
+* Big code cleanup, many more functions
+* Better dispay of text data
+* Added About page and more help
+* Added second joints for all 10 fingers 
 
 2013-08-05 ~ Theo
 * Added r4 folder
