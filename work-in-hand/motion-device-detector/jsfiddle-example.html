@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang=en>
+<head>
+<title>motion device detector</title>
+<meta charset=utf-8>
+</head>
+<body>
+<script src="http://js.leapmotion.com/0.2.0-beta6/leap.min.js"></script>
+<script src="motion-device-detector.js"></script>
+<script>
+	if ( ! MotionDeviceDetector.motionDevice ) { MotionDeviceDetector.addGetMotionDeviceMessage(); }
+
+	document.body.style.cssText = ' font: bold 12pt monospace; ';
+	var info = document.body.appendChild( document.createElement( 'div' ) );
+	info.innerHTML = '<h1>Howdy</h1>';
+	
+	if ( MotionDeviceDetector.motionDevice ) { info.innerHTML += 'Good to go...'; };
+	
+	function doMyOwnStuff() {
+		  console.log( "O_o" );
+	}
+
+	var controller = new Leap.Controller();
+
+	controller.on('deviceConnected', function() {
+	  console.log("A Leap device has been connected.");
+	  doMyOwnStuff();
+	});
+
+	controller.on( 'deviceDisconnected', function() {
+	  console.log("A Leap device has been disconnected.");
+	});
+
+	//should probably fire a 'deviceConnected'
+	controller.connect();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang=en>
+<head>
+<title>motion device detector</title>
+<meta charset=utf-8>
+</head>
+<body>
+<script src="http://js.leapmotion.com/0.2.0-beta6/leap.min.js"></script>
+<script>
+
+	document.body.style.cssText = ' font: bold 12pt monospace; ';
+	var log = document.body.appendChild( document.createElement( 'div' ) );
+	log.innerHTML = '<h1>motion device detector</h1>';
+
+	function doMyOwnStuff() {
+		log.innerHTML += 'O_o<br>' ;
+	}
+
+	var controller = new Leap.Controller();
+
+	controller.on('deviceConnected', function() {
+	  log.innerHTML +=' A Leap Motion device has been connected.<br>';
+	  doMyOwnStuff();
+	});
+
+	controller.on( 'deviceDisconnected', function() {
+		log.innerHTML += 'A Leap Motion device has been disconnected.<br>';
+	});
+
+	//should probably fire a 'deviceConnected'
+	controller.connect();
+
+</script>
+</body>
+</html>
+

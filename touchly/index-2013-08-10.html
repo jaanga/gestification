@@ -10,7 +10,7 @@
 <script src=http://mrdoob.github.com/three.js/build/three.min.js ></script>
 <script src=http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js ></script>
 <script src=http://mrdoob.github.com/three.js/examples/js/libs/stats.min.js ></script>
-<script src=../modec-threejs-utils/r3/modec-threejs-utils-r3.js ></script>
+<script src=../modec-threejs-utils/r1/modec-threejs-utils.js ></script>
 <script>
 // Theo Armour ~ 2013-07-24 - 2013-07-31 ~ MIT License
 
@@ -29,31 +29,8 @@
 
 	function init() {
 		var css, light, geometry, material, mesh;
-		
 		css = document.body.appendChild( document.createElement('style') );
 		css.innerHTML = 'body { background-color: #ddd; font: 600 12pt monospace; margin: 0; overflow: hidden; text-align: center; }' ;	
-		
-		setHeadsUp();
-		headsUpAbout = '<p style="margin: 0; text-align: right;">[X]</p>' +
-			'<h1>Touchly</h1>' +
-			'<p>A simpe game for your <a href="http://leapmotion.com" target="_blank">Leap Motion</a> device.</p>' +
-			'<p>User: Learn how to move, point and touch objects in 3D.</p>' +
-			'<p>Coder: The underlieing code is simple and can help you learn how to program for the device.</p>' +
-			'<p>Designer: Note the use of shadows, color changes and sounds as cues..</p>' +
-			// '<p>View data coming in from your <a href="http://leapmotion.com" target="_blank">Leap Motion</a> device both as numbers and as 3D objects.</p>' +
-			// '<p>Wiggle your hands and fingers over the device to view the data.</p>' +
-			'<p>Move your finger over the \'?\' for more help.</p>' +
-			// '<p>See also the Leap Motion JavaScript <a href="http://js.leapmotion.com/api/v0.2.0/docs" target="_blank">API</a> ' +
-			// 'and <a href="http://js.leapmotion.com/examples" target="_blank">Examples</a> for more details.</p>' +
-			'<p>Tested on Chrome. Broken on Firefox, Safari and IE.</p>' +
-			'<p>Report bugs, view source code on <a href="https://github.com/jaanga/gestification/tree/gh-pages/yougest" target="_blank">GitHub</a>.</p>' +
-			'<p style=font-size:8pt; >Copyright &copy 2013 Jaanga authors. MIT License</small></p>' +
-		'';
-		headsUp.innerHTML = headsUpAbout;		
-		
-		scoreCard =   document.body.appendChild( document.createElement( 'div' ) );
-		scoreCard.style.cssText = 'font: bold 36pt monospace; position: absolute; top: 0px; width: 100% ';
-		scoreCard.innerHTML = 'Touchly: a very touching effort<hr width=600>Point your finger at the cubes';		
 
 // Three.js assets
 		renderer = new THREE.WebGLRenderer( { antialias: true }  );
@@ -62,7 +39,7 @@
 		document.body.appendChild( renderer.domElement );
 		scene = new THREE.Scene();
 
-		resetCamera( camX, camY, camZ, conY );
+		resetCamera( camX, camY, camZ );
 
 		stats = new Stats();
 		stats.domElement.style.cssText = 'position: absolute; top: 0px; zIndex: 100; ';
@@ -81,7 +58,11 @@
 // light.shadowCameraVisible = true;
 
 // Touchly assets
-		// geometry = new THREE.AxisHelper( 50 )
+		scoreCard =   document.body.appendChild( document.createElement( 'div' ) );
+		scoreCard.style.cssText = 'font: bold 36pt monospace; position: absolute; top: 0px; width: 100% ';
+		scoreCard.innerHTML = 'Touchly: a very touching effort<hr width=600>Point your finger at the cubes';
+
+		geometry = new THREE.AxisHelper( 50 )
 		// scene.add( geometry );
 
 // ground plane
@@ -109,9 +90,8 @@
 			scene.add(mesh);
 		}
 		
-		buildPointer( 10, 0 );
-		// buildHome( 130, 20, -20, 1);
-		buildToolbar( 130, 20, -20, 1);
+		buildPointer();
+		buildHome( 130, 20, -20, 1);
 	}
 
 	function setTouched( obj ) {
@@ -138,7 +118,6 @@
 			pointer.position.set( pointable.stabilizedTipPosition[0], 0.3 * pointable.stabilizedTipPosition[1] -80, pointable.stabilizedTipPosition[2] );
 			direction = v( pointable.direction[0], pointable.direction[1], pointable.direction[2] );  // best so far
 			pointer.lookAt( direction.add( pointer.position ) );
-			
 // Big thanks to Lee Stemkoski for the following code		
 			var originPoint = pointer.position.clone();
 			var point = pointer.children[0];

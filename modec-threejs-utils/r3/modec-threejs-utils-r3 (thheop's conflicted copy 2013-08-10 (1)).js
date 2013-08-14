@@ -1,9 +1,10 @@
-// Theo Armour ~ 2013-07-31 ~ MIT License
-// TBD: Namespace & objectification
+// Theo Armour ~ 2013-08-09 ~ MIT License ~ r3
+// TBD: Name? MDU - mition detector utilities? Namespace & objectification
 
 	var headsUp, pointer, pointerTip;
 	var collidableMeshList = [];
-	var headsUpHelp = '<p style="margin: 0; text-align: right;"><i>click point device here to close...</i></p>' +
+	var headsUpClose = '<p style="margin: 0; text-align: right;">[X]</p>';
+	var headsUpHelp = headsUpClose +
 		'<h1>Toolbar Help</h1>' +
 		'<p><b>Two Hands Icon</b><br>&bull; Switch hand functions<br>&bull; Not yet implemented</p>' +
 		'<p><b>House Icon</b><br>&bull; Return to home page</p>' +
@@ -17,54 +18,48 @@
 	'';
 	
 	var camX = 0, camY = 100, camZ = 350, conY = 0;
-	var INTERSECTED;
+	var intersected;
+	
+	function setHeadsUp() {
+		headsUp = document.body.appendChild( document.createElement( 'div' ) );
+		headsUp.style.cssText = 'background-color: #aaa; border-radius: 8px; color: #333; font: 600 14pt monospace; display: block; left: -10px; ' +
+			'margin: 0px; opacity: 0.85; padding: 5px 20px 10px 20px; ' +
+			'position: absolute; text-align: left; top: 170px; max-width: 400px; min-width: 280px;';
+		headsUp.onclick = toggleHeadsUp;
+		headsUp.innerHTML = headsUpAbout;	
+	}
 	
 	function utilsDetectCollision() {
 // Big thanks to Lee Stemkoski for the following code
-		// point = pointerTip;
 		var originPoint = pointer.position.clone();
 		for (var vertexIndex = 0; vertexIndex < pointerTip.geometry.vertices.length; vertexIndex++) {
 			var localVertex = pointerTip.geometry.vertices[vertexIndex].clone();
 			var globalVertex = localVertex.applyMatrix4( pointerTip.matrix );
+			
 			var directionVector = globalVertex.sub( pointerTip.position );
 
 			var ray = new THREE.Raycaster( originPoint, directionVector.clone().normalize() );
 			var collisionResults = ray.intersectObjects( collidableMeshList );
 			if ( collisionResults.length > 0 && collisionResults[0].distance < directionVector.length() ) {
-				//var obj = collisionResults[0].object;
-				//if (obj.doIt ) {
-				//	obj.doIt();
-				//}
-				
-				if ( INTERSECTED != collisionResults[ 0 ].object ) {
-					if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
-					INTERSECTED = collisionResults[ 0 ].object;
-// if no getHex ability this causes non-critical error...
-					INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
-					INTERSECTED.material.emissive.setHex( 0xff0000 );
-					
-					// headsUp.innerText = 'Object id: ' + INTERSECTED.uuid;
-					// if ( noises != undefined ) { noises[ parseInt( 9 * Math.random() ) ].play(); }
-					if ( INTERSECTED.doIt ) {
-						INTERSECTED.doIt();
+				if ( intersected != collisionResults[ 0 ].object ) {
+					if ( intersected ) intersected.material.emissive.setHex( intersected.currentHex );
+					intersected = collisionResults[ 0 ].object;
+					if ( intersected.material.emissive ) {
+						intersected.currentHex = intersected.material.emissive.getHex();
+						intersected.material.emissive.setHex( 0xff0000 );
+					}
+					if ( intersected.doIt ) {
+						intersected.doIt();
 					}
 				}
 			} else {
-				if ( INTERSECTED && INTERSECTED.material.emissive) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
-				INTERSECTED = null;
+				if ( intersected && intersected.material.emissive) intersected.material.emissive.setHex( intersected.currentHex );
+				intersected = null;
 			}
 		}
 	}
 
-	function buildToolbar( X, Y, Z, scale) {
-		
-		headsUp = document.body.appendChild( document.createElement( 'div' ) );
-		headsUp.style.cssText = 'background-color: #aaa; border-radius: 8px; color: #333; font: 600 14pt monospace; display: block; left: -10px; ' +
-			'margin: 0px; opacity: 0.85; padding: 5px 20px 10px 20px; ' +
-			'position: absolute; text-align: left; top: 170px; max-width: 500px; min-width: 280px;';
-		headsUp.onclick = toggleHeadsUp;
-		headsUp.innerHTML = headsUpAbout;
-		
+	function buildToolbar( X, Y, Z, scale) {	
 		var toolbar = new THREE.Object3D();
 		
 		var line = new THREE.Shape();
@@ -118,9 +113,9 @@
 		line.lineTo(-5, 0);
 
 		geometry = line.extrude( { amount: 10, bevelEnabled: false,} );
+		material = new THREE.MeshPhongMaterial( { color: 0xff0000, ambient: 0x440000, opacity: 0.25, side: THREE.DoubleSide, transparent: true });
 		material = new THREE.MeshLambertMaterial( { color: 0xff0000, ambient: 0xff0000 });
 		mesh = new THREE.Mesh( geometry, material );
-		// mesh.scale.set( scale, scale, scale);
 		mesh.position.set( X + 3, Y, Z - 5);
 		// mesh.castShadow = true;
 		mesh.receiveShadow = true;
@@ -227,51 +222,50 @@
 		resetCamera( camX, camY, camZ, conY ); 
 	}
 	
-	function buildPointer() {
+	function buildPointer( tetraSize, hand ) {
 // pointer
 		pointer = new THREE.Object3D();
 		pointer.position.y = -500;
 		
-		geometry = new THREE.TetrahedronGeometry( 10 );
+		geometry = new THREE.TetrahedronGeometry( tetraSize );
 		geometry.applyMatrix( new THREE.Matrix4().makeRotationY( -Math.PI / 4 ) );
 		geometry.applyMatrix( new THREE.Matrix4().makeRotationX( Math.PI / 4 ) );
+		geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 0, -0.5 * tetraSize ) );
 		material = new THREE.MeshNormalMaterial();
 		mesh = new THREE.Mesh( geometry, material );
 		mesh.scale.set( 1, 0.5, 1 );
-		mesh.position.set( 0, 1.5, -10);
+		// mesh.position.set( 0, 1.5, -10);
 		mesh.castShadow = true;
 		mesh.receiveShadow = true;
 		pointer.add( mesh );
-		pointerTip = mesh;
+		pointerTip = mesh.clone();
 
-		geometry = new THREE.CubeGeometry( 6, 3, 50 );
-// material = new THREE.MeshLambertMaterial();
-		mesh = new THREE.Mesh( geometry, material );
-		mesh.position.set( 0, 1, -38 );
-		mesh.castShadow = true;
-		mesh.receiveShadow = true;
-		pointer.add( mesh );
-
+		if ( hand === 0 ) {
+			geometry = new THREE.CubeGeometry( 6, 3, 50 );
+			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 0, -30 ) );
+	// material = new THREE.MeshLambertMaterial();
+			mesh = new THREE.Mesh( geometry, material );
+			// mesh.position.set( 0, 1, -38 );
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			pointer.add( mesh );
+			
+		} else {
+			var loader = new THREE.JSONLoader();
+			loader.load( 'models/hands/w-hand-02-01.js ', function ( geometry ) {
+				geometry.applyMatrix( new THREE.Matrix4().makeRotationY( Math.PI ) );
+				geometry.applyMatrix( new THREE.Matrix4().makeTranslation( -2, 0, -9 ) );
+				col = Math.random() * 0xffffff;
+				material = new THREE.MeshPhongMaterial( { ambient: 0x555555, color: col, specular: col, shininess: 50, wireframe: true } );
+				mesh = new THREE.Mesh( geometry, material );
+				mesh.scale.set( 4, 4, 4 );
+				mesh.castShadow = true;
+				mesh.receiveShadow = true;
+				pointer.add( mesh );
+			});		
+		}
 		scene.add( pointer );
-/*
-// older pointer
-		geometry = new THREE.CylinderGeometry( 1, 10, 20, 5 );
-		geometry.applyMatrix( new THREE.Matrix4().makeRotationX( Math.PI / 2 ) );
-		material = new THREE.MeshLambertMaterial();
-		mesh = new THREE.Mesh( geometry, material );
-		mesh.position.set( 0, 0, -20);
-		mesh.castShadow = true;
-		mesh.receiveShadow = true;
-		pointer.add( mesh );
-
-		geometry = new THREE.CubeGeometry( 10, 5, 60 );
-		material = new THREE.MeshLambertMaterial();
-		mesh = new THREE.Mesh( geometry, material );
-		mesh.position.set( 0, 0, -60 );
-		mesh.castShadow = true;
-		mesh.receiveShadow = true;
-		pointer.add( mesh );
-*/		
+		
 	}
 
 	function resetCamera( X, Y, Z, conY) {

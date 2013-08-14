@@ -5,7 +5,7 @@
 <meta charset=utf-8>
 </head>
 <body>
-<script src="http://js.leapmotion.com/0.2.0/leap.min.js"></script>
+<script src="http://js.leapmotion.com/0.2.0-beta5/leap.min.js"></script>
 <script src='http://mrdoob.github.com/three.js/examples/js/Detector.js'></script>
 <script src='http://mrdoob.github.com/three.js/build/three.min.js'></script>
 <script src='http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js'></script>
@@ -23,24 +23,28 @@
 <script src="http://mrdoob.github.com/three.js/examples/fonts/droid/droid_serif_regular.typeface.js"></script>
 <script src="http://mrdoob.github.com/three.js/examples/fonts/droid/droid_serif_bold.typeface.js"></script>
 -->
-<script src=modec-threejs-utils/r3/modec-threejs-utils-r3.js ></script>
+<script src=modec-threejs-utils/r1/modec-threejs-utils.js ></script>
 <script>
-// Theo Armour ~ 2013-08-08 ~ MIT License
+// Theo Armour ~ 2013-07-27 ~ MIT License
 	var renderer, scene, camera, controls;
-	
+	// var headsUp;
+	var homeText = '<h1>Apps to explore the Leap Motion&trade; device</h1>' +
+		'<p>Use your hand to control the pointer and touch things.</p>' +
+		'<p>Touch \'Demo\' to run the applet.</p>' +
+		'<p style="color:red;">In the demos, touch the red house to return here.</p>' +
+		'<p>Touch \'Code\' to see the source on GitHub.</p>' +
+		'<p>Reload page to update the color scheme.</p>' +
+	'';
 	var tipOfTheMoment = [];
 	tipOfTheMoment.push('<h1>Just use your pointing finger for best results<h1>');
-	tipOfTheMoment.push('<h1>This revision only supports one hand ;-(</h1>');
+	tipOfTheMoment.push('<h1>This revision only supports one hand</h1>');
 	tipOfTheMoment.push('<h1>Theo Armour built it ~ 2013-07-31 ~ San Francisco</h1>');
 	tipOfTheMoment.push('<h1>Thank you Mr.doob & Leap Motion</h1>');
-	tipOfTheMoment.push('<h1>Anything in a box will react</h1>');
 	tipOfTheMoment.push('<h1>Happy Leaping!</h1>');
-	tipOfTheMoment.push('<h1>JavaScript rulz!</h1>');
-	tipOfTheMoment.push('<h1>Fresh new colors every time you load this page</h1>');
 	tipOfTheMoment.push('<h1>Use your mouse to pan, rotate and zoom!</h1>');
 	// tipOfTheMoment.push('');
 	
-	var spotLight, collidableMeshList = [];
+	var collidableMeshList = [];
 
 	var src = 'http://ie.microsoft.com/testdrive/Graphics/IEBeatz/assets/sounds/mp3/';
 	var names = ['hihat','snare','kick','scratch','crash','bonga','effect','bass2','bass1'];
@@ -49,15 +53,14 @@
 		var noise = new Audio( src + names[i] + '.mp3');
 		noises.push( noise );
 	}
-	
+
+	var aniRas = true;
 	init();
 	animate();
 
 	function init() {
-		var css, light, geometry, material, mesh;
 		css = document.body.appendChild( document.createElement('style') );
 
-// colorful background - evetually will change as you mve your hands		
 		var col1 = "#" + Math.random().toString(16).slice(2, 8);
 		var col2 = "#" + Math.random().toString(16).slice(2, 8);
 		var col3 = "#" + Math.random().toString(16).slice(2, 8);
@@ -71,62 +74,40 @@
 			'background: radial-gradient(' + X + 'px ' + Y + 'px, farthest-corner, ' + col1 + ' 0%, ' + col2 + ' 50%, ' + col3 + ' 100%);' +
 		'';
 
+		var geometry, material, mesh, css;
+
 		renderer = new THREE.WebGLRenderer( { antialias: true }  );
 		renderer.setSize( window.innerWidth, window.innerHeight );
 		renderer.shadowMapEnabled = true;
 		document.body.appendChild( renderer.domElement );
 		scene = new THREE.Scene();
 
-		camY = 180, camZ = 200;
-		resetCamera( camX, camY, camZ, conY );
+		camZ = 200;
+		resetCamera( camX, camY, camZ );
 
 		stats = new Stats();
 		stats.domElement.style.cssText = 'position: absolute; top: 0px; zIndex: 100; ';
 		document.body.appendChild( stats.domElement );
-		
-		setHeadsUp();
-		headsUpAbout = headsUpClose +
-			'<h1>Apps to explore the Leap Motion&trade; device</h1>' +
-			'<p>Use your hand to control the pointer and touch things.</p>' +
-			'<p>Touch \'Demo\' to run the applet.</p>' +
-			'<p style="color:red;">In the demos, touch the red house to return here.</p>' +
-			'<p>Touch \'Code\' to see the source on GitHub.</p>' +
-			'<p>Reload page to update the color scheme.</p>' +
-		'';
-		headsUp.innerHTML = headsUpAbout;		
 
- 		light = new THREE.DirectionalLight( 0xffffff, 1 );
-		light.position.set( 0, 500, 0 );
-		scene.add( light );
+		headsUp = document.body.appendChild( document.createElement( 'div' ) );
+		headsUp.style.cssText = 'background-color: #aaa; border-radius: 8px; font: 600 14pt monospace; display: block; left: -10px; ' +
+			'opacity: 0.85; padding: 5px 5px 20px 20px; ' +
+			'position: absolute; text-align: left; top: 8%; width: 280px;';
+		headsUp.innerHTML = homeText;
+
+		var light = new THREE.SpotLight( 0xffffff, 1.5 );
+		light.position.set( 200, 250, 200 );
 		light.castShadow = true;
-		light.shadowMapWidth = 2048;
-		light.shadowMaHeight = 2048;
-		var d = 70;
-		light.shadowCameraLeft = -d;
-		light.shadowCameraRight = d;
-		light.shadowCameraTop = d * 2;
-		light.shadowCameraBottom = -d * 2;
-
-		light.shadowCameraNear = 300;
-		light.shadowCameraFar = 600;
+		light.shadowMapWidth = 1024;
+		light.shadowMapHeight = 1024;
+		light.shadowCameraNear = 100;
+		light.shadowCameraFar = 500;
+		light.shadowCameraFov = 50;
+		scene.add( light );
 // light.shadowCameraVisible = true;
 
-		spotLight = new THREE.SpotLight( 0xffffff, 1 );
-		spotLight.position.set( 0, 400, 0 );
-		//spotLight.castShadow = true;
-
-		//light.shadowMapWidth = 512;
-		//light.shadowMapHeight = 1024;
-		spotLight.shadowCameraNear = 5;
-		spotLight.shadowCameraFar = 1000;
-		spotLight.shadowCameraFov = 2;
-		spotLight.angle = 0.05;
-		scene.add( spotLight );
-spotLight.shadowCameraVisible = true;
-
-
-// geometry = new THREE.AxisHelper( 50 )
-// scene.add( geometry );
+//geometry = new THREE.AxisHelper( 50 )
+//scene.add( geometry );
 
 		var codes = [];
 		codes.push( function() { window.location.assign("https://github.com/jaanga/gestification/tree/gh-pages/murgatroyd-heaven/"); } );
@@ -137,7 +118,7 @@ spotLight.shadowCameraVisible = true;
 // title and tag line
 		geometry = new THREE.TextGeometry( "Gestification", {
 			size: 20,
-			height: 5,
+			height: 10,
 			curveSegments: 5,
 			// font: "gentilis"  // smoothest
 			font: "optimer"
@@ -152,50 +133,44 @@ spotLight.shadowCameraVisible = true;
 			// bend: true,
 			// bendPath: aBendPath
 		});
-
 		material = new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff, shading: THREE.SmoothShading });
 		mesh = new THREE.Mesh( geometry, material );
 		mesh.position.set( -110, 30, -50);
 		mesh.receiveShadow = true;
 		scene.add( mesh );
-		
-// tag line
+
 		geometry = new THREE.PlaneGeometry( 200, 15, 1, 1 );
 		var texture = canvasText('Your happy place for motion detectors  ⓘ', { color: '#888', fontSize: '36pt', height: 75, lineWidth: 3, width: 1000, X: 10, Y: 10} );
-		material = new THREE.MeshPhongMaterial( { map: texture, shading: THREE.SmoothShading, side: THREE.DoubleSide, transparent: true } );
+		material = new THREE.MeshBasicMaterial( { map: texture, shading: THREE.SmoothShading, side: THREE.DoubleSide, transparent: true } );
 		mesh = new THREE.Mesh( geometry, material );
-		mesh.position.set( -10, 5, -80);
+		mesh.position.set( -10, 12, -80);
 		mesh.doIt = function() {
-			headsUp.innerHTML = headsUpAbout;
+			headsUp.innerHTML = homeText;
 		};
 		collidableMeshList.push( mesh );
 		scene.add( mesh );
-		
-// code
+
 		geometry = new THREE.PlaneGeometry( 40, 10, 1, 1 );
 		var texture = canvasText('Code', { color: '#888', fontSize: '36pt', height: 80, lineWidth: 3, width: 160, X: 10, Y: 10} );
 		material = new THREE.MeshBasicMaterial( { map: texture, shading: THREE.SmoothShading, side: THREE.DoubleSide, transparent: true } );
 		mesh = new THREE.Mesh( geometry, material );
-		mesh.position.set( 60, 25, -90 );
+		mesh.position.set( 60, 30, -90 );
 		mesh.receiveShadow = true;
 		mesh.doIt = codes[3];
 		collidableMeshList.push( mesh );
 		scene.add( mesh );
 
-// Ground plane 
-		geometry = new THREE.PlaneGeometry( 200, 150, 1, 1 );
+// plane & music cubes
+		geometry = new THREE.PlaneGeometry( 200, 100, 1, 1 );
 		geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
-		material = new THREE.MeshPhongMaterial( {color: Math.random() * 0xffffff, side: THREE.DoubleSide } );
+		material = new THREE.MeshLambertMaterial( {color: Math.random() * 0xffffff, side: THREE.DoubleSide } );
 		mesh = new THREE.Mesh( geometry, material );
 		mesh.position.set( 10, -20, 10 );
 		mesh.receiveShadow = true;
-		mesh.doIt = function() { headsUp.innerHTML = tipOfTheMoment[parseInt( Math.random() * tipOfTheMoment.length) ]; 
-
-		};
+		mesh.doIt = function() { headsUp.innerHTML = tipOfTheMoment[parseInt( Math.random() * tipOfTheMoment.length) ]; };
 		collidableMeshList.push( mesh );
 		scene.add( mesh );
-		
-// Music cubes
+
 		geometry = new THREE.CubeGeometry( 10, 10, 10);
 		for (var i = 0; i < 9; i++) {
 			material =  new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } )
@@ -208,7 +183,7 @@ spotLight.shadowCameraVisible = true;
 			mesh.doIt = function() {
 				headsUp.innerHTML = '<h1>Practice moving and aiming the pointer...</h1>' +
 					'<p>Best interaction:</p>' +
-					'<p>Point with just one finger and one hand.</p>' +
+					'<p>point with just one finger and one hand.</p>' +
 				'';
 				noises[ parseInt( 9 * Math.random() ) ].play();
 			};
@@ -216,7 +191,7 @@ spotLight.shadowCameraVisible = true;
 			scene.add(mesh);
 		}
 
-// Menu Items
+// Menu
 		var titles = [ 'Murgatroyd', 'Touchly', 'youGest' ];
 		var demos = [];
 		demos.push( function() { window.location.assign("murgatroyd-heaven/index.html"); } );
@@ -239,34 +214,21 @@ spotLight.shadowCameraVisible = true;
 			'<p>Much data still not yet exposed.</p>' +
 			'<p>Not for the timid. </p>' +
 		''; } );
+		
+
 
 		for (var i = 0, len = titles.length; i < len; i++) {
-		
-			geometry = new THREE.TextGeometry( titles[i], { bevelEnabled: true, bevelThickness: 0.35, bevelSize: 0.35, size: 20, height: 3, curveSegments: 6, font: "optimer", weight: 'bold' });
-			geometry.computeBoundingBox();
-			geometry.computeVertexNormals();	
-			var centerOffset = -0.5 * ( geometry.boundingBox.max.x - geometry.boundingBox.min.x );
-			var width = geometry.boundingBox.max.x - geometry.boundingBox.min.x ;
-			
+			geometry = new THREE.TextGeometry( titles[i], { bevelEnabled: true, bevelThickness: 0.35, bevelSize: 0.35, size: 20, height: 5, curveSegments: 6, font: "optimer", weight: 'bold' });
 			material = new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff, shading: THREE.SmoothShading });
 			mesh = new THREE.Mesh( geometry, material );
 			mesh.position.set( -80, -10, -50 + i * 50);
 			mesh.castShadow = true;
 			mesh.receiveShadow = true;
 			scene.add( mesh );
-			
-// for use to call up tooltps
-			geometry = new THREE.PlaneGeometry( width, 20, 1, 1 );
-			material = new THREE.MeshNormalMaterial( { side: THREE.DoubleSide, opacity: 1.0, transparent: true, wireframe: true} );
-			mesh = new THREE.Mesh( geometry, material );
-			mesh.position.set( -80 - centerOffset, -5, -50 + i * 50);
-			mesh.doIt = toolTips[i];
-			collidableMeshList.push( mesh );
-			scene.add( mesh );			
 
 			geometry = new THREE.PlaneGeometry( 40, 10, 1, 1 );
 			var texture = canvasText('Demo', { color: '#888', fontSize: '36pt', height: 80, lineWidth: 3, width: 160, X: 10, Y: 10} );
-			material = new THREE.MeshPhongMaterial( { map: texture, shading: THREE.SmoothShading, side: THREE.DoubleSide, transparent: true } );
+			material = new THREE.MeshBasicMaterial( { map: texture, shading: THREE.SmoothShading, side: THREE.DoubleSide, transparent: true } );
 			mesh = new THREE.Mesh( geometry, material );
 			mesh.position.set( -10, 10, -52 + i * 50);
 			mesh.receiveShadow = true;
@@ -283,27 +245,74 @@ spotLight.shadowCameraVisible = true;
 			mesh.doIt = codes[i];
 			collidableMeshList.push( mesh );
 			scene.add( mesh );
+// invisible - for use to call up tooltps
+			geometry = new THREE.PlaneGeometry( 100, 30, 1, 1 );
+			material = new THREE.MeshNormalMaterial( { side: THREE.BackSide, opacity: 0.01, transparent: true } );
+			mesh = new THREE.Mesh( geometry, material );
+			mesh.position.set( -10, -10, -45 + i * 50);
+			mesh.doIt = toolTips[i];
+			collidableMeshList.push( mesh );
+			scene.add( mesh );
 		}
-		buildPointer( 2, 1 );
-	}
 
+		buildPointer();
+	}
+var INTERSECTED;
 	Leap.loop( function( frame ) {
+		var pointable;
+		var hand;
+		hand = frame.hands[0];
 		if (frame.pointables.length > 0) {
-			var pointable = frame.pointables[0];
+			pointable = frame.pointables[0];
 			pointer.position.set( pointable.stabilizedTipPosition[0], 0.3 * pointable.stabilizedTipPosition[1] -50, pointable.stabilizedTipPosition[2] );
 			var dir = v( pointable.direction[0], pointable.direction[1], pointable.direction[2] );  // best so far
-			pointer.lookAt( dir.add( pointer.position ) );	
+			pointer.lookAt( dir.add( pointer.position ) );
 
-			utilsDetectCollision();	
+// Big thanks to Lee Stemkoski for the following code
+			point = pointer.children[0];
+			var originPoint = pointer.position.clone();
+			for (var vertexIndex = 0; vertexIndex < point.geometry.vertices.length; vertexIndex++) {
+				var localVertex = point.geometry.vertices[vertexIndex].clone();
+				var globalVertex = localVertex.applyMatrix4( point.matrix );
+				var directionVector = globalVertex.sub( point.position );
 
-			var finger = pointer.clone();
-			spotLight.position = finger.position;	
-			spotLight.target = finger.translateZ( -100);
+				var ray = new THREE.Raycaster( originPoint, directionVector.clone().normalize() );
+				var collisionResults = ray.intersectObjects( collidableMeshList );
+				if ( collisionResults.length > 0 && collisionResults[0].distance < directionVector.length() ) {
+					var obj = collisionResults[0].object;
+					if (obj.doIt ) {
+						obj.doIt();
+					}
+					if ( INTERSECTED != collisionResults[ 0 ].object ) {
+						if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+						INTERSECTED = collisionResults[ 0 ].object;
+// if no getHex causes non-critical error...						
+						INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
+						INTERSECTED.material.emissive.setHex( 0xff0000 );
+						
+						headsUp.innerText = 'Object id: ' + INTERSECTED.uuid;
+						noises[ parseInt( 9 * Math.random() ) ].play();
+						if ( INTERSECTED.doIt ) {
+							INTERSECTED.doIt();
+						}
+					}
+				} else {
+					if ( INTERSECTED && INTERSECTED.material.emissive) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+					INTERSECTED = null;
+				}
+			}
 		}
-	});
+		aniRas = false;
+		animate();
+		aniRas = true;
+	})
 
 	function animate() {
-		requestAnimationFrame( animate );
+		if ( aniRas === true ) {
+			requestAnimationFrame( animate );
+			aniRas = true;
+		}
+		var point;
 		controls.update();
 		renderer.render( scene, camera );
 		stats.update();
