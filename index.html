@@ -198,9 +198,9 @@
 		scene.add( mesh );
 
 // Music cubes
-		geometry = new THREE.CubeGeometry( 40, 30, 30);
+		geometry = new THREE.CubeGeometry( 80, 50, 30);
 		for (var i = 0; i < 9; i++) {
-			material =  new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } )
+			material =  new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff, opacity: 0.7, transparent: true} )
 			mesh = new THREE.Mesh(geometry, material);
 			mesh.position.set( 150 * Math.random() + 150, 200 * Math.random() + 100, 300 * Math.random() - 200 );
 			mesh.rotation.set( Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI );
