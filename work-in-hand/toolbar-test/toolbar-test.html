@@ -15,7 +15,7 @@
 <script src=http://mrdoob.github.com/three.js/build/three.min.js></script>
 <script src=http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js></script>
 <script src=http://mrdoob.github.com/three.js/examples/js/libs/stats.min.js></script>
-<script src=../../modec-threejs-utils/r3/modec-threejs-utils-r4.js ></script>
+<script src=../../modec-threejs-utils/r4/modec-threejs-utils-r4.js ></script>
 <script>
 // Theo Armour ~ 2013-07-24 - 2013-07-31 ~ MIT License
 
@@ -30,18 +30,17 @@
 		
 		css = document.body.appendChild( document.createElement('style') );
 		css.innerHTML = 'body { font: 600 12pt monospace; margin: 0; overflow: hidden; text-align: center; }' +
-			'h1 { margin: 0;' +
+			'h1 { margin: 0; }' +
+			'.normal { background-color: #eee; border-radius: 8px; color: #333; left: 0; ' +
+				'margin: auto; opacity: 0.90; padding: 10px 20px 10px 20px; ' +
+				'position: absolute; text-align: left; right: 0; top: -8px; min-width: 280px; width: 40%; }	' +
+			'.about { background-color: #eee; border-radius: 8px; bottom: 0; color: #333; height: 30%; left: 0; ' +
+				'margin: auto; opacity: 0.85; padding: 10px;' +
+				'position: absolute; right: 0; text-align: left; top: 0 !important; min-width: 280px; max-width: 50%; }' +			
+			
 		'' ;
 
-		//info = document.body.appendChild( document.createElement( 'div' ) );
-		//info.style.cssText = 'margin 0; position: absolute; top: 0px; width: 100% ';
-		//info.innerHTML = '<p>tootlbar test</p>' +
-		//	'' +
-		//'';
-		
-		MDU.setHeadsUp();
-		
-		MDU.headsUpAbout = MDU.headsUpClose +
+		MDU.headsUpAbout = MDU.headsUpAboutClose +
 			'<h1>toolbar test</h1>' +
 			//'<p>View data coming in from your <a href="http://leapmotion.com" target="_blank">Leap Motion</a> device both as numbers and as 3D objects.</p>' +
 			//'<p>Wiggle your hands and fingers over the device to view the data.</p>' +
@@ -52,9 +51,10 @@
 			'<p>Report bugs, view source code on <a href="https://github.com/jaanga/gestification/tree/gh-pages/yougest" target="_blank">GitHub</a>.</p>' +
 			'<p style=font-size:8pt; >Copyright &copy 2013 Jaanga authors. MIT License</small></p>' +
 		'';
-		MDU.headsUp.innerHTML = MDU.headsUpAbout;	
+		MDU.setHeadsUp();
+		// MDU.headsUp.innerHTML = MDU.headsUpAbout;	
 		
-// Basics
+// Three.js Basics
 		renderer = new THREE.WebGLRenderer( { antialias: true } );
 		renderer.setSize( window.innerWidth, window.innerHeight );
 		renderer.setClearColor(0xffffff, 1);
@@ -65,7 +65,7 @@
 		MDU.resetCamera();
 
 		stats = new Stats();
-		stats.domElement.style.cssText = 'position: absolute; top: 0px; zIndex: 100; ';
+		stats.domElement.style.cssText = 'position: absolute; right: 0; top: 0; zIndex: 100; ';
 		document.body.appendChild( stats.domElement );
 
 //  Lights
@@ -90,7 +90,7 @@ light.shadowCameraVisible = true;
         scene.add( new THREE.ArrowHelper( v(0, 1, 0), v(0, 0, 0), 100, 0x00cc00) );
         scene.add( new THREE.ArrowHelper( v(0, 0, 1), v(0, 0, 0), 100, 0x0000cc) );
 
-// Assets
+// Toolbr Test Assets
 		material = new THREE.MeshBasicMaterial( {color: Math.random() * 0xffffff } );
 		geometry = new THREE.CubeGeometry( 600, 10, 300 );
 		mesh = new THREE.Mesh( geometry, material );
@@ -98,6 +98,7 @@ light.shadowCameraVisible = true;
 		mesh.castShadow = true;
 		mesh.receiveShadow = true;
 		scene.add( mesh );
+		// add corner lines 
 		mesh = mesh.clone();
 		mesh.material = new THREE.MeshBasicMaterial( { wireframe: true } );
 		scene.add( mesh );
@@ -119,7 +120,7 @@ light.shadowCameraVisible = true;
 			fingers.push( mesh );
 		}
 		
-		MDU.buildToolbar( -110, 100, 0, 2);
+		MDU.buildToolbar( -110, 120, 0, 2);
 	}
 
 	var fr;
@@ -145,8 +146,7 @@ light.shadowCameraVisible = true;
 				finger = fingers[i];
 				if ( i < len ) {
 					if ( i === 0) {
-						// pointer = pointerTip = finger;
-						MDU.utilsDetectCollision( finger, finger);
+						MDU.utilsDetectCollision( finger );
 					}
 					pointable = frame.pointables[i];
 					finger.position.set( pointable.stabilizedTipPosition[0], pointable.stabilizedTipPosition[1], pointable.stabilizedTipPosition[2] );
@@ -154,7 +154,7 @@ light.shadowCameraVisible = true;
 					finger.lookAt( direction.add( finger.position ) );
 					finger.scale.z = 0.05 * pointable.length;
 					finger.visible = true;
-					if ( MDU.headsUpVisible === true ) { MDU.headsUp.style.display = 'block'; }
+					if ( MDU.headsUpVisible === true ) { MDU.headsUp.style.display = ''; }
 				} else {
 					fingers[i].visible = false;
 					MDU.headsUpVisible = false;

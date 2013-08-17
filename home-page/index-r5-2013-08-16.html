@@ -27,35 +27,32 @@
 <script>
 // Theo Armour ~ 2013-08-08 ~ 2013-08-14 ~ MIT License
 	var renderer, scene, camera, controls;
-
+	
 	var tipOfTheMoment = [];
-	tipOfTheMoment.push('<h1>Just use your pointing finger for best results.<h1>');
+	tipOfTheMoment.push('<h1>Just use your pointing finger for best results<h1>');
 	tipOfTheMoment.push('<h1>This revision only supports one hand ;-(</h1>');
-	tipOfTheMoment.push('<h1>Theo Armour built it ~ San Francisco ~ r1 2013-07-31</h1>');
-	tipOfTheMoment.push('<h1>Thank you Mr.doob & Leap Motion.</h1>');
-	tipOfTheMoment.push('<h1>Anything in a box will react.</h1>');
+	tipOfTheMoment.push('<h1>Theo Armour built it ~ 2013-07-31 ~ San Francisco</h1>');
+	tipOfTheMoment.push('<h1>Thank you Mr.doob & Leap Motion</h1>');
+	tipOfTheMoment.push('<h1>Anything in a box will react</h1>');
 	tipOfTheMoment.push('<h1>Happy Leaping!</h1>');
 	tipOfTheMoment.push('<h1>JavaScript rulz!</h1>');
-	tipOfTheMoment.push('<h1>Fresh new colors every time you load this page.</h1>');
+	tipOfTheMoment.push('<h1>Fresh new colors every time you load this page</h1>');
 	tipOfTheMoment.push('<h1>Use your mouse to pan, rotate and zoom!</h1>');
-	tipOfTheMoment.push('<h1>The shadows are your friends. Use them as navigation aids.</h1>');
-	tipOfTheMoment.push('<h1>None of this is easy. It\'s never easy at the start.</h1>');
-	tipOfTheMoment.push('<h1>Move the \'lozenge\' to see more apps.</h1>');
-	// tipOfTheMoment.push('<h1></h1>');
+	tipOfTheMoment.push('<h2>The shadows your friends. Use them as navigation aids.</h1>');
+	// tipOfTheMoment.push('<h2></h1>');
+	
+	var spotLight;
 
 	var src = 'http://ie.microsoft.com/testdrive/Graphics/IEBeatz/assets/sounds/mp3/';
 	var names = ['hihat','snare','kick','scratch','crash','bonga','effect','bass2','bass1'];
 	var noises = [];
 	for (var i = 0, len = names.length; i < len; i++) {
+		// var noise = new Audio( src + names[i] + '.mp3');
 		noises.push( new Audio( src + names[i] + '.mp3') );
 	}
-
-	var spotLight;
-	var apps;
-	var musicBoxes = [], target;
+	var apps, app;
+	var target;
 	
-	MDU.appRoot = '';
-
 	init();
 	animate();
 
@@ -63,7 +60,7 @@
 		var css, light, geometry, material, mesh;
 		css = document.body.appendChild( document.createElement('style') );
 
-// colorful background - evetually will change as you mve your hands
+// colorful background - evetually will change as you mve your hands		
 		var col1 = "#" + Math.random().toString(16).slice(2, 8);
 		var col2 = "#" + Math.random().toString(16).slice(2, 8);
 		var col3 = "#" + Math.random().toString(16).slice(2, 8);
@@ -82,63 +79,63 @@
 				'margin: auto; opacity: 0.85; padding: 10px;' +
 				'position: absolute; right: 0; text-align: left; top: 0 !important; min-width: 280px; max-width: 60%; }' +
 		'';
-
+	
 		MDU.headsUpAbout = MDU.headsUpAboutClose +
 			'<h1>Apps to explore the Leap Motion&trade; device</h1>' +
-			'<p>Use your pointing finger <big>&#x270c;</big> to control the hand and touch things.</p>' +
-			'<p>Slide the round lozenge thing to see more apps.</p>' +
-			'<p>Touch \'Demo\' to run the app.</p>' +
-			// '<p style="color:red;">In the demos, touch the red house to return here.</p>' +
+			'<p>Use your hand to control the pointer and touch things.</p>' +
+			'<p>Touch \'Demo\' to run the applet.</p>' +
+			'<p style="color:red;">In the demos, touch the red house to return here.</p>' +
 			'<p>Touch \'Code\' to see the source on GitHub.</p>' +
 			'<p>Reload page to update the color scheme.</p>' +
 		'</div>';
 		MDU.setHeadsUp();
-
+		
 // Three.js basics
 		renderer = new THREE.WebGLRenderer( { antialias: true }  );
 		renderer.setSize( window.innerWidth, window.innerHeight );
 		renderer.shadowMapEnabled = true;
 		document.body.appendChild( renderer.domElement );
 		scene = new THREE.Scene();
-
-		MDU.resetCamera( { camY: 850, camZ: 650} );
+		
+		MDU.resetCamera( { } );		
 
 		stats = new Stats();
 		stats.domElement.style.cssText = 'position: absolute; right: 0; top: 0px; zIndex: 100; ';
-		document.body.appendChild( stats.domElement );
+		document.body.appendChild( stats.domElement );	
 
 		light = new THREE.AmbientLight( 0x333333);
 		// light.color.setHSL( 0.1, 0.5, 0.3 );
 		scene.add( light );
-
-// general overhead light
+		
+// general overhead light		
  		light = new THREE.DirectionalLight( 0xffffff, 1 );
 		light.position.set( 0, 1000, 0 );
 		scene.add( light );
 		light.castShadow = true;
 		//light.shadowMapWidth = 2048;
 		//light.shadowMaHeight = 2048;
-		var d = 200;
+		var d = 170;
 		light.shadowCameraLeft = -d;
 		light.shadowCameraRight = d;
 		light.shadowCameraTop = d * 2;
 		light.shadowCameraBottom = -d * 2;
 
-		light.shadowCameraNear = 400;
+		light.shadowCameraNear = 700;
 		light.shadowCameraFar = 1100;
 // light.shadowCameraVisible = true;
 
 // geometry = new THREE.AxisHelper( 50 )
 // scene.add( geometry );
 
-// >> Gestification-Specific Assets
+// // Gestification-Specific Assets
 
 // Pointer - headlight
 		spotLight = new THREE.SpotLight( 0xffffff, 1 );
 		// spotLight.position.set( 0, 400, 0 );
-		// spotLight.castShadow = true;
-		// light.shadowMapWidth = 512;
-		// light.shadowMapHeight = 1024;
+		//spotLight.castShadow = true;
+
+		//light.shadowMapWidth = 512;
+		//light.shadowMapHeight = 1024;
 		spotLight.shadowCameraNear = 5;
 		spotLight.shadowCameraFar = 1000;
 		spotLight.shadowCameraFov = 2;
@@ -146,316 +143,61 @@
 		scene.add( spotLight );
 // spotLight.shadowCameraVisible = true;
 
-// Title and tag line
+// title and tag line
 		geometry = new THREE.TextGeometry( "Gestification", {
-			size: 55,
+			size: 50,
 			height: 5,
 			curveSegments: 5,
 			// font: "gentilis"  // smoothest
-			font: "optimer",
+			font: "optimer"
 			// font: "helvetiker" // smallest file size
 			// font: "droid sans",
 			// font: "droid serif"
 			// weight: "bold",
 			// style: "normal", // needs italic font?
-			bevelEnabled: true,
-			bevelThickness: 2,
-			bevelSize: 2
+			// bevelEnabled: true,
+			// bevelThickness: 2,
+			// bevelSize: 2
 			// bend: true,
 			// bendPath: aBendPath
 		});
 
 		material = new THREE.MeshLambertMaterial( {  color: Math.random() * 0xffffff, shading: THREE.SmoothShading });
 		mesh = new THREE.Mesh( geometry, material );
-		mesh.position.set( -350, 320, -50);
+		mesh.position.set( -300, 300, -50);
 		mesh.castShadow = true;
 		mesh.receiveShadow = true;
 		scene.add( mesh );
-
+		
 // Title - tag line
 		geometry = new THREE.PlaneGeometry( 400, 30, 1, 1 );
 		// unicide &#x24D8;
 		var texture = canvasText('Your happy place for motion detectors  ⓘ', { color: '#888', fontSize: '36pt', height: 75, lineWidth: 3, width: 1000, X: 10, Y: 10} );
 		material = new THREE.MeshPhongMaterial( { map: texture, shading: THREE.SmoothShading, side: THREE.DoubleSide, transparent: true } );
 		mesh = new THREE.Mesh( geometry, material );
-		mesh.position.set( -120, 275, -80);
+		mesh.position.set( -80, 250, -80);
 		mesh.doIt = function() {
 			MDU.headsUpVisible = true;
-			MDU.headsUp.innerHTML = MDU.headsUpAbout;
+			MDU.headsUp.innerHTML = headsUpAbout;
 		};
 		MDU.collidableMeshList.push( mesh );
 		scene.add( mesh );
-
+		
 // Title - code button
+		// var codes = [];
 		geometry = new THREE.PlaneGeometry( 120, 30, 1, 1 );
 		var texture = canvasText('Code', { color: '#888', fontSize: '36pt', height: 80, lineWidth: 3, width: 160, X: 10, Y: 10} );
 		material = new THREE.MeshBasicMaterial( { map: texture, shading: THREE.SmoothShading, side: THREE.DoubleSide, transparent: true } );
 		mesh = new THREE.Mesh( geometry, material );
-		mesh.position.set( 130, 320, -90 );
+		mesh.position.set( 130, 280, -90 );
 		mesh.receiveShadow = true;
 		mesh.doIt = function() { window.location.assign("https://github.com/jaanga/gestification/"); };
 		MDU.collidableMeshList.push( mesh );
 		scene.add( mesh );
 
-// Music cubes
-		geometry = new THREE.CubeGeometry( 40, 30, 30);
-		for (var i = 0; i < 9; i++) {
-			material =  new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } )
-			mesh = new THREE.Mesh(geometry, material);
-			mesh.position.set( 150 * Math.random() + 150, 200 * Math.random() + 100, 300 * Math.random() - 200 );
-			mesh.rotation.set( Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI );
-			mesh.castShadow = true;
-			mesh.receiveShadow = true;
-			mesh.id = i;
-			function snd( i ) { return noises[ i ]; };
-			mesh.doIt = function() {
-				MDU.headsUpVisible = true;
-				MDU.headsUp.innerHTML = MDU.headsUpClose + tipOfTheMoment[parseInt( Math.random() * tipOfTheMoment.length) ];
-				noises[ this.id ].play();
-			};
-			MDU.collidableMeshList.push( mesh );
-			musicBoxes.push( mesh );
-			scene.add(mesh);
-		}
-
-// Menu Items
-		apps = [];
-
-		var app = {};
-		app.title = 'youGest';
-		app.demo = function() { window.location.assign("cookbook/yougest/r4/index.html"); };
-		app.code = function() { window.location.assign("https://github.com/jaanga/gestification/tree/gh-pages/cookbook/yougest/r4/index.html"); };
-		app.tooltip = function() { MDU.headsUpVisible = true; MDU.headsUp.innerHTML = MDU.headsUpClose +'<h1>youGest</h1>' +
-			'<p>This app explores the Leap Motion API with the incoming numeric data represented as 3D objects.</p>' +
-			'<p>Much data still not yet exposed.</p>' +
-			'<p>Not for the timid. </p>' +
-			'<p>Cookbook code example</p></div>' +
-		''; };
-		apps.push( app );
-
-		app = {};
-		app.title = 'Touchly';
-		app.demo = function() { window.location.assign('cookbook/touchly/index.html'); };
-		app.code = function() { window.location.assign('https://github.com/jaanga/gestification/tree/gh-pages/cookbook/touchly/'); };
-		app.tooltip = function() { MDU.headsUpVisible = true; MDU.headsUp.innerHTML = MDU.headsUpClose + '<h1>Touchly</h1>' +
-			'<p>Point your finger at the cubes and watch them pop.</p>' +
-			'<p>The code explores touching events.</p>' +
-			'<p>A good place to start...</p>' +
-			'<p>Cookbook code example</p></div>' +
-		''};
-		apps.push( app );
-
-		app = {};
-		app.title = 'showOfHands';
-		app.demo = function() { window.location.assign('cookbook/show-of-hands/index.html'); };
-		app.code = function() { window.location.assign('https://github.com/jaanga/gestification/tree/gh-pages/cookbook/show-of-hands'); };
-		app.tooltip = function() { MDU.headsUpVisible = true; MDU.headsUp.innerHTML = MDU.headsUpClose + '<h1>Show of Hands</h1>' +
-			'<p>See your virtual hand</p>' +
-			'<p>Got to hand in to you - </p>' +
-			'<p>in robotic, skeletal and other forms</p>' +
-			'<p>Cookbook code example</p></div>' +
-		''};
-		apps.push( app );
-
-		app = {};
-		app.title = 'Murgatroyd';
-		app.demo = function() { window.location.assign('cookbook/murgatroyd-heaven/index.html'); };
-		app.code = function() { window.location.assign('https://github.com/jaanga/gestification/tree/gh-pages/cookbook/murgatroyd-heaven/'); };
-		app.tooltip = function() { MDU.headsUpVisible = true; MDU.headsUp.innerHTML = MDU.headsUpClose + '<h1>Murgatroyd</h1>' +
-			'<p>The first app we made for LM.</p>' +
-			'<p>Now supports two hands.</p>' +
-			'<p>Still way too complex...</p>' +
-			'<p>Cookbook code example</p></div>' +
-		''};
-		apps.push( app );
-
-		app = {};
-		app.title = 'phalanges';
-		app.demo = function() { window.location.assign('work-in-hand/phalanges/index.html'); };
-		app.code = function() { window.location.assign('work-in-hand/phalanges/'); };
-		app.tooltip = function() { MDU.headsUpVisible = true; MDU.headsUp.innerHTML = MDU.headsUpClose + '<h1>Phalanges</h1>' +
-			'<p>The goal is to display two joints per finger.</p>' +
-			'<p>Now supports just one joint.</p>' +
-			'<p>Still a ways to go.</p>' +
-			'<p>Work in hand.</p></div>' +
-		''};
-		apps.push( app );
-
-		app = {};
-		app.title = 'toolbarTest';
-		app.demo = function() { window.location.assign('work-in-hand/toolbar-test/toolbar-test.html'); };
-		app.code = function() { window.location.assign('work-in-hand/toolbar-test/'); };
-		app.tooltip = function() { MDU.headsUpVisible = true; MDU.headsUp.innerHTML = MDU.headsUpClose + '<h1>Toolbar Test</h1>' +
-			'<p>Frequently used functions in a library file.</p>' +
-			'<p>Along with prototype of a standard 3D toolbar.</p>' +
-			'<p>This app is for testing the functions.</p>' +
-			'<p>Work in hand.</p></div>' +
-		''};
-		apps.push( app );
-
-		app = {};
-		app.title = 'touchPlacards';
-		app.demo = function() { window.location.assign('work-in-hand/touch-placards/r1/index.html'); };
-		app.code = function() { window.location.assign('work-in-hand/touch-placards/'); };
-		app.tooltip = function() { MDU.headsUpVisible = true; MDU.headsUp.innerHTML = MDU.headsUpClose + '<h1>Touch Placards</h1>' +
-			'<p>Explores the use of two hands.</p>' +
-			'<p>Right hand controls the pointer.</p>' +
-			'<p>Left hand controls the camera.</p>' +
-			'<p>Work in hand.</p></div>' +
-		''};
-		apps.push( app );
-
-		app = {};
-		app.title = 'holdEm';
-		app.demo = function() { window.location.assign('work-in-hand/holdem/holdem.html'); };
-		app.code = function() { window.location.assign('work-in-hand/holdem'); };
-		app.tooltip = function() { MDU.headsUpVisible = true; MDU.headsUp.innerHTML = MDU.headsUpClose + '<h1>Hold \'Em</h1>' +
-			'<p>The beginnings of a 3D slider bar</p>' +
-			'<p>Keep the pointer inside the sphere - </p>' +
-			'<p>while you move the pointer.</p>' +
-			'<p>Work in hand.</p></div>' +
-		''};
-		apps.push( app );
-
-		app = {};
-		app.title = 'save2JSON';
-		app.demo = function() { window.location.assign('work-in-hand/save-json/save-json.html'); };
-		app.code = function() { window.location.assign('work-in-hand/save-json/'); };
-		app.tooltip = function() { MDU.headsUpVisible = true; MDU.headsUp.innerHTML = MDU.headsUpClose + '<h1>Save to JSON</h1>' +
-			'<p>Save your gestures to a file.</p>' +
-			'<p>Much more coming...</p>' +
-			'<p>Will be able to export to BVH files.</p>' +
-			'<p>Work in hand.</p></div>' +
-		''};
-		apps.push( app );
-
-/*
-		app = {};
-		app.title = '';
-		app.demo = function() { window.location.assign(''); };
-		app.code = function() { window.location.assign(''); };
-		app.tooltip = function() { MDU.headsUpVisible = true; MDU.headsUp.innerHTML = MDU.headsUpClose + '<h1>Plakanges</h1>' +
-			'<p></p>' +
-			'<p></p>' +
-			'<p></p>' +
-			'<p>Work in hand.</p></div>' +
-		''};
-		apps.push( app );
-*/
-
-// Apps
-		var packet;
-		for (var i = 0, len = apps.length; i < len; i++) {
-
-// App - titles
-			app = apps[i];
-			packet = new THREE.Object3D();
-
-			geometry = new THREE.TextGeometry( app.title, { bevelEnabled: true, bevelThickness: 2, bevelSize: 1, size: 50, height: 6, curveSegments: 6, font: "optimer" });
-			geometry.computeBoundingBox();
-			geometry.computeVertexNormals();
-			// var centerOffset = 0; // 0.5 * ( geometry.boundingBox.max.x - geometry.boundingBox.min.x );
-			var centerOffset = geometry.boundingBox.max.x - geometry.boundingBox.min.x;
-
-			material = new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff, shading: THREE.SmoothShading, specular: Math.random() * 0xffffff });
-			mesh = new THREE.Mesh( geometry, material );
-			mesh.position.set( 180 - centerOffset , 0, 0);
-			mesh.castShadow = true;
-			mesh.receiveShadow = true;
-			packet.add( mesh );
-			if ( i > 2 ) { mesh.visible = false; }
-
-// App frame - for use to call up tooltps
-			geometry = new THREE.PlaneGeometry( 20 + centerOffset, 75, 1, 1 );
-			material = new THREE.MeshNormalMaterial( {  opacity: 0.15, transparent: true, wireframe: false} );
-			mesh = new THREE.Mesh( geometry, material );
-			// mesh.position.set( -200 - centerOffset, 110, 50 + i * -100);
-			mesh.position.set(  180 - 0.5 * centerOffset, 15, 0);
-			mesh.doIt = app.tooltip;
-			MDU.collidableMeshList.push( mesh );
-			packet.add( mesh );
-			if ( i > 2 ) { mesh.visible = false; }
-
-// App - demo
-			geometry = new THREE.PlaneGeometry( 80, 25, 1, 1 );
-			var texture = canvasText('Demo', { color: '#888', fontSize: '36pt', height: 80, lineWidth: 3, width: 160, X: 10, Y: 10} );
-			material = new THREE.MeshPhongMaterial( { map: texture, shading: THREE.SmoothShading, side: THREE.DoubleSide, transparent: true } );
-			mesh = new THREE.Mesh( geometry, material );
-			// mesh.position.set( -150, 135, 40 + i * -100);
-			mesh.position.set( 50, 55, -10);
-			mesh.receiveShadow = true;
-			mesh.doIt = app.demo;
-			MDU.collidableMeshList.push( mesh );
-			packet.add( mesh );
-			if ( i > 2 ) { mesh.visible = false; }
-
-// App - code button
-			geometry = new THREE.PlaneGeometry( 80, 25, 1, 1 );
-			var texture = canvasText('Code', { color: '#888', fontSize: '36pt', height: 80, lineWidth: 3, width: 160, X: 10, Y: 10} );
-			material = new THREE.MeshBasicMaterial( { map: texture, shading: THREE.SmoothShading, side: THREE.DoubleSide, transparent: true } );
-			mesh = new THREE.Mesh( geometry, material );
-			// mesh.position.set( -235, 150, 80 + i * -100);
-			mesh.position.set( -35, 90, 20);
-			mesh.receiveShadow = true;
-			mesh.doIt = app.code;
-			MDU.collidableMeshList.push( mesh );
-			packet.add( mesh );
-			if ( i > 2 ) { mesh.visible = false; }
-
-			packet.position.set( -200, 80, 80 + i * -100);
-
-			app.packet = packet;
-			scene.add( packet );
-		}
-
-// Slider
-// target 1
-		geometry = new THREE.SphereGeometry( 50, 30, 30 );
-		material = new THREE.MeshPhongMaterial( {color: Math.random() * 0xffffff, opacity: 0.8, shading: THREE.SmoothShading, side: THREE.DoubleSide, transparent: true } );
-
-		target = new THREE.Mesh( geometry, material );
-		target.position.set( 60, 70, 50 );
-		target.scale.set( 1, 1, 0.5 );
-		target.castShadow = true;
-		target.receiveShadow = true;
-		MDU.collidableMeshList.push( target );
-		target.doIt = function() { getSlider(); };
-		scene.add( target );
-
-		geometry = new THREE.CubeGeometry( 10, 20, 150 );
-		material = new THREE.MeshLambertMaterial( {color: Math.random() * 0xffffff, side: THREE.DoubleSide } );
-		mesh = new THREE.Mesh( geometry, material );
-		mesh.position.set( 40, 90, -10 );
-		mesh.castShadow = true;
-		mesh.receiveShadow = true;
-		scene.add( mesh );
-
-// front end
-		geometry = new THREE.CubeGeometry( 350, 200, 30 );
-		geometry.applyMatrix( new THREE.Matrix4().makeRotationX( 1.05 ) );
-		geometry.applyMatrix( new THREE.Matrix4().makeRotationZ( Math.random() * -0.5 ) );
-		material = new THREE.MeshLambertMaterial( {color: Math.random() * 0xffffff, side: THREE.DoubleSide } );
-		mesh = new THREE.Mesh( geometry, material );
-		mesh.position.set( -175, 50, 90 );
-		mesh.castShadow = true;
-		mesh.receiveShadow = true;
-		scene.add( mesh );
-
-// back end
-		geometry = new THREE.CubeGeometry( 300, 200, 50 );
-		geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -0.4 + Math.random() * -0.5 ) );
-		geometry.applyMatrix( new THREE.Matrix4().makeRotationY( Math.random() * 0.25 ) );
-		geometry.applyMatrix( new THREE.Matrix4().makeRotationZ( Math.random() * 0.75 ) );
-		material = new THREE.MeshLambertMaterial( {color: 0xaaaaaa + Math.random() * 0x777777 , side: THREE.DoubleSide } );
-		mesh = new THREE.Mesh( geometry, material );
-		mesh.position.set( -150, 110, -200 );
-		mesh.castShadow = true;
-		mesh.receiveShadow = true;
-		scene.add( mesh );
-
-// Ground plane lower
-		geometry = new THREE.CubeGeometry( 650, 20, 300 );
-		geometry.applyMatrix( new THREE.Matrix4().makeRotationY( Math.random() * 0.5  - 0.25) );
+// Ground plane 1
+		geometry = new THREE.CubeGeometry( 600, 20, 300 );
+		// geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
 		material = new THREE.MeshPhongMaterial( {color: Math.random() * 0xffffff, side: THREE.DoubleSide } );
 		mesh = new THREE.Mesh( geometry, material );
 		mesh.position.set( 0, 0, 0 );
@@ -463,9 +205,9 @@
 		//mesh.doIt = function() { MDU.headsUpVisible = true; MDU.headsUp.innerHTML = MDU.headsUpClose + tipOfTheMoment[parseInt( Math.random() * tipOfTheMoment.length) ]; };
 		//MDU.collidableMeshList.push( mesh );
 		scene.add( mesh );
-// Ground plane 2 upper
-		geometry = new THREE.CubeGeometry( 300, 10, 700 );
-		geometry.applyMatrix( new THREE.Matrix4().makeRotationY( Math.random() * 0.25 ) );
+// plane 2		
+		geometry = new THREE.CubeGeometry( 300, 10, 600 );
+		// geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
 		material = new THREE.MeshPhongMaterial( {color: Math.random() * 0xffffff, side: THREE.DoubleSide } );
 		mesh = new THREE.Mesh( geometry, material );
 		mesh.position.set( -70, 50, -200 );
@@ -473,9 +215,239 @@
 		mesh.receiveShadow = true;
 		mesh.doIt = function() { MDU.headsUpVisible = true; MDU.headsUp.innerHTML = MDU.headsUpClose + tipOfTheMoment[parseInt( Math.random() * tipOfTheMoment.length) ]; };
 		MDU.collidableMeshList.push( mesh );
-		scene.add( mesh );
+		scene.add( mesh );		
+		
+// Music cubes
+		geometry = new THREE.CubeGeometry( 20, 20, 20);
+		for (var i = 0; i < 9; i++) {
+			material =  new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } )
+			mesh = new THREE.Mesh(geometry, material);
+			mesh.position.set( 130 * Math.random() + 150, 100, 150 * Math.random() - 50 );
+			mesh.rotation.set( Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI );
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			function snd( i ) { return noises[ i ]; };
+			mesh.doIt = function() {
+				MDU.headsUpVisible = true;
+				//MDU.headsUp.innerHTML = MDU.headsUpClose + '<h1>Practice moving and aiming the pointer...</h1>' +
+				//	'<p>Best interaction:</p>' +
+				//	'<p>Point with just one finger and one hand.</p>' +
+				//'</div>';
+				
+				MDU.headsUp.innerHTML = MDU.headsUpClose + tipOfTheMoment[parseInt( Math.random() * tipOfTheMoment.length) ];
+				noises[ parseInt( 9 * Math.random() ) ].play();
+			};
+			
+			
+			MDU.collidableMeshList.push( mesh );
+			scene.add(mesh);
+		}
 
-		MDU.buildPointer( 20, 1 );
+		
+// Menu Items
+		apps = [];
+		
+		app = {};
+		app.title = 'youGest';
+		app.demo = function() { window.location.assign("yougest/r4/index.html"); };
+		app.code = function() { window.location.assign("https://github.com/jaanga/gestification/tree/gh-pages/yougest/r4/index.html"); };
+		app.tooltip = function() { MDU.headsUpVisible = true; MDU.headsUp.innerHTML = MDU.headsUpClose +'<h1>youGest</h1>' +
+			'<p>This app explores the Leap Motion API with the incoming numeric data represented as 3D objects.</p>' +
+			'<p>Much data still not yet exposed.</p>' +
+			'<p>Not for the timid. </p></div>' +
+		''; };
+		apps.push( app );
+
+		app = {};
+		app.title = 'Touchly';
+		app.demo = function() { window.location.assign('touchly/index.html"'); };
+		app.code = function() { window.location.assign('https://github.com/jaanga/gestification/tree/gh-pages/murgatroyd-heaven/'); };
+		app.tooltip = function() { MDU.headsUpVisible = true; MDU.headsUp.innerHTML = MDU.headsUpClose + '<h1>Touchly</h1>' +
+			'<p>Point your finger at the cubes and watch them pop.</p>' +
+			'<p>The code explores touching events.</p>' +
+			'<p>A good place to start...</p></div>' +
+		''};
+		apps.push( app );	
+		
+		app = {};
+		app.title = 'showOfHands';
+		app.demo = function() { window.location.assign(''); };
+		app.code = function() { window.location.assign(''); };
+		app.tooltip = function() {''};
+		apps.push( app );		
+		
+		app = {};
+		app.title = 'Murgatroyd';
+		app.demo = function() { window.location.assign('murgatroyd-heaven/index.html'); };
+		app.code = function() { window.location.assign('https://github.com/jaanga/gestification/tree/gh-pages/murgatroyd-heaven/'); };
+		app.tooltip = function() { MDU.headsUpVisible = true; MDU.headsUp.innerHTML = MDU.headsUpClose + '<h1>Murgatroyd</h1>' +
+			'<p>The first app we made for LM.</p>' +
+			'<p>Now supports two hands.</p>' +
+			'<p>Still way too complex...</p></div>' +
+		''};
+		apps.push( app );
+
+		app = {};
+		app.title = 'phalanges';
+		app.demo = function() { window.location.assign(''); };
+		app.code = function() { window.location.assign(''); };
+		app.tooltip = function() {''};
+		apps.push( app );		
+		
+		app = {};
+		app.title = 'toolbarTest';
+		app.demo = function() { window.location.assign(''); };
+		app.code = function() { window.location.assign(''); };
+		app.tooltip = function() {''};
+		apps.push( app );	
+
+		app = {};
+		app.title = 'touchPlacards';
+		app.demo = function() { window.location.assign(''); };
+		app.code = function() { window.location.assign(''); };
+		app.tooltip = function() {''};
+		apps.push( app );
+
+		app = {};
+		app.title = 'holdEm';
+		app.demo = function() { window.location.assign(''); };
+		app.code = function() { window.location.assign(''); };
+		app.tooltip = function() {''};
+		apps.push( app );	
+
+		app = {};
+		app.title = 'hand2Go';
+		app.demo = function() { window.location.assign(''); };
+		app.code = function() { window.location.assign(''); };
+		app.tooltip = function() {''};
+		apps.push( app );
+		
+/*		
+		app = {};
+		app.title = '';
+		app.demo = function() { window.location.assign(''); };
+		app.code = function() { window.location.assign(''); };
+		app.tooltip = function() {''};
+		apps.push( app );
+*/
+
+/*	
+		var titles = [ 'youGest', 'Touchly', 'Murgatroyd' ];
+		var demos = [];
+		
+		demos.push( function() { window.location.assign("yougest/r4/index.html"); } );
+		demos.push( function() { window.location.assign("touchly/index.html"); } );
+		demos.push( function() { window.location.assign("murgatroyd-heaven/index.html"); } );
+		
+		codes.push( function() { window.location.assign("https://github.com/jaanga/gestification/tree/gh-pages/yougest/r4/index.html"); } );
+		codes.push( function() { window.location.assign("https://github.com/jaanga/gestification/tree/gh-pages/touchly/index.html"); } );
+		codes.push( function() { window.location.assign("https://github.com/jaanga/gestification/tree/gh-pages/murgatroyd-heaven/"); } );
+		codes.push( function() { window.location.assign("https://github.com/jaanga/gestification/"); } );
+			
+		var toolTips = [];
+		toolTips.push ( function() { MDU.headsUpVisible = true; MDU.headsUp.innerHTML = MDU.headsUpClose +'<h1>youGest</h1>' +
+			'<p>This app explores the Leap Motion API with the incoming numeric data represented as 3D objects.</p>' +
+			'<p>Much data still not yet exposed.</p>' +
+			'<p>Not for the timid. </p></div>' +
+		''; } );		
+		toolTips.push ( function() { MDU.headsUpVisible = true; MDU.headsUp.innerHTML = MDU.headsUpClose + '<h1>Touchly</h1>' +
+			'<p>Point your finger at the cubes and watch them pop.</p>' +
+			'<p>The code explores touching events.</p>' +
+			'<p>A good place to start...</p></div>' +
+		''} );
+		toolTips.push ( function() { MDU.headsUpVisible = true; MDU.headsUp.innerHTML = MDU.headsUpClose + '<h1>Murgatroyd</h1>' +
+			'<p>The first app we made for LM.</p>' +
+			'<p>Now supports two hands.</p>' +
+			'<p>Still way too complex...</p></div>' +
+		''} );
+*/		
+var packet;
+// Apps
+		for (var i = 0, len = apps.length; i < len; i++) {
+// App - titles		
+	
+			app = apps[i];
+			packet = new THREE.Object3D();
+			
+			geometry = new THREE.TextGeometry( app.title, { bevelEnabled: true, bevelThickness: 0.35, bevelSize: 0.35, size: 30, height: 3, curveSegments: 6, font: "optimer", weight: 'bold' });
+			geometry.computeBoundingBox();
+			geometry.computeVertexNormals();	
+			// var centerOffset = 0; // 0.5 * ( geometry.boundingBox.max.x - geometry.boundingBox.min.x );
+			var centerOffset = ( geometry.boundingBox.max.x - geometry.boundingBox.min.x );
+			
+			var width = 20 + centerOffset ;
+			
+			material = new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff, shading: THREE.SmoothShading, specular: Math.random() * 0xffffff });
+			mesh = new THREE.Mesh( geometry, material );
+			mesh.position.set( 180 - centerOffset , 0, 0);
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			packet.add( mesh );
+			
+// App frame - for use to call up tooltps
+			geometry = new THREE.PlaneGeometry( width, 40, 1, 1 );
+			material = new THREE.MeshNormalMaterial( { side: THREE.DoubleSide, opacity: 1.0, transparent: true, wireframe: true} );
+			mesh = new THREE.Mesh( geometry, material );
+			// mesh.position.set( -200 - centerOffset, 110, 50 + i * -100);
+			mesh.position.set(  180 - 0.5 * centerOffset, 10, 0);
+			mesh.doIt = app.tooltip;
+			MDU.collidableMeshList.push( mesh );
+			packet.add( mesh );			
+
+// App - demo
+			geometry = new THREE.PlaneGeometry( 80, 20, 1, 1 );
+			var texture = canvasText('Demo', { color: '#888', fontSize: '36pt', height: 80, lineWidth: 3, width: 160, X: 10, Y: 10} );
+			material = new THREE.MeshPhongMaterial( { map: texture, shading: THREE.SmoothShading, side: THREE.DoubleSide, transparent: true } );
+			mesh = new THREE.Mesh( geometry, material );
+			// mesh.position.set( -150, 135, 40 + i * -100);
+			mesh.position.set( 50, 35, -10);
+			mesh.receiveShadow = true;
+			mesh.doIt = app.demo;
+			MDU.collidableMeshList.push( mesh );
+			packet.add( mesh );
+
+// App - code button
+			geometry = new THREE.PlaneGeometry( 80, 20, 1, 1 );
+			var texture = canvasText('Code', { color: '#888', fontSize: '36pt', height: 80, lineWidth: 3, width: 160, X: 10, Y: 10} );
+			material = new THREE.MeshBasicMaterial( { map: texture, shading: THREE.SmoothShading, side: THREE.DoubleSide, transparent: true } );
+			mesh = new THREE.Mesh( geometry, material );
+			// mesh.position.set( -235, 150, 80 + i * -100);
+			mesh.position.set( -35, 50, 20);
+			mesh.receiveShadow = true;
+			mesh.doIt = app.code;
+			MDU.collidableMeshList.push( mesh );
+			packet.add( mesh );
+			
+			packet.position.set( -200, 100, 75 + i * -100);
+			
+			app.packet = packet;
+			scene.add( packet );
+		}
+		
+		
+// Slider
+// target 1
+		material = new THREE.MeshPhongMaterial( {color: Math.random() * 0xffffff, opacity: 0.8, shading: THREE.SmoothShading, side: THREE.DoubleSide, transparent: true } );
+		geometry = new THREE.SphereGeometry( 50, 30, 30 );
+		target = new THREE.Mesh( geometry, material );
+		target.position.set( 60, 70, 50 );
+		target.scale.set( 1, 1, 0.5 );
+		target.castShadow = true;
+		target.receiveShadow = true;
+		
+		MDU.collidableMeshList.push( target );
+		target.doIt = function() { getSlider(); };
+		scene.add( target );
+
+		material = new THREE.MeshLambertMaterial( {color: Math.random() * 0xffffff, side: THREE.DoubleSide } );
+		geometry = new THREE.CubeGeometry( 10, 20, 150 );
+		mesh = new THREE.Mesh( geometry, material );
+		mesh.position.set( 40, 90, -10 );
+		mesh.castShadow = true;
+		mesh.receiveShadow = true;
+		scene.add( mesh );		
+		
+		MDU.buildPointer( 20, 0 );
 	}
 
 	Leap.loop( function( frame ) {
@@ -483,57 +455,60 @@
 			var pointable = frame.pointables[0];
 			MDU.pointer.position.set( pointable.stabilizedTipPosition[0], pointable.stabilizedTipPosition[1], pointable.stabilizedTipPosition[2] );
 			var dir = v( pointable.direction[0], pointable.direction[1], pointable.direction[2] );  // best so far
-			MDU.pointer.lookAt( dir.add( MDU.pointer.position ) );
+			MDU.pointer.lookAt( dir.add( MDU.pointer.position ) );	
 
 			MDU.utilsDetectCollision( MDU.pointer, MDU.pointerTip );
 			if ( MDU.headsUpVisible === true ) { MDU.headsUp.style.display = ''; }
-			MDU.headsUpVisible = false;
+			MDU.headsUpVisible = false;			
 
 			var finger = MDU.pointer.clone();
-			spotLight.position = finger.position;
+			spotLight.position = finger.position;	
 			spotLight.target = finger.translateZ( -100);
-
+			
+			
 		} else {
 			if ( MDU.headsUpVisible === false ) { MDU.headsUp.style.display = 'none'; }
 		}
 	});
 
-
+	
 	function getSlider(  ) {
-// console.log( 'Distance to target is close enough: ' + new Date() );
+// console.log( 'Distance to target is close enough: ' + new Date() ); 		
 		if ( MDU.pointer === undefined ) { return; }
 		var point = MDU.pointer;
 		var pos = point.position.z;
 		if ( pos < 50 && pos > -150 ) {
 			target.position.z = pos;
 			var delta = 5 * (pos - 50);
-			var packet, dis;
+			var packet, dis;					
 			for (var i = 0, len = apps.length; i < len; i++) {
 				packet = apps[i].packet;
 				dis = -delta + i * -100;
 				packet.position.z = dis;
+				
+				
 				if ( dis > -200 && dis < 100) {
+					// packet.position.z = dis + pos;
+					//packet.visible = true;
+					//packet.children[0].visible = true; 
 					for (var j = 0, jlen = packet.children.length; j < jlen; j++) {
 						packet.children[j].visible = true;
-					}
+					}						
 				} else {
 					for (var j = 0, jlen = packet.children.length; j < jlen; j++) {
 						packet.children[j].visible = false;
 					}
 				}
+			//}
 			}
-		}
+		}	
 	}
-
+	
 	function animate() {
 		requestAnimationFrame( animate );
 		controls.update();
 		renderer.render( scene, camera );
 		stats.update();
-		for (var i = 0; i < 9; i++) {
-			musicBoxes[i].rotation.x += 0.002;
-			musicBoxes[i].rotation.y -= 0.002;
-		}
 	}
 </script>
 </body>

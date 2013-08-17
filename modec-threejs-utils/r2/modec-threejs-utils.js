@@ -85,7 +85,7 @@
 		mesh.position.set( X, Y + 25, Z + 4 );
 		mesh.castShadow = true;
 		mesh.receiveShadow = true;
-		mesh.doIt = function() { headsUp.innerHTML = 'Cominfg soon...' ; }
+		mesh.doIt = function() { headsUp.innerHTML = 'Coming soon...' ; }
 		collidableMeshList.push( mesh );
 		toolbar.add( mesh );
 
@@ -96,7 +96,7 @@
 		mesh.position.set( X, Y + 25, Z - 6);
 		mesh.castShadow = true;
 		mesh.receiveShadow = true;
-		mesh.doIt = function() { headsUp.innerHTML = 'Cominfg soon...' ; }
+		mesh.doIt = function() { headsUp.innerHTML = 'Coming soon...' ; }
 		collidableMeshList.push( mesh );
 		toolbar.add( mesh );
 
@@ -116,7 +116,7 @@
 		mesh.position.set( X, Y, Z - 5);
 		mesh.castShadow = true;
 		mesh.receiveShadow = true;
-		mesh.doIt = function() { window.location.assign("../../index.html"); }
+		mesh.doIt = function() { window.location.assign("../../../index.html"); }
 		collidableMeshList.push( mesh );
 		toolbar.add( mesh );
 

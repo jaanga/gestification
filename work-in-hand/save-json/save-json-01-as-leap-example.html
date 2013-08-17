@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang=en>
+<head>
+<title>save json</title>
+<meta charset=utf-8>
+</head>
+<body>
+<script src="http://js.leapmotion.com/0.2.0-beta1/leap.min.js"></script>
+<script>
+// http://js.leapmotion.com/examples/gestures-dump.html
+
+	document.body.style.cssText = ' font: bold 12pt monospace; ';
+	
+	var outputDiv = document.body.appendChild( document.createElement( 'div' ) );
+	outputDiv.innerHTML = '<h1>Howdy</h1>';
+	
+	// listen to Leap Motion
+	Leap.loop({enableGestures: true}, function(obj) {
+		if (obj.gestures.length > 0) {
+			obj.gestures.forEach(function(gesture) {
+				output(gesture);
+			});
+		}
+	});
+
+	function output(json) {
+	  var div = document.createElement("div")
+	  div.innerHTML = JSON.stringify(json) + "<br/>";
+	  outputDiv.insertBefore(div, outputDiv.firstChild);
+	};
+
+
+</script>
+</body>
+</html>

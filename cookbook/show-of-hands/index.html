@@ -25,9 +25,16 @@
 	animate();
 
 	function init() {
-		var css = document.body.appendChild( document.createElement('style') );
-		css.innerHTML = 'body { font: 400 12pt monospace; margin: 0; overflow: hidden; text-align: center; }' ;
+		var css, info, geometry, material, mesh, col;
+		
+		css = document.body.appendChild( document.createElement('style') );
+		css.innerHTML = 'body { font: 400 12pt monospace; margin: 0; overflow: hidden; text-align: center; }' ;		
+		
+		var info = document.body.appendChild( document.createElement( 'div' ) );
+		info.style.cssText = 'position: absolute; top: 0px; width: 100% ';
+		info.innerHTML = '<p><b><a href="https://github.com/jaanga/gestification/tree/gh-pages/show-of-hands" target="_blank">Show of Hands</a></b> ~ wiggle your hand over <a href="http://leapmotion.com" target="_blank">Leap Motion</a> device ~ use pointing device to zoom, pan & rotate</p>';
 
+// Three.js basics		
 		if ( ! Detector.webgl ) {
 			renderer = new THREE.CanvasRenderer( { antialias: true } );
 		} else {
@@ -47,11 +54,8 @@
 		stats.domElement.style.cssText = 'position: absolute; top: 0px; zIndex: 100; ';
 		document.body.appendChild( stats.domElement );
 
-		var info = document.body.appendChild( document.createElement( 'div' ) );
-		info.style.cssText = 'position: absolute; top: 0px; width: 100% ';
-		info.innerHTML = '<p><b><a href="https://github.com/jaanga/gestification/tree/gh-pages/show-of-hands" target="_blank">Show of Hands</a></b> ~ wiggle your hand over <a href="http://leapmotion.com" target="_blank">Leap Motion</a> device ~ use pointing device to zoom, pan & rotate</p>';
 
-		// LIGHTS
+// Lights
 		var ambient = new THREE.AmbientLight( 0x222222 );
 		scene.add( ambient );
 
@@ -59,7 +63,7 @@
 		directionalLight.position.set( 0, 100, 300 );
 		scene.add( directionalLight );
 		directionalLight.castShadow = true;
-// directionalLight.shadowCameraVisible = true;
+
 		directionalLight.shadowMapWidth = 2048;
 		directionalLight.shadowMaHeight = 2048;
 		var d = 170;
@@ -69,13 +73,14 @@
 		directionalLight.shadowCameraBottom = -d;
 		directionalLight.shadowCameraNear = 100;
 		directionalLight.shadowCameraFar = 500;
-		
-		var geometry, material, mesh, col;
+// directionalLight.shadowCameraVisible = true;
 
-// need to credit sources...
+// Hands
+
+// Need to credit sources...
 		var geometry, material, mesh;
 		var loader = new THREE.JSONLoader();
-		loader.load( '../models/hands/skeleton-left.js ', function ( geometry ) {
+		loader.load( '../../models/hands/skeleton-left.js ', function ( geometry ) {
 			var col = Math.random() * 0xffffff;
 			material = new THREE.MeshPhongMaterial( { ambient: col, color: col, specular: 0xffffff, shininess: 50, shading: THREE.SmoothShading } );
 			mesh = new THREE.Mesh( geometry, material );
@@ -87,7 +92,7 @@
 			scene.add( mesh );
 		});
 
-		loader.load( '../models/hands/mano-left-01.js ', function ( geometry ) {
+		loader.load( '../../models/hands/mano-left-01.js ', function ( geometry ) {
 			col = Math.random() * 0xffffff;
 			material = new THREE.MeshPhongMaterial( { ambient: col, color: col, specular: 0xffffff, shininess: 50, shading: THREE.SmoothShading, wireframe: true, } );
 			mesh = new THREE.Mesh( geometry, material );
@@ -99,7 +104,7 @@
 			scene.add( mesh );
 		});
 
-		loader.load( '../models/hands/robot-left-01.js ', function ( geometry ) {
+		loader.load( '../../models/hands/robot-left-01.js ', function ( geometry ) {
 			col = Math.random() * 0xffffff;
 			material = new THREE.MeshPhongMaterial( { ambient: col, color: col, specular: 0xffffff, shininess: 50, shading: THREE.SmoothShading } );
 			mesh = new THREE.Mesh( geometry, material );
@@ -111,7 +116,7 @@
 			scene.add( mesh );
 		});
 
-		loader.load( '../models/hands/robo-artsy-01.js ', function ( geometry ) {
+		loader.load( '../../models/hands/robo-artsy-01.js ', function ( geometry ) {
 			col = Math.random() * 0xffffff;
 			material = new THREE.MeshPhongMaterial( { ambient: 0x555555, color: col, specular: col, shininess: 50, shading: THREE.SmoothShading } );
 			mesh = new THREE.Mesh( geometry, material );
@@ -123,7 +128,7 @@
 			scene.add( mesh );
 		});
 
-		loader.load( '../models/hands/w-hand-02-01.js ', function ( geometry ) {
+		loader.load( '../../models/hands/w-hand-02-01.js ', function ( geometry ) {
 			col = Math.random() * 0xffffff;
 			material = new THREE.MeshPhongMaterial( { ambient: 0x555555, color: col, specular: col, shininess: 50, shading: THREE.SmoothShading } );
 			mesh = new THREE.Mesh( geometry, material );
@@ -135,7 +140,7 @@
 			scene.add( mesh );
 		});
 
-		loader.load( '../models/hands/left-hand.js ', function ( geometry ) {
+		loader.load( '../../models/hands/left-hand.js ', function ( geometry ) {
 			col = Math.random() * 0xffffff;
 			material = new THREE.MeshPhongMaterial( { ambient: 0x555555, color: col, specular: col, shininess: 50, shading: THREE.SmoothShading } );
 			mesh = new THREE.Mesh( geometry, material );
@@ -148,7 +153,7 @@
 		});
 
 		loader = new THREE.UTF8Loader();
-		loader.load( '../models/utf8/hand.js', function ( object ) {
+		loader.load( '../../models/utf8/hand.js', function ( object ) {
 			object.rotation.set( 0, -1.51, 0 );
 			object.scale.set( 90, 90, 90 );
 			object.position.set( 130, -40, 0 );
@@ -164,6 +169,7 @@
 			} );
 		}, { normalizeRGB: true } );
 
+// background
 		geometry = new THREE.CubeGeometry( 300, 300, 10 );
 		col = Math.random() * 0xffffff;
 		material = new THREE.MeshPhongMaterial( { ambient: 0x555555, color: col, specular: col, shininess: 50, shading: THREE.SmoothShading } );
@@ -179,9 +185,7 @@
 		scene.add( leadingClaw );
 	}
 
-	var fr;
 	Leap.loop( function( frame ) {
-		fr = frame;
 		var hand, direction;
 		if ( frame.hands.length > 0) {
 			hand = frame.hands[0];

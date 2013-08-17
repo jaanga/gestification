@@ -10,7 +10,7 @@
 <script src=http://mrdoob.github.com/three.js/build/three.min.js ></script>
 <script src=http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js ></script>
 <script src=http://mrdoob.github.com/three.js/examples/js/libs/stats.min.js ></script>
-<script src=../modec-threejs-utils/r3/modec-threejs-utils-r3.js ></script>
+<script src=../modec-threejs-utils/r4/modec-threejs-utils-r4.js ></script>
 <script>
 // Theo Armour ~ 2013-07-24 - 2013-07-31 ~ MIT License
 
@@ -29,8 +29,37 @@
 
 	function init() {
 		var css, light, geometry, material, mesh;
+		
 		css = document.body.appendChild( document.createElement('style') );
-		css.innerHTML = 'body { background-color: #ddd; font: 600 12pt monospace; margin: 0; overflow: hidden; text-align: center; }' ;	
+		css.innerHTML = 'body { background-color: #ddd; font: 600 12pt monospace; margin: 0; overflow: hidden; text-align: center; }' +
+			'.normal { background-color: #eee; border-radius: 8px; color: #333; left: 0; ' +
+				'margin: auto; opacity: 0.90; padding: 10px 20px 10px 20px; ' +
+				'position: absolute; text-align: left; right: 0; top: -8px; min-width: 280px; width: 40%; }	' +
+			'.about { background-color: #eee; border-radius: 8px; bottom: 0; color: #333; height: 40%; left: 0; ' +
+				'margin: auto; opacity: 0.85; padding: 10px;' +
+				'position: absolute; right: 0; text-align: left; top: 0 !important; min-width: 280px; max-width: 60%; }' +		
+		'';	
+		
+		MDU.headsUpAbout = '<div class=about ><p style="margin: 0; text-align: right;">[X]</p>' +
+			'<h1>Touchly</h1>' +
+			'<p>A simpe game for your <a href="http://leapmotion.com" target="_blank">Leap Motion</a> device.</p>' +
+			'<p>User: Learn how to move, point and touch objects in 3D.</p>' +
+			'<p>Coder: The underlieing code is simple and can help you learn how to program for the device.</p>' +
+			'<p>Designer: Note the use of shadows, color changes and sounds as cues..</p>' +
+			// '<p>View data coming in from your <a href="http://leapmotion.com" target="_blank">Leap Motion</a> device both as numbers and as 3D objects.</p>' +
+			// '<p>Wiggle your hands and fingers over the device to view the data.</p>' +
+			'<p>Move your finger over the \'?\' for more help.</p>' +
+			// '<p>See also the Leap Motion JavaScript <a href="http://js.leapmotion.com/api/v0.2.0/docs" target="_blank">API</a> ' +
+			// 'and <a href="http://js.leapmotion.com/examples" target="_blank">Examples</a> for more details.</p>' +
+			'<p>Tested on Chrome. Broken on Firefox, Safari and IE.</p>' +
+			'<p>Report bugs, view source code on <a href="https://github.com/jaanga/gestification/tree/gh-pages/yougest" target="_blank">GitHub</a>.</p>' +
+			'<p style=font-size:8pt; >Copyright &copy 2013 Jaanga authors. MIT License</small></p>' +
+		'</div>';
+		MDU.setHeadsUp();		
+		
+		scoreCard =   document.body.appendChild( document.createElement( 'div' ) );
+		scoreCard.style.cssText = 'font: bold 36pt monospace; position: absolute; top: 0px; width: 100% ';
+		scoreCard.innerHTML = 'Touchly: a very touching effort<hr width=600>Point your finger at the cubes';		
 
 // Three.js assets
 		renderer = new THREE.WebGLRenderer( { antialias: true }  );
@@ -39,7 +68,7 @@
 		document.body.appendChild( renderer.domElement );
 		scene = new THREE.Scene();
 
-		resetCamera( camX, camY, camZ, conY );
+		MDU.resetCamera( { camY: 4, camZ: 350, conY: 4 } );
 
 		stats = new Stats();
 		stats.domElement.style.cssText = 'position: absolute; top: 0px; zIndex: 100; ';
@@ -58,11 +87,7 @@
 // light.shadowCameraVisible = true;
 
 // Touchly assets
-		scoreCard =   document.body.appendChild( document.createElement( 'div' ) );
-		scoreCard.style.cssText = 'font: bold 36pt monospace; position: absolute; top: 0px; width: 100% ';
-		scoreCard.innerHTML = 'Touchly: a very touching effort<hr width=600>Point your finger at the cubes';
-
-		geometry = new THREE.AxisHelper( 50 )
+		// geometry = new THREE.AxisHelper( 50 )
 		// scene.add( geometry );
 
 // ground plane
@@ -72,7 +97,7 @@
 		mesh = new THREE.Mesh( geometry, material );
 		mesh.position.set( 0, -50, 0 );
 		mesh.receiveShadow = true;
-		mesh.doIt = function() { headsUp.innerHTML = '<p>Touch the house to return to the home page</p>'; };
+		mesh.doIt = function() { MDU.headsUp.innerHTML = '<p>Touch the house to return to the home page</p>'; };
 		collidableMeshList.push( mesh );
 		scene.add( mesh );
 
@@ -90,9 +115,9 @@
 			scene.add(mesh);
 		}
 		
-		buildPointer( 10, 0 );
+		MDU.buildPointer( 10, 0 );
 		// buildHome( 130, 20, -20, 1);
-		buildToolbar( 130, 20, -20, 1);
+		MDU.buildToolbar( 130, 20, -20, 1);
 	}
 
 	function setTouched( obj ) {
@@ -116,12 +141,13 @@
 		hand = frame.hands[0];
 		if (frame.pointables.length > 0) {
 			pointable = frame.pointables[0];
-			pointer.position.set( pointable.stabilizedTipPosition[0], 0.3 * pointable.stabilizedTipPosition[1] -80, pointable.stabilizedTipPosition[2] );
+			MDU.pointer.position.set( pointable.stabilizedTipPosition[0], 0.3 * pointable.stabilizedTipPosition[1] -80, pointable.stabilizedTipPosition[2] );
 			direction = v( pointable.direction[0], pointable.direction[1], pointable.direction[2] );  // best so far
-			pointer.lookAt( direction.add( pointer.position ) );
+			MDU.pointer.lookAt( direction.add( MDU.pointer.position ) );
+			
 // Big thanks to Lee Stemkoski for the following code		
-			var originPoint = pointer.position.clone();
-			var point = pointer.children[0];
+			var originPoint = MDU.pointer.position.clone();
+			var point = MDU.pointer.children[0];
 			for (var vertexIndex = 0; vertexIndex < point.geometry.vertices.length; vertexIndex++) {
 				var localVertex = point.geometry.vertices[vertexIndex].clone();
 				var globalVertex = localVertex.applyMatrix4( point.matrix );

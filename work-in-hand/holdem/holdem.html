@@ -1,0 +1,244 @@
+﻿<!doctype html>
+<html lang=en>
+<head>
+<title>holdem</title>
+<meta charset=utf-8>
+</head>
+<body>
+<script src="http://js.leapmotion.com/0.2.0/leap.min.js"></script>
+<!--
+<script src=../../../git-repos/three.js/examples/js/Detector.js></script>
+<script src=../../../git-repos/three.js/build/three.min.js></script>
+<script src=../../../git-repos/three.js/examples/js/controls/TrackballControls.js></script>
+<script src=../../../git-repos/three.js/examples/js/libs/stats.min.js></script>
+-->
+<script src=http://mrdoob.github.com/three.js/build/three.min.js></script>
+<script src=http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js></script>
+<script src=http://mrdoob.github.com/three.js/examples/js/libs/stats.min.js></script>
+
+<script>
+	var renderer, scene, camera, controls, stats;
+	var info, spotLight, target, packets;
+	var palm, fingers = [];
+
+	init();
+	animate();
+
+	function init() {
+		var css, light, geometry, material, mesh;
+		
+		css = document.body.appendChild( document.createElement('style') );
+		css.innerHTML = 'body { font: 600 12pt monospace; margin: 0; overflow: hidden; text-align: center; }' +
+		'' ;
+
+		info = document.body.appendChild( document.createElement( 'div' ) );
+		info.style.cssText = 'margin 0; position: absolute; top: 0px; width: 100% ';
+		info.innerHTML = '<p>holdem - slider bar experiment ~ touch and move the sphere</p>' +
+			'' +
+		'';
+		
+// Basics
+		renderer = new THREE.WebGLRenderer( { antialias: true } );
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		renderer.shadowMapEnabled = true;
+		document.body.appendChild( renderer.domElement );
+		scene = new THREE.Scene();
+
+		camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 3000 );
+		camera.position.set( 0, 250, 600 );
+		controls = new THREE.TrackballControls( camera, renderer.domElement );
+		controls.target.set( 0, 100, 0 );
+
+		stats = new Stats();
+		stats.domElement.style.cssText = 'position: absolute; top: 0px; zIndex: 100; ';
+		document.body.appendChild( stats.domElement );
+
+//  Lights
+		light = new THREE.AmbientLight( 0x555555);
+		scene.add( light );
+/*		
+		light = new THREE.DirectionalLight( 0xffffff, 1 );
+		light.position.set( 1, 1, 1 ).normalize();
+		scene.add( light );
+
+		light = new THREE.DirectionalLight( 0xffffff, 1 );
+		light.position.set( -1, -1, -1 ).normalize();
+		scene.add( light );		
+*/
+ 		light = new THREE.DirectionalLight( 0xffffff, 1 );
+		light.position.set( 0, 500, 0 );
+		scene.add( light );
+		light.castShadow = true;
+		light.shadowMapWidth = 2048;
+		light.shadowMaHeight = 2048;
+		var d = 200;
+		light.shadowCameraLeft = -d;
+		light.shadowCameraRight = d;
+		light.shadowCameraTop = d * 2;
+		light.shadowCameraBottom = -d * 2;
+
+		light.shadowCameraNear = 100;
+		light.shadowCameraFar = 600;
+// light.shadowCameraVisible = true;
+
+// headlight
+		spotLight = new THREE.SpotLight( 0xffffff, 1 );
+		spotLight.position.set( 0, 400, 0 );
+		// spotLight.castShadow = true;
+
+		//light.shadowMapWidth = 512;
+		//light.shadowMapHeight = 1024;
+		spotLight.shadowCameraNear = 30;
+		spotLight.shadowCameraFar = 1000;
+		spotLight.shadowCameraFov = 2;
+		spotLight.angle = 0.05;
+		scene.add( spotLight );
+// spotLight.shadowCameraVisible = true;
+
+
+// geometry = new THREE.AxisHelper( 50 )
+// scene.add( geometry );
+
+// Ground plane
+		material = new THREE.MeshLambertMaterial( {color: Math.random() * 0xffffff, side: THREE.DoubleSide } );
+		geometry = new THREE.CubeGeometry( 600, 10, 500 );
+		mesh = new THREE.Mesh( geometry, material );
+		mesh.position.set( 0, -50, 0 );
+		mesh.castShadow = true;
+		mesh.receiveShadow = true;
+		scene.add( mesh );
+		
+// target 1
+		material = new THREE.MeshPhongMaterial( {color: Math.random() * 0xffffff, opacity: 0.8, shading: THREE.SmoothShading, side: THREE.DoubleSide, transparent: true } );
+		geometry = new THREE.SphereGeometry( 50, 30, 30 );
+		target = new THREE.Mesh( geometry, material );
+		target.position.set( 0, 170, 0 );
+		target.castShadow = true;
+		target.receiveShadow = true;
+		scene.add( target );
+
+		material = new THREE.MeshLambertMaterial( {color: Math.random() * 0xffffff, side: THREE.DoubleSide } );
+		geometry = new THREE.CubeGeometry( 300, 10, 10 );
+		mesh = new THREE.Mesh( geometry, material );
+		mesh.position.set( 0, 170, 0 );
+		mesh.castShadow = true;
+		mesh.receiveShadow = true;
+		scene.add( mesh );	
+		
+// packets
+		packets = new THREE.Object3D();
+		for (var i = 0; i < 20; i++) {
+			material = new THREE.MeshLambertMaterial( {color: Math.random() * 0xffffff, side: THREE.DoubleSide } );
+			geometry = new THREE.CubeGeometry( 20, 50, 50 );
+			mesh = new THREE.Mesh( geometry, material );
+			mesh.position.set( -900 + i * 100, 170, -150 );
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			packets.add( mesh );
+		} 	
+		scene.add( packets );	
+		
+// palm	
+		geometry = new THREE.CubeGeometry( 100, 20, 80 );
+		material = new THREE.MeshNormalMaterial();
+		palm = new THREE.Mesh( geometry, material );
+		palm.castShadow = true;
+		palm.receiveShadow = true;
+		scene.add( palm );
+		
+// fingers
+		geometry = new THREE.CubeGeometry( 16, 12, 50 );
+		material = new THREE.MeshNormalMaterial();
+		for (var j = 0; j < 5; j++) {
+			mesh = new THREE.Mesh( geometry, material );
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			scene.add( mesh );
+			fingers.push( mesh );
+		}
+	}
+
+	var fr;
+	var finger;
+	var packs;
+	Leap.loop( function( frame ) {
+		fr = frame;
+		var hand, direction, roll, len, pointable;
+		if ( frame.hands.length > 0) {
+			hand = frame.hands[0];
+			palm.position.set( hand.stabilizedPalmPosition[0], hand.stabilizedPalmPosition[1], hand.stabilizedPalmPosition[2] );
+			direction = v( hand.direction[0], hand.direction[1], hand.direction[2] );  // best so far
+			palm.lookAt( direction.add( palm.position ) );
+			roll = Math.atan2( hand.palmNormal[0], -hand.palmNormal[1] );
+			palm.rotateOnAxis(new THREE.Vector3( 0, 0, -1 ), roll);
+			palm.visible = true;
+		} else {
+			palm.visible = false;
+		}
+
+		len = frame.pointables.length
+		if ( len > 0) {
+			for (var i = 0; i < 5; i++) {
+				finger = fingers[i];
+				if ( i < len ) {
+					pointable = frame.pointables[i];
+					finger.position.set( pointable.stabilizedTipPosition[0], pointable.stabilizedTipPosition[1], pointable.stabilizedTipPosition[2] );
+					direction = v( pointable.direction[0], pointable.direction[1], pointable.direction[2]);  // best so far
+					finger.lookAt( direction.add( finger.position ) );
+					// finger.scale.z = 0.05 * pointable.length;
+					finger.visible = true;
+				} else {
+					fingers[i].visible = false;
+				}
+			}
+
+			finger = fingers[0].clone();
+			spotLight.position = finger.position;
+			finger.translateZ( 25 );
+			
+			spotLight.target = finger.translateZ( -100);
+			
+			getSlider( finger );
+		}
+	});
+	
+	function getSlider( finger ) {
+			var distance = finger.position.distanceTo( target.position );
+			if ( distance < 50 ) {
+				info.innerHTML = 'Distance to target is close enough: ' + distance.toFixed(0);
+				if ( target.currentHex === undefined ) {
+					target.currentHex = target.material.emissive.getHex();
+				}	
+				target.material.emissive.setHex( 0xff0000 );
+				if ( Math.abs( finger.position.x ) < 150 ) {
+					var pos = finger.position.x;
+					target.position.x = pos;
+					var delta = 5 * pos;
+					packets.position.x = delta;
+					packs = packets.children;
+// info.innerHTML +=  ' - ' + delta.toFixed(0) + ' - '+ (packs[0].position.x + delta);						
+					for (var i = 0, len = packs.length; i < len; i++) {
+						if ( packs[i].position.x  + delta > -300 && packs[i].position.x  + delta < 300) {
+							 packs[i].visible = true;
+						} else {
+							packs[i].visible = false;
+						}
+					}
+				}
+			} else {
+				info.innerHTML = 'Pointer too far from slider sphere: ' + distance.toFixed(0);
+				target.material.emissive.setHex( target.current );
+			}		
+	}
+
+	function animate() {
+		requestAnimationFrame( animate );
+		controls.update();
+		renderer.render( scene, camera );
+		stats.update();
+	}
+
+	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }
+</script>
+</body>
+</html>

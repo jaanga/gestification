@@ -143,10 +143,10 @@
 					childs[i].material.emissive.setHex( 0xff0000 );
 					score++;
 				} else {
-					childs[i].scale.x = 1;
-					childs[i].material =  new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } );
-					soundMinus.play();
-					score--;
+					// childs[i].scale.x = 1;
+					// childs[i].material =  new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } );
+					// soundMinus.play();
+					// score--;
 				}
 			}
 			if ( score < 499 ) {
@@ -172,7 +172,7 @@
 		geometry = line.extrude( {	amount: 10, bevelEnabled: false,} );	
 		material = new THREE.MeshLambertMaterial( { color: 0xff0000, ambient: 0xff0000, opacity: 0.7});
 		iconHome = new THREE.Mesh( geometry, material );
-		iconHome.doIt = function() { window.location.assign("../index.html"); }
+		iconHome.doIt = function() { window.location.assign("../../index.html"); }
 		// collidableMeshList.push( iconHome );
 		assets.add( iconHome );
 		iconHome.scale.set( 1, 1, 1 );

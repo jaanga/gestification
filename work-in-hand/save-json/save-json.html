@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang=en>
+<head>
+<title>save json</title>
+<meta charset=utf-8>
+</head>
+<body>
+<script src="http://js.leapmotion.com/0.2.0-beta6/leap.min.js"></script>
+<script src=FileSaver.min.js >   // see https://github.com/eligrey/FileSaver.js/   </script> 
+<script>
+
+	document.body.style.cssText = ' font: bold 9pt monospace; ';
+
+	var menu = document.body.appendChild( document.createElement( 'div' ) );
+	menu.innerHTML = '<h1 style="display: inline;">Save Leap Motion Data to JSON </h1> <button onclick=saveFile() >Save File</button>';
+	
+	var outputDiv = document.body.appendChild( document.createElement( 'div' ) );
+	outputDiv.innerHTML = '<p></p>';
+	
+	var textarea = document.body.appendChild( document.createElement( 'textarea' ) );
+	textarea.style.cssText = 'height: ' + (window.innerHeight - 50) + 'px; width: ' + (window.innerWidth - 40) + 'px; ';
+
+	var pausedFrame = null;
+	var latestFrame = null;
+	
+	window.onkeypress = function(e) {
+		if (e.charCode == 32) {
+			if (pausedFrame == null) {
+				pausedFrame = latestFrame;
+			} else {
+				pausedFrame = null;
+			}
+		}
+	};
+
+	var fr;
+	Leap.loop( function( frame ) {
+		var data;
+		fr = frame;
+		latestFrame = frame;
+		outputDiv.innerHTML = JSON.stringify( (pausedFrame || latestFrame).data );
+		if ( !pausedFrame && frame.hands.length === 1 && frame.pointables.length === 5 ) {
+// console.log( frame.hands[0] );
+			
+			textarea.value += JSON.stringify( frame.data ) + '\n';
+			// textarea.value += 'Hand: ' + JSON.stringify( frame.data.hands[0] ) + '\n\n';
+			// textarea.value += 'Pointable: ' + JSON.stringify( frame.data.pointables[0] ) + '\n\n';
+		}
+	});	
+	
+	function saveFile() {
+		var blob = new Blob( [ textarea.value ] , {type: "text/plain;charset=utf-8"} );
+		saveAs(blob, 'leapmotion.json');
+	}	
+</script>
+</body>
+</html>

@@ -15,6 +15,9 @@ MIT License
 
 ###Change Log
 
+2013-08-16 ~ Theo
+* home page now r5
+
 2013-08-09 ~ Theo
 * Many changes, see in indicidual folders
 * See 'home Page' folder for changes to Gestification index.html
