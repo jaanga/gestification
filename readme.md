@@ -5,6 +5,9 @@ Apps from Jaanga for the awesome [Leap Motion](http://leapmotion.com) device.
 
 Demos: http://jaanga.github.io/gestification/
 
+No Leap Motion device, but you want to see what th demos look like?
+Try this file: http://jaanga.github.io/gestification/no-leap-view-only.html
+
 See also: http://jaanga.com
 
 
