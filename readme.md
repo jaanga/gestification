@@ -1,20 +1,22 @@
 Gestification
 ==============
 
-JavaScript apps from Jaanga for the awesome [Leap Motion](http://leapmotion.com) device.
+JavaScript web-apps from Jaanga for the awesome [Leap Motion](http://leapmotion.com) device.
 
-Live demos: http://jaanga.github.io/gestification/
+Live demos that work in your browser: http://jaanga.github.io/gestification/
 
 ####Featured App####
 [Draw 3D Objects](http://jaanga.github.io/gestification/cookbook/draw-3d-objects/r1/draw-3d-objects.html)
 
+***
+
 All the apps here are built with the help of Leap.js and Three.js.
 
-The mission is to build apps that are 3D in all aspects - all interaction, movement is inworld 3D all in your browser. 
-The tools and designs for this sort of work ae still at a very early stage of development.
+The mission is to build apps that are 3D in every aspect - all interaction, movement is inworld 3D in your browser. 
+The tools and designs for this sort of work are still at a very early stage of development.
 
-With all of the app here, you pointer or hands will get biggere and smaller as you move them in and out of the screen. You can move your pointer around, behind and under things. 
-This is the sort of behavior you see in games that cost millions to produce. But it is not the sort of behavior that you find frequently in simple, free open-source code.
+With all of the apps in this repo, notice that your pointer or hands will get bigger and smaller as you move them in and out of the screen. You can move your pointer around, behind and under things. 
+This is the sort of behavior you see in computer games that cost millions to produce. But it is not the sort of behavior that you typically find in simple, free open-source code.
 
 The 'cookbook' folder contains a number of short, simple apps that you coud use to build bigger apps. Files are generally about 200 or so lines of code.
 
@@ -31,6 +33,11 @@ Copyright &copy; 2013 Jaanga authors
 MIT License
 
 ###Change Log
+
+2013-08-19 ~ Theo
+* Updated this readme
+* Many tweaks throughout
+* See individual folder readme files
 
 2013-08-16 ~ Theo
 * home page now r5
