@@ -1,7 +1,7 @@
 'Heavens to Murgatroyd'
 =======================
 
-Demo: http://jaanga.github.io/gestification/murgatroyd-heaven/
+Demo: http://jaanga.github.io/gestification/cookbook/murgatroyd-heaven/
 
 See also http://www.phrases.org.uk/meanings/heavens-to-murgatroyd.html
 

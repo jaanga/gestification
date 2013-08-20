@@ -1,12 +1,23 @@
 Gestification
 ==============
 
-Apps from Jaanga for the awesome [Leap Motion](http://leapmotion.com) device.
+JavaScript apps from Jaanga for the awesome [Leap Motion](http://leapmotion.com) device.
 
-Demos: http://jaanga.github.io/gestification/
+Live demos: http://jaanga.github.io/gestification/
 
-No Leap Motion device, but you want to see what th demos look like?
-Try this file: http://jaanga.github.io/gestification/no-leap-view-only.html
+All the apps here are built with the help of Leap.js and Three.js.
+
+The mission is to build apps that are 3D in all aspects - all interaction, movement is inworld 3D all in your browser. 
+The tools and designs for this sort of work ae still at a very early stage of development.
+
+With all of the app here, you pointer or hands will get biggere and smaller as you move them in and out of the screen. You can move your pointer around, behind and under things. 
+This is the sort of behavior you see in games that cost millions to produce. But it is not the sort of behavior that you find frequently in simple, free open-source code.
+
+The 'cookbook' folder contains a number of short, simple apps that you coud use to build bigger apps. Files are generally about 200 or so lines of code.
+
+The 'work-in-hand' folder contains more experimental work where the final outcome is more up in the air.
+
+If you do not have the Leap Motion device, but you want to see what the demos look like, try this file: http://jaanga.github.io/gestification/no-leap-view-only.html
 
 See also: http://jaanga.com
 

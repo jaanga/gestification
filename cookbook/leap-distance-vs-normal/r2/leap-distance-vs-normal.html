@@ -16,16 +16,17 @@
 
 	var infoLeft, interactionBoxLeft, palmLeft, deviceLeft;
 	var infoRight, interactionBoxRight, palmRight, deviceRight;
+	var infoPRY, roll, pitch, yaw;
 
 	init();
 	animate();
 
 	function init() {
 		var css, geometry, material, mesh;
-		
+
 		css = document.body.appendChild( document.createElement('style') );
 		css.innerHTML = 'body { font: 600 12pt monospace; margin: 0; overflow: hidden; }' ;
-		
+
 		renderer = new THREE.WebGLRenderer( { setClearColor: 0x000000, antialias: true } );  // depends on lighting - can look awful...
 		// renderer = new THREE.WebGLRenderer();
 		renderer.setSize( window.innerWidth, window.innerHeight );
@@ -61,8 +62,9 @@
 
 // left
 		infoLeft = document.body.appendChild( document.createElement( 'div' ) );
-		infoLeft.style.cssText = 'position: absolute; left: 0; top: 0; width: 25% ';
-		infoLeft.innerHTML = '<h2>Left: position angles via frame.hands[0].direction</h2>Wave and roll your hand over the Leap Motion device...';
+		infoLeft.style.cssText = 'position: absolute; left: 10px; top: 10px; width: 25% ';
+		infoLeft.txt = '<h2>Left: hand angles via frame.hands[0].direction</h2>';
+		infoLeft.innerHTML = infoLeft.txt + 'Wave and roll your hand over the Leap Motion device...';
 
 		geometry = new THREE.CubeGeometry( 80, 16, 30);
 		material = new THREE.MeshLambertMaterial( {color: 0x888888 } );
@@ -84,7 +86,7 @@
 // Right
 		infoRight = document.body.appendChild( document.createElement( 'div' ) );
 		infoRight.style.cssText = 'position: absolute; right: 0; top: 0; width: 25% ';
-		infoRight.innerHTML = '<h2>Right: position angles via frame.hands[0].palmNormal</h2>Note the differing yaw, pitch and roll<br>But shouldn\'t the movements be identical?';
+		infoRight.innerHTML = infoRight.txt = '<h2>Right: hand angles via frame.hands[0].palmNormal</h2>';
 
 		geometry = new THREE.CubeGeometry( 80, 16, 30);
 		material = new THREE.MeshLambertMaterial( {color: 0x888888 } );
@@ -101,22 +103,38 @@
 		material = new THREE.MeshNormalMaterial();
 		palmRight = new THREE.Mesh( geometry, material );
 		scene.add( palmRight );
-	}
 
+// Pitch, Roll and Yaw
+		infoPRY = document.body.appendChild( document.createElement( 'div' ) );
+		infoPRY.style.cssText = 'left: 0; margin: auto; position: absolute; right: 0; top: 10px; width: 30% ';
+		infoPRY.innerHTML = infoPRY.txt = '<h2>Calculated Pitch, Roll & Yaw</h2>';
+
+		geometry = new THREE.CubeGeometry( 50, 30, 100 );
+		material = new THREE.MeshNormalMaterial();
+		pitch = new THREE.Mesh( geometry, material );
+		pitch.position.set( -150, 350, 0 );
+		scene.add( pitch );
+		
+		roll = pitch.clone();
+		roll.position.set( 0, 350, 0 );
+		scene.add( roll );		
+
+		yaw = roll.clone();
+		yaw.position.set( 150, 350, 0 );
+		scene.add( yaw );
+	}
 
 	Leap.loop( function( frame ) {
 		var handString;
-		fr = frame;  // to get a global for debugging...
 
 		if (frame.hands.length > 0) {
 			hand = frame.hands[0];
-
+// left - hand.direction
 			interactionBoxLeft.position.set( frame.interactionBox.center[0] - 150, frame.interactionBox.center[1], frame.interactionBox.center[2] );
 			interactionBoxLeft.scale.set( frame.interactionBox.size[0], frame.interactionBox.size[1], frame.interactionBox.size[2] );
-// left - hand.direction
-			handString = '<h2>Left: position angles via frame.hands[0].direction</h2>';
-			handString += 'hand.direction vector: ' + vectorToString(hand.direction, 2) + '<br />';
-			handString += 'Observe: yaw: ok, pitch: good, roll: sucks<br />';
+
+			handString = infoLeft.txt;
+			handString += 'hand.direction vector: <br />' + vectorToString(hand.direction, 2) + '<br />';
 			infoLeft.innerHTML = handString;
 
 			palmLeft.position.set( hand.palmPosition[0] - 150, hand.palmPosition[1], hand.palmPosition[2] );
@@ -124,14 +142,13 @@
 			palmLeft.lookAt( dir.add( palmLeft.position ) );
 
 			palmLeft.visible = true;
-			
+
 // right - hand.palmNormal
 			interactionBoxRight.position.set( frame.interactionBox.center[0] + 150, frame.interactionBox.center[1], frame.interactionBox.center[2] );
 			interactionBoxRight.scale.set( frame.interactionBox.size[0], frame.interactionBox.size[1], frame.interactionBox.size[2] );
 
-			handString = '<h2>Right: position angles via frame.hands[0].palmNormal</h2>';
-			handString += 'hand.palmNormal vector: ' + vectorToString(hand.palmNormal, 2) + '<br />';
-			handString += 'Observe: yaw: ok, pitch: sucks, roll: good<br />';
+			handString = infoRight.txt;
+			handString += 'hand.palmNormal vector: <br />' + vectorToString(hand.palmNormal, 2) + '<br />';
 			infoRight.innerHTML = handString;
 
 			palmRight.position.set( hand.palmPosition[0] + 150, hand.palmPosition[1], hand.palmPosition[2] );
@@ -141,6 +158,21 @@
 
 			palmRight.visible = true;
 			
+// Pitch, Roll and Yaw
+			var pitchAng = Math.atan2( hand.direction[1] , -hand.direction[2] );
+			pitch.rotation.x = pitchAng;
+
+			var rollAng = Math.atan2( hand.palmNormal[0], -hand.palmNormal[1] );
+			roll.rotation.z = rollAng;		
+
+			var yawAng = Math.atan2( hand.direction[0], -hand.direction[1] );
+			yaw.rotation.y = yawAng;
+			
+			handString = infoPRY.txt + ' Pitch - radians: ' + pitchAng.toFixed(2) + ' - degrees: ' + (180 *  pitch.rotation.x / Math.PI).toFixed(0) + '<br />';
+			handString += 'Roll  - radians: ' + rollAng.toFixed(2) + ' - degrees: ' + (180 *  rollAng / Math.PI).toFixed(0) + '<br />';
+			handString += 'Yaw   - radians: ' + yawAng.toFixed(2) + ' - degrees: ' + (180 *  yawAng / Math.PI).toFixed(0) + '<br />';
+			infoPRY.innerHTML = handString;
+
 		} else {
 			palmLeft.visible = false;
 			palmRight.visible = false;

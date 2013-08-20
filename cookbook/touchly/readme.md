@@ -1,10 +1,15 @@
 Touchly
 =======
 
-Demo: http://jaanga.github.io/gestification/touchly/
+Demo: http://jaanga.github.io/gestification/cookbook/touchly/
 
 ### Change Log
-2013-08-10 ~ 
+
+2013-08-19 ~ Theo
+* No more tolbar, just simple cookbook example
+* Folders added and older files put into archive
+
+2013-08-10 ~ Theo
 * updated toolbar to utils r3
 * Added About message
 * general code cleanup

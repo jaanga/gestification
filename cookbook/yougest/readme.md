@@ -1,7 +1,7 @@
 youGest
 =======
 
-Demo: http://jaanga.github.io/gestification/yougest/r4/ 
+Demo: http://jaanga.github.io/gestification/cookbook/yougest/r4/ 
 
 
 ###Road Map###

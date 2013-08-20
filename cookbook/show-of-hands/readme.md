@@ -3,7 +3,7 @@ Show of Hands
 
 A first attempt at skinning <a href="http://leapmotion.com" target="_blank">Leap Motion</a> data.
 
-Demo: http://jaanga.github.io/gestification/show-of-hands/
+Demo: http://jaanga.github.io/gestification/cookbook/show-of-hands/r1/show-of-hands.html
 
 ### Change Log
 
