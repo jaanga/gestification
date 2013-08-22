@@ -3,6 +3,7 @@
 <head>
 <title></title>
 <meta charset=utf-8>
+<meta name='viewport' content='width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0'>
 </head>
 <body>
 <script src="http://js.leapmotion.com/0.2.0/leap.min.js"></script>
@@ -12,37 +13,39 @@
 <script src=../../../git-repos/three.js/examples/js/controls/TrackballControls.js></script>
 <script src=../../../git-repos/three.js/examples/js/libs/stats.min.js></script>
 -->
+<script src=http://mrdoob.github.com/three.js/examples/js/Detector.js></script>
 <script src=http://mrdoob.github.com/three.js/build/three.min.js></script>
 <script src=http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js></script>
 <script src=http://mrdoob.github.com/three.js/examples/js/libs/stats.min.js></script>
 
 <script>
+	if ( ! Detector.webgl ) { Detector.addGetWebGLMessage(); }
+
 	var renderer, scene, camera, controls, stats;
-	var info, palm, fingers = [];
-	
-	var txts = ['Kindly get with the program.','Let\'s not be tricky.','I\'m waiting...'];
+	var palm, fingers = [];
 
 	init();
 	animate();
 
 	function init() {
-		var css, light, geometry, material, mesh;
-		
-		css = document.body.appendChild( document.createElement('style') );
+		var css = document.body.appendChild( document.createElement('style') );
 		css.innerHTML = 'body { font: 600 12pt monospace; margin: 0; overflow: hidden; text-align: center; }' +
-		'h1.red { color: red; }' +
-		'h1.green { color: green; }' ;
+		'' ;
 
-		info = document.body.appendChild( document.createElement( 'div' ) );
+		var info = document.body.appendChild( document.createElement( 'div' ) );
 		info.style.cssText = 'margin 0; position: absolute; top: 0px; width: 100% ';
-		info.innerHTML = info.txt = '<h1>pointing-or-not</h1>' +
+		info.innerHTML = '<p>boilerplate</p>' +
 			'' +
 		'';
 		
 // Basics
-		renderer = new THREE.WebGLRenderer( { antialias: true } );
+		if ( ! Detector.webgl ) {
+			renderer = new THREE.CanvasRenderer( { antialias: true } );
+		} else {
+			renderer = new THREE.WebGLRenderer( { antialias: true } );
+		}
+
 		renderer.setSize( window.innerWidth, window.innerHeight );
-		renderer.setClearColor(0xffffff, 1);
 		renderer.shadowMapEnabled = true;
 		document.body.appendChild( renderer.domElement );
 		scene = new THREE.Scene();
@@ -57,40 +60,41 @@
 		document.body.appendChild( stats.domElement );
 
 //  Lights
- 		light = new THREE.DirectionalLight( 0xffffff, 1 );
-		light.position.set( 0, 500, 0 );
+		var light, geometry, material, mesh;
+
+		light = new THREE.AmbientLight( 0xffffff);
+		light.color.setHSL( 0.1, 0.5, 0.3 );
 		scene.add( light );
+
+		light = new THREE.DirectionalLight( 0xffffff, 1 );
+		light.position.set( 1, 1, 1 ).normalize();
+		scene.add( light );
+
+		light = new THREE.DirectionalLight( 0xffffff, 1 );
+		light.position.set( -1, -1, -1 ).normalize();
+		scene.add( light );
+
+		light = new THREE.SpotLight( 0xffffff, 1.5 );
+		light.position.set( 0, 1700, 0 );
 		light.castShadow = true;
-		light.shadowMapWidth = 2048;
-		light.shadowMaHeight = 2048;
-		var d = 200;
-		light.shadowCameraLeft = -d;
-		light.shadowCameraRight = d;
-		light.shadowCameraTop = d * 2;
-		light.shadowCameraBottom = -d * 2;
 
-		light.shadowCameraNear = 100;
-		light.shadowCameraFar = 600;
-light.shadowCameraVisible = true;
-
-// axes
-        scene.add( new THREE.ArrowHelper( v(1, 0, 0), v(0, 0, 0), 100, 0xcc0000) );
-        scene.add( new THREE.ArrowHelper( v(0, 1, 0), v(0, 0, 0), 100, 0x00cc00) );
-        scene.add( new THREE.ArrowHelper( v(0, 0, 1), v(0, 0, 0), 100, 0x0000cc) );
+		light.shadowMapWidth = 1024;
+		light.shadowMapHeight = 1024;
+		light.shadowCameraNear = 1000;
+		light.shadowCameraFar = 1900;
+		light.shadowCameraFov = 25;
+		scene.add( light );
+// light.shadowCameraVisible = true;
 
 // Assets
-		material = new THREE.MeshBasicMaterial( {color: Math.random() * 0xffffff } );
-		geometry = new THREE.CubeGeometry( 600, 10, 300 );
+		material = new THREE.MeshBasicMaterial( {color: Math.random() * 0xffffff, side: THREE.DoubleSide } );
+		geometry = new THREE.CubeGeometry( 600, 10, 500 );
 		mesh = new THREE.Mesh( geometry, material );
-		// mesh.position.set( 0, 0, 0 );
+		mesh.position.set( 0, -50, 0 );
 		mesh.castShadow = true;
 		mesh.receiveShadow = true;
 		scene.add( mesh );
-		
-		mesh = mesh.clone();
-		mesh.material = new THREE.MeshBasicMaterial( { wireframe: true } );
-		scene.add( mesh );
-		
+
 		geometry = new THREE.CubeGeometry( 100, 20, 80 );
 		material = new THREE.MeshNormalMaterial();
 		palm = new THREE.Mesh( geometry, material );
@@ -106,48 +110,33 @@ light.shadowCameraVisible = true;
 			mesh.receiveShadow = true;
 			scene.add( mesh );
 			fingers.push( mesh );
-		}	
+		}
 	}
 
 	var fr;
 
 	Leap.loop( function( frame ) {
 		fr = frame;
-		var hand, direction, roll, len, finger, pointable;
+		var hand, direction, roll, finger, pointable;
 		if ( frame.hands.length > 0) {
 			hand = frame.hands[0];
+// console.log( frame.data );
 			palm.position.set( hand.stabilizedPalmPosition[0], hand.stabilizedPalmPosition[1], hand.stabilizedPalmPosition[2] );
 			direction = v( hand.direction[0], hand.direction[1], hand.direction[2] );  // best so far
 			palm.lookAt( direction.add( palm.position ) );
-			roll = Math.atan2( hand.palmNormal[0], hand.palmNormal[1] );
-			palm.rotation.z = roll;
+			roll = Math.atan2( hand.palmNormal[0], -hand.palmNormal[1] );
+			palm.rotateOnAxis(new THREE.Vector3( 0, 0, -1 ), roll);
 			palm.visible = true;
 		} else {
 			palm.visible = false;
 		}
 
-		len = frame.pointables.length;
-		var hang, pang, dang;
-		if ( len > 0) {
-			palm.hasFingers = true;
+		var len = frame.pointables.length
+		if ( frame.pointables.length > 0) {
 			for (var i = 0; i < 5; i++) {
 				finger = fingers[i];
-				
 				if ( i < len ) {
 					pointable = frame.pointables[i];
-					if ( len === 1 && hand ) {
-						hang = v( hand.direction[0], hand.direction[1], hand.direction[2] );
-						pang = v( pointable.direction[0], pointable.direction[1], pointable.direction[2] );
-						dang = hang.angleTo( pang ).toFixed(3);
-						pointing = ( dang < 0.5 ) ? '<h1 class=green > I can see that you are pointing a finger. Yay!</h1>' : '<h1>You are not pointing, because your finger appears to be bent or turned.</h1>';
-						//  info.innerHTML = info.txt + hand.direction + '<br>' + pointable.direction + '<br>' +
-						//  'ang: ' + dang + pointing;
-						info.innerHTML = info.txt + pointing;
-						
-					} else {
-						info.innerHTML = info.txt + '<h1>You are not pointing, because I see more than one finger.</h1>';
-// need to add code here that identifies spurious fingers						
-					}
 					finger.position.set( pointable.stabilizedTipPosition[0], pointable.stabilizedTipPosition[1], pointable.stabilizedTipPosition[2] );
 					direction = v( pointable.direction[0], pointable.direction[1], pointable.direction[2]);  // best so far
 					finger.lookAt( direction.add( finger.position ) );
@@ -157,12 +146,6 @@ light.shadowCameraVisible = true;
 					fingers[i].visible = false;
 				}
 			}
-		} else {
-			for (var i = 0; i < 5; i++) {
-				fingers[i].visible = false;
-			}
-			// info.innerHTML = info.txt + '<h1>You are not pointing, because I don\'t see any fingers.<br>' + txts[ Math.floor(Math.random() * 3) ] + '</h1>';
-			info.innerHTML = info.txt + '<h1 class=red>You are not pointing, because I don\'t see any fingers.</h1>';
 		}
 	});
 

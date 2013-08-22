@@ -1,0 +1,239 @@
+﻿<!doctype html>
+<html lang=en>
+<head>
+<title></title>
+<meta charset=utf-8>
+</head>
+<body>
+<script src="http://js.leapmotion.com/0.2.0/leap.min.js"></script>
+<!--
+<script src=../../../git-repos/three.js/examples/js/Detector.js></script>
+<script src=../../../git-repos/three.js/build/three.min.js></script>
+<script src=../../../git-repos/three.js/examples/js/controls/TrackballControls.js></script>
+<script src=../../../git-repos/three.js/examples/js/libs/stats.min.js></script>
+-->
+<script src=http://mrdoob.github.com/three.js/build/three.min.js></script>
+<script src=http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js></script>
+<script src=http://mrdoob.github.com/three.js/examples/js/libs/stats.min.js></script>
+
+<script>
+	var renderer, scene, camera, controls, stats;
+	var cube, palm, fingers = [], data;
+	var patches = [];
+	var plane, patchesRows = 3; patchesCols = 3;
+	var edgeLeft = -900, edgeRight = 900, edgeFront = -900, edgeBack = 900;
+
+	init();
+	animate();
+
+	function init() {
+		var css, info, light, geometry, material, mesh;
+
+		css = document.body.appendChild( document.createElement('style') );
+		css.innerHTML = 'body { font: 600 12pt monospace; margin: 0; overflow: hidden; text-align: center; }' +
+		'' ;
+
+		info = document.body.appendChild( document.createElement( 'div' ) );
+		info.style.cssText = 'margin 0; position: absolute; top: 0px; width: 100% ';
+		info.innerHTML = '<p>hand2go</p>' +
+			'<p id=data>bbb</p>' +
+		'';
+
+// Basics
+		renderer = new THREE.WebGLRenderer( { antialias: true } );
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		renderer.shadowMapEnabled = true;
+		document.body.appendChild( renderer.domElement );
+		scene = new THREE.Scene();
+
+		camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
+		camera.position.set( 0, 250, 600 );
+		controls = new THREE.TrackballControls( camera, renderer.domElement );
+		controls.target.set( 0, 100, 0 );
+
+		stats = new Stats();
+		stats.domElement.style.cssText = 'position: absolute; top: 0px; zIndex: 100; ';
+		document.body.appendChild( stats.domElement );
+
+//  Lights
+ 		light = new THREE.DirectionalLight( 0xffffff, 1 );
+		light.position.set( 0, 500, 0 );
+		scene.add( light );
+		light.castShadow = true;
+		light.shadowMapWidth = 2048;
+		light.shadowMaHeight = 2048;
+		var d = 200;
+		light.shadowCameraLeft = -d;
+		light.shadowCameraRight = d;
+		light.shadowCameraTop = d * 2;
+		light.shadowCameraBottom = -d * 2;
+
+		light.shadowCameraNear = 100;
+		light.shadowCameraFar = 600;
+// light.shadowCameraVisible = true;
+
+// geometry = new THREE.AxisHelper( 50 )
+// scene.add( geometry );
+
+// Assets
+		plane = new THREE.Object3D();
+		geometry = new THREE.CubeGeometry( 500, 50, 500 );
+		for (var i = 0; i < patchesCols; i++) {
+			patches[i] = [];
+			for (var j = 0; j < patchesRows; j++) {
+				material = new THREE.MeshLambertMaterial( {color: Math.random() * 0xffffff, side: THREE.DoubleSide } );
+				mesh = new THREE.Mesh( geometry, material );
+				mesh.position.set( edgeLeft + 300 + i * 600, -50 - 100 * Math.random(), edgeBack - 300 - j * 600 );
+				mesh.castShadow = true;
+				mesh.receiveShadow = true;
+				patches[i][j] = mesh;
+				// plane.add( mesh );
+				scene.add( mesh );			
+			}
+		} 
+// cube
+		geometry = new THREE.CubeGeometry( 100, 100, 100 );
+		material = new THREE.MeshNormalMaterial();
+		cube = new THREE.Mesh( geometry, material );
+		cube.castShadow = true;
+		cube.receiveShadow = true;
+		scene.add( cube );		
+		
+// palm
+		geometry = new THREE.CubeGeometry( 100, 20, 80 );
+		material = new THREE.MeshNormalMaterial();
+		palm = new THREE.Mesh( geometry, material );
+		palm.castShadow = true;
+		palm.receiveShadow = true;
+		scene.add( palm );
+
+		geometry = new THREE.CubeGeometry( 16, 12, 20 );
+		material = new THREE.MeshNormalMaterial();
+		for (var j = 0; j < 5; j++) {
+			mesh = new THREE.Mesh( geometry, material );
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			scene.add( mesh );
+			fingers.push( mesh );
+		}
+		data = document.getElementById('data');
+	}
+
+	var fr;
+
+	Leap.loop( function( frame ) {
+		fr = frame;
+		var hand, direction, roll, len, finger, pointable;
+		if ( frame.hands.length > 0) {
+			hand = frame.hands[0];
+// console.log( frame.data );
+			palm.position.set( hand.stabilizedPalmPosition[0], hand.stabilizedPalmPosition[1], hand.stabilizedPalmPosition[2] );
+			direction = v( hand.direction[0], hand.direction[1], hand.direction[2] );  // best so far
+			palm.lookAt( direction.add( palm.position ) );
+			roll = Math.atan2( hand.palmNormal[0], -hand.palmNormal[1] );
+			palm.rotateOnAxis( new THREE.Vector3( 0, 0, -1 ), roll);
+			palm.visible = true;
+
+			data.innerHTML = 'x: ' + palm.position.x.toFixed(2) + ' - y: ' + palm.position.y.toFixed(2)  + ' - z: '  + palm.position.z.toFixed(2) + 
+				' - conZ: ' + controls.target.z.toFixed(2);
+
+			// plane.position.x += 0.002 * palm.position.x;
+			// plane.position.y += 0.002 * (palm.position.y - 120);
+			// plane.position.z += 0.002 * palm.position.z;
+
+			if ( controls.target.z < (edgeFront + 600) ) {
+				var geometry, material, mesh;
+				var posZ = edgeFront - 300;
+				for (var i = 0; i < patchesCols; i++) {
+					geometry = new THREE.CubeGeometry( 500, 50, 500 );
+					material = new THREE.MeshLambertMaterial( {color: Math.random() * 0xffffff, side: THREE.DoubleSide } );
+					mesh = new THREE.Mesh( geometry, material );
+					mesh.position.set( edgeLeft + 300 + i * 600, -50 - 100 * Math.random(), posZ );
+					mesh.castShadow = true;
+					mesh.receiveShadow = true;
+					scene.add( mesh );
+					patches[i][3] = mesh;
+					var patch = patches[i][0];
+					scene.remove( patch );
+					patches[i].shift();
+				}
+				edgeFront -= 600;
+				edgeBack -= 600;
+			}
+		
+			if ( controls.target.x > edgeRight - 600 ) {
+				var geometry, material, mesh;
+				var posX = edgeRight + 300;
+				patches[3] = [];
+				for (var i = 0; i < patchesRows; i++) {
+					geometry = new THREE.CubeGeometry( 600, 50, 500 );
+					material = new THREE.MeshLambertMaterial( {color: Math.random() * 0xffffff, side: THREE.DoubleSide } );
+					mesh = new THREE.Mesh( geometry, material );
+					mesh.position.set( posX, -50 - 100 * Math.random(), edgeFront + 300 + i * 600 );
+					mesh.castShadow = true;
+					mesh.receiveShadow = true;
+					scene.add( mesh );
+					
+					patches[3][i] = mesh;
+					var patch = patches[0][i];
+					
+					scene.remove( patch );	
+				}
+				patches.splice(0, 1);
+				// patches.slice();
+				edgeRight += 600;
+				edgeLeft += 600;
+			}
+
+			var posX = 0.005 * palm.position.x;
+			cube.position.x += posX;
+			camera.position.x += posX;
+			controls.position0.x += posX;
+			controls.target.x += posX;
+			
+			var posY = 0.005 * ( palm.position.y - 150 );
+			cube.position.y += posY;
+			camera.position.y += posY;
+			controls.target.y += posY;
+			controls.position0.y += posY;
+			
+			var deltaZ =  ( palm.position.z > 0 ) ?  0.004 : 0.03;
+			
+			camera.position.z += deltaZ * palm.position.z;
+			controls.target.z += deltaZ * palm.position.z;
+			controls.position0.z += deltaZ * palm.position.z;
+			cube.position.z   += deltaZ * palm.position.z;
+			
+		} else {
+			palm.visible = false;
+		}
+
+		len = frame.pointables.length
+		if ( len > 0) {
+			for (var i = 0; i < 5; i++) {
+				finger = fingers[i];
+				if ( i < len ) {
+					pointable = frame.pointables[i];
+					finger.position.set( pointable.stabilizedTipPosition[0], pointable.stabilizedTipPosition[1], pointable.stabilizedTipPosition[2] );
+					direction = v( pointable.direction[0], pointable.direction[1], pointable.direction[2]);  // best so far
+					finger.lookAt( direction.add( finger.position ) );
+					finger.scale.z = 0.05 * pointable.length;
+					finger.visible = true;
+				} else {
+					fingers[i].visible = false;
+				}
+			}
+		}
+	});
+
+	function animate() {
+		requestAnimationFrame( animate );
+		controls.update();
+		renderer.render( scene, camera );
+		stats.update();
+	}
+
+	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }
+</script>
+</body>
+</html>

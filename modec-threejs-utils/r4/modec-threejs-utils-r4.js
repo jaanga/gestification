@@ -267,8 +267,8 @@
 		pointer.add( mesh );
 
 		if ( hand === 0 ) {
-			geometry = new THREE.CubeGeometry( 6, 3, 50 );
-			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 0, -30 ) );
+			geometry = new THREE.CubeGeometry( 0.6  * tetraSize, 0.3 * tetraSize, 2.5 * tetraSize  );
+			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 0, -2 * tetraSize ) );
 	// material = new THREE.MeshLambertMaterial();
 			mesh = new THREE.Mesh( geometry, material );
 			mesh.castShadow = true;

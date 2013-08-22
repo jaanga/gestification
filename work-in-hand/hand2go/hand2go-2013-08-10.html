@@ -18,36 +18,34 @@
 
 <script>
 	var renderer, scene, camera, controls, stats;
-	var info, palm, fingers = [];
-	
-	var txts = ['Kindly get with the program.','Let\'s not be tricky.','I\'m waiting...'];
+	var cube, palm, fingers = [], data;
+	var plane, rows = [], rowCount = 3; cols = [], colCount = 3;
+	var edgeLeft = -900, edgeRight = 900, edgeFront = -900, edgeBack = 900;
 
 	init();
 	animate();
 
 	function init() {
-		var css, light, geometry, material, mesh;
-		
+		var css, info, light, geometry, material, mesh;
+
 		css = document.body.appendChild( document.createElement('style') );
 		css.innerHTML = 'body { font: 600 12pt monospace; margin: 0; overflow: hidden; text-align: center; }' +
-		'h1.red { color: red; }' +
-		'h1.green { color: green; }' ;
+		'' ;
 
 		info = document.body.appendChild( document.createElement( 'div' ) );
 		info.style.cssText = 'margin 0; position: absolute; top: 0px; width: 100% ';
-		info.innerHTML = info.txt = '<h1>pointing-or-not</h1>' +
-			'' +
+		info.innerHTML = '<p>hand2go</p>' +
+			'<p id=stats>bbb</p>' +
 		'';
-		
+
 // Basics
 		renderer = new THREE.WebGLRenderer( { antialias: true } );
 		renderer.setSize( window.innerWidth, window.innerHeight );
-		renderer.setClearColor(0xffffff, 1);
 		renderer.shadowMapEnabled = true;
 		document.body.appendChild( renderer.domElement );
 		scene = new THREE.Scene();
 
-		camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 3000 );
+		camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 5000 );
 		camera.position.set( 0, 250, 600 );
 		controls = new THREE.TrackballControls( camera, renderer.domElement );
 		controls.target.set( 0, 100, 0 );
@@ -71,26 +69,36 @@
 
 		light.shadowCameraNear = 100;
 		light.shadowCameraFar = 600;
-light.shadowCameraVisible = true;
+// light.shadowCameraVisible = true;
 
-// axes
-        scene.add( new THREE.ArrowHelper( v(1, 0, 0), v(0, 0, 0), 100, 0xcc0000) );
-        scene.add( new THREE.ArrowHelper( v(0, 1, 0), v(0, 0, 0), 100, 0x00cc00) );
-        scene.add( new THREE.ArrowHelper( v(0, 0, 1), v(0, 0, 0), 100, 0x0000cc) );
+// geometry = new THREE.AxisHelper( 50 )
+// scene.add( geometry );
 
 // Assets
-		material = new THREE.MeshBasicMaterial( {color: Math.random() * 0xffffff } );
-		geometry = new THREE.CubeGeometry( 600, 10, 300 );
-		mesh = new THREE.Mesh( geometry, material );
-		// mesh.position.set( 0, 0, 0 );
-		mesh.castShadow = true;
-		mesh.receiveShadow = true;
-		scene.add( mesh );
+		plane = new THREE.Object3D();
+		geometry = new THREE.CubeGeometry( 500, 50, 500 );
+		for (var i = 0; i < rowCount; i++) {
+			for (var j = 0; j < colCount; j++) {
+				material = new THREE.MeshLambertMaterial( {color: Math.random() * 0xffffff, side: THREE.DoubleSide } );
+				mesh = new THREE.Mesh( geometry, material );
+				mesh.position.set( -600 + j * 600, -50 - 100 * Math.random(), 600 - i * 600 );
+				mesh.castShadow = true;
+				mesh.receiveShadow = true;
+				rows.push( mesh );
+				cols.push( mesh );
+				plane.add( mesh );
+				scene.add( plane );			
+			}
+		} 
+// cube
+		geometry = new THREE.CubeGeometry( 100, 100, 100 );
+		material = new THREE.MeshNormalMaterial();
+		cube = new THREE.Mesh( geometry, material );
+		cube.castShadow = true;
+		cube.receiveShadow = true;
+		scene.add( cube );		
 		
-		mesh = mesh.clone();
-		mesh.material = new THREE.MeshBasicMaterial( { wireframe: true } );
-		scene.add( mesh );
-		
+// palm
 		geometry = new THREE.CubeGeometry( 100, 20, 80 );
 		material = new THREE.MeshNormalMaterial();
 		palm = new THREE.Mesh( geometry, material );
@@ -106,7 +114,9 @@ light.shadowCameraVisible = true;
 			mesh.receiveShadow = true;
 			scene.add( mesh );
 			fingers.push( mesh );
-		}	
+		}
+
+		data = document.getElementById('stats');
 	}
 
 	var fr;
@@ -116,38 +126,93 @@ light.shadowCameraVisible = true;
 		var hand, direction, roll, len, finger, pointable;
 		if ( frame.hands.length > 0) {
 			hand = frame.hands[0];
+// console.log( frame.data );
 			palm.position.set( hand.stabilizedPalmPosition[0], hand.stabilizedPalmPosition[1], hand.stabilizedPalmPosition[2] );
 			direction = v( hand.direction[0], hand.direction[1], hand.direction[2] );  // best so far
 			palm.lookAt( direction.add( palm.position ) );
-			roll = Math.atan2( hand.palmNormal[0], hand.palmNormal[1] );
-			palm.rotation.z = roll;
+			roll = Math.atan2( hand.palmNormal[0], -hand.palmNormal[1] );
+			palm.rotateOnAxis( new THREE.Vector3( 0, 0, -1 ), roll);
 			palm.visible = true;
+
+			data.innerHTML = 'x: ' + palm.position.x.toFixed(2) + ' - y: ' + palm.position.y.toFixed(2)  + ' - z: '  + palm.position.z.toFixed(2) + 
+				' - conZ: ' + controls.target.z.toFixed(2);
+
+			// plane.position.x += 0.002 * palm.position.x;
+			// plane.position.y += 0.002 * (palm.position.y - 120);
+			// plane.position.z += 0.002 * palm.position.z;
+
+			if ( controls.target.z < (edgeFront + 300) ) {
+				var geometry, material, mesh;
+				var posZ = edgeFront - 300;
+				for (var i = 0; i < colCount; i++) {
+					geometry = new THREE.CubeGeometry( 500, 50, 500 );
+					material = new THREE.MeshLambertMaterial( {color: Math.random() * 0xffffff, side: THREE.DoubleSide } );
+					mesh = new THREE.Mesh( geometry, material );
+					mesh.position.set( -600 + i * 600, -50 - 100 * Math.random(), posZ );
+					mesh.castShadow = true;
+					mesh.receiveShadow = true;
+					plane.add( mesh );	
+					
+					rows.push( mesh );
+					// cols.push( mesh );
+					
+					var row = rows.shift();
+					
+					plane.remove( row );
+				}
+				edgeFront -= 600;
+			}
+			
+			if ( controls.target.x > edgeRight ) {
+				var geometry, material, mesh;
+				var posX = edgeRight + 300;
+				for (var i = 0; i < rowCount; i++) {
+					geometry = new THREE.CubeGeometry( 600, 50, 500 );
+					material = new THREE.MeshLambertMaterial( {color: Math.random() * 0xffffff, side: THREE.DoubleSide } );
+					mesh = new THREE.Mesh( geometry, material );
+					mesh.position.set( posX, -50 - 100 * Math.random(), edgeFront + 300 + i * 600 );
+					mesh.castShadow = true;
+					mesh.receiveShadow = true;
+					plane.add( mesh );	
+					// rows.push( mesh );
+					cols.push( mesh );
+					var col = cols.shift();
+					//plane.remove( col );					
+				}
+				edgeRight += 600;
+			}
+
+			var posX = 0.005 * palm.position.x;
+			cube.position.x += posX;
+			camera.position.x += posX;
+			controls.position0.x += posX;
+			controls.target.x += posX;
+			
+			var posY = 0.005 * ( palm.position.y - 150 );
+			cube.position.y += posY;
+			camera.position.y += posY;
+			controls.target.y += posY;
+			controls.position0.y += posY;
+			
+			var deltaZ =  ( palm.position.z > 0 ) ?  0.004 : 0.03;
+			
+			camera.position.z += deltaZ * palm.position.z;
+			controls.target.z += deltaZ * palm.position.z;
+			controls.position0.z += deltaZ * palm.position.z;
+			cube.position.z   += deltaZ * palm.position.z;
+			
+			
+
 		} else {
 			palm.visible = false;
 		}
 
-		len = frame.pointables.length;
-		var hang, pang, dang;
+		len = frame.pointables.length
 		if ( len > 0) {
-			palm.hasFingers = true;
 			for (var i = 0; i < 5; i++) {
 				finger = fingers[i];
-				
 				if ( i < len ) {
 					pointable = frame.pointables[i];
-					if ( len === 1 && hand ) {
-						hang = v( hand.direction[0], hand.direction[1], hand.direction[2] );
-						pang = v( pointable.direction[0], pointable.direction[1], pointable.direction[2] );
-						dang = hang.angleTo( pang ).toFixed(3);
-						pointing = ( dang < 0.5 ) ? '<h1 class=green > I can see that you are pointing a finger. Yay!</h1>' : '<h1>You are not pointing, because your finger appears to be bent or turned.</h1>';
-						//  info.innerHTML = info.txt + hand.direction + '<br>' + pointable.direction + '<br>' +
-						//  'ang: ' + dang + pointing;
-						info.innerHTML = info.txt + pointing;
-						
-					} else {
-						info.innerHTML = info.txt + '<h1>You are not pointing, because I see more than one finger.</h1>';
-// need to add code here that identifies spurious fingers						
-					}
 					finger.position.set( pointable.stabilizedTipPosition[0], pointable.stabilizedTipPosition[1], pointable.stabilizedTipPosition[2] );
 					direction = v( pointable.direction[0], pointable.direction[1], pointable.direction[2]);  // best so far
 					finger.lookAt( direction.add( finger.position ) );
@@ -157,12 +222,6 @@ light.shadowCameraVisible = true;
 					fingers[i].visible = false;
 				}
 			}
-		} else {
-			for (var i = 0; i < 5; i++) {
-				fingers[i].visible = false;
-			}
-			// info.innerHTML = info.txt + '<h1>You are not pointing, because I don\'t see any fingers.<br>' + txts[ Math.floor(Math.random() * 3) ] + '</h1>';
-			info.innerHTML = info.txt + '<h1 class=red>You are not pointing, because I don\'t see any fingers.</h1>';
 		}
 	});
 

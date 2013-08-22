@@ -1,0 +1,245 @@
+﻿<!doctype html>
+<html lang=en>
+<head>
+<title></title>
+<meta charset=utf-8>
+</head>
+<body>
+<script src="http://js.leapmotion.com/0.2.0/leap.min.js"></script>
+<!--
+<script src=../../../git-repos/three.js/examples/js/Detector.js></script>
+<script src=../../../git-repos/three.js/build/three.min.js></script>
+<script src=../../../git-repos/three.js/examples/js/controls/TrackballControls.js></script>
+<script src=../../../git-repos/three.js/examples/js/libs/stats.min.js></script>
+-->
+<script src=http://mrdoob.github.com/three.js/build/three.min.js></script>
+<script src=http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js></script>
+<script src=http://mrdoob.github.com/three.js/examples/js/libs/stats.min.js></script>
+
+<script>
+	var renderer, scene, camera, controls, stats, light;
+	var avatar, palm, data;
+	var patches = [];
+	var patchesRows = 3; patchesCols = 3;
+	var patchSize = 1000;
+	var edgeLeft = 0, edgeRight = 2, edgeFront = -2, edgeBack = 0;
+
+	init();
+	animate();
+
+	function init() {
+		var css, info, geometry, material, mesh;
+
+		css = document.body.appendChild( document.createElement('style') );
+		css.innerHTML = 'body { font: 600 12pt monospace; margin: 0; overflow: hidden; text-align: center; }' +
+		'' ;
+
+		info = document.body.appendChild( document.createElement( 'div' ) );
+		info.style.cssText = 'margin 0; position: absolute; top: 0px; width: 100% ';
+		info.innerHTML = '<p>hand2go</p>' +
+			'<p id=data>bbb</p>' +
+		'';
+
+// Basics
+		renderer = new THREE.WebGLRenderer( { antialias: true } );
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		renderer.shadowMapEnabled = true;
+		document.body.appendChild( renderer.domElement );
+		scene = new THREE.Scene();
+
+		camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
+		camera.position.set( patchSize, 250, 600 );
+		controls = new THREE.TrackballControls( camera, renderer.domElement );
+		controls.target.set( patchSize, 100, -500 );
+
+		stats = new Stats();
+		stats.domElement.style.cssText = 'position: absolute; top: 0px; zIndex: 100; ';
+		document.body.appendChild( stats.domElement );
+
+//  Lights
+ 		light = new THREE.DirectionalLight( 0xffffff, 1 );
+		light.position.set( patchSize, 2000, -patchSize);
+		scene.add( light );
+		light.castShadow = true;
+		light.shadowMapWidth = 2048;
+		light.shadowMaHeight = 2048;
+		
+		light.shadowCameraLeft = -1000;
+		light.shadowCameraRight = 1000;
+		light.shadowCameraTop = 1000;
+		light.shadowCameraBottom = -1000;
+
+		light.shadowCameraNear = 500;
+		light.shadowCameraFar = 3000;
+light.shadowCameraVisible = true;
+
+		geometry = new THREE.AxisHelper(500 )
+		scene.add( geometry );
+		
+// patches
+		// plane = new THREE.Object3D();
+		// geometry = new THREE.CubeGeometry( patchSize - 50, 50, patchSize - 50 );
+		for (var i = 0; i < patchesCols; i++) {
+			for (var j = 0; j < patchesRows; j++) {
+				getCube( v( patchSize * (edgeLeft + i), -50 - 100 * Math.random(), -patchSize * (edgeBack + j)  ) );
+			}
+		}
+// avatar
+		geometry = new THREE.CubeGeometry( 100, 100, 100 );
+		material = new THREE.MeshNormalMaterial();
+		avatar = new THREE.Mesh( geometry, material );
+		avatar.position.set( patchSize, 100, -patchSize );
+		avatar.castShadow = true;
+		avatar.receiveShadow = true;
+		scene.add( avatar );
+		light.target = avatar;
+		camera.target = avatar;
+
+// palm
+		geometry = new THREE.CubeGeometry( 100, 20, 80 );
+		material = new THREE.MeshNormalMaterial();
+		palm = new THREE.Mesh( geometry, material );
+		palm.castShadow = true;
+		palm.receiveShadow = true;
+		scene.add( palm );
+
+		data = document.getElementById('data');
+	}
+
+	var fr;
+
+	Leap.loop( function( frame ) {
+		fr = frame;
+		var hand, direction, roll, len, finger, pointable;
+		if ( frame.hands.length > 0) {
+			hand = frame.hands[0];
+			palm.position.set( hand.stabilizedPalmPosition[0], hand.stabilizedPalmPosition[1], hand.stabilizedPalmPosition[2] );
+			direction = v( hand.direction[0], hand.direction[1], hand.direction[2] );  // best so far
+			palm.lookAt( direction.add( palm.position ) );
+			roll = Math.atan2( hand.palmNormal[0], -hand.palmNormal[1] );
+			palm.rotateOnAxis( new THREE.Vector3( 0, 0, -1 ), roll);
+			palm.visible = true;
+			pos = avatar.position;
+			data.innerHTML = 'palm.x: ' + palm.position.x.toFixed(2) + ' - palm.y: ' + palm.position.y.toFixed(2)  + ' - palm.z: '  + palm.position.z.toFixed(0) +
+				' - ava.x: ' + pos.x.toFixed(0) + ' ava.y: '  + pos.y.toFixed(0)  + ' ava.z: ' + pos.z.toFixed(0) +
+				' - cam.z: ' + camera.position.z.toFixed(0);
+
+			getPatch();
+
+			var deltaX = 0.005 * palm.position.x ;
+			camera.position.x += deltaX;
+			avatar.position.x += deltaX;
+			//camera.translateX( deltaX );
+			//avatar.translateX( deltaX );
+
+			var deltaY = 0.005 * ( palm.position.y - 150 );
+			camera.position.y += deltaY;
+			avatar.position.y += deltaY;
+
+			var scaleZ = ( palm.position.z > 0 ) ?  0.008 : 0.06;
+			var deltaZ = scaleZ * palm.position.z;
+			
+			avatar.position.z += deltaZ;
+			camera.position.z += deltaZ;
+			controls.target = avatar.position;
+			light.position.set( avatar.position.x, 2000, avatar.position.z );
+			// pos = avatar.clone();
+			// pos.translateZ( -800 );
+			// camera.position = pos.position;
+			avatar.rotation.set( palm.rotation.x, palm.rotation.y, palm.rotation.z );
+		} else {
+			palm.visible = false;
+		}
+	});
+
+	function getPatch() {
+		var patch;
+		var pos = avatar.position;
+		var arr = [];
+		var len = patches.length;
+		
+		if ( pos.z < patchSize * ( edgeBack - 1 ) ) {
+			data.innerHTML += ' - in z- zone';
+			for (var i = 0; i < len; i++) {
+				patch = patches[i];
+				if ( patch.position.z > patchSize * ( edgeBack - 0 ) ) {
+					scene.remove( patch);
+				} else {
+					arr.push( patch );
+				}
+			}
+			for (var i = 0; i < patchesCols; i++) {
+				getCube( v( patchSize * (edgeLeft + i), -50 - 100 * Math.random(), patchSize * (edgeBack - 3) ) );
+			}
+			edgeBack--;
+			
+		} else if ( pos.z > patchSize * ( edgeBack + 0 )  ) {
+			data.innerHTML += ' - in z+ zone';
+			for (var i = 0; i < len; i++) {
+				patch = patches[i];
+				if ( patch.position.z < patchSize * ( edgeBack - 2)  ) {
+					scene.remove( patch);
+				} else {
+					arr.push( patch );
+				}
+			}
+			for (var i = 0; i < patchesCols; i++) {
+				getCube( v( patchSize * (edgeLeft + i), -50 - 100 * Math.random(), patchSize * (edgeBack + 1) ) );
+			}
+			edgeBack++;
+
+		} else if ( pos.x > patchSize * ( edgeLeft + 1 )  ) {
+			data.innerHTML += ' - in x+ zone';
+			for (var i = 0; i < len; i++) {
+				patch = patches[i];
+				if ( patch.position.x < patchSize * ( edgeLeft - 0 ) ) {
+					scene.remove( patch);
+				} else {
+					arr.push( patch );
+				}
+			}
+			for (var i = 0; i < 3; i++) {
+				getCube( v( patchSize * (edgeLeft + 3), -50 - 100 * Math.random(), patchSize * (edgeBack - i) ) );
+			}
+			edgeLeft++;
+
+		} else if ( pos.x < patchSize * ( edgeLeft - 0 )  ) {
+			data.innerHTML += ' - x- in zone';
+			for (var i = 0; i < len; i++) {
+				patch = patches[i];
+				if ( patch.position.x > patchSize * ( edgeLeft + 1 ) ) {
+					scene.remove( patch);
+				} else {
+					arr.push( patch );
+				}
+			}
+			for (var i = 0; i < 3; i++) {
+				getCube( v( patchSize * (edgeLeft - 2), -50 - 100 * Math.random(), patchSize * (edgeBack - i) ));
+			}
+			edgeLeft--;
+		}
+		patches = arr;
+	}
+
+	function getCube( position ) {
+		var geometry = new THREE.CubeGeometry( patchSize - 50, 50, patchSize - 50 );
+		var material = new THREE.MeshLambertMaterial( {color: Math.random() * 0xffffff } );
+		var mesh = new THREE.Mesh( geometry, material );
+		mesh.position = position;
+		mesh.castShadow = true;
+		mesh.receiveShadow = true;
+		patches.push( mesh );
+		scene.add( mesh );
+	}
+
+	function animate() {
+		requestAnimationFrame( animate );
+		controls.update();
+		renderer.render( scene, camera );
+		stats.update();
+	}
+
+	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }
+</script>
+</body>
+</html>

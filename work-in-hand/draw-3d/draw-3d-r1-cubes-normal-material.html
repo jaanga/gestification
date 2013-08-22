@@ -18,9 +18,7 @@
 
 <script>
 	var renderer, scene, camera, controls, stats;
-	var info, palm, fingers = [];
-	
-	var txts = ['Kindly get with the program.','Let\'s not be tricky.','I\'m waiting...'];
+	var info, drawCube, palm, fingers = [];
 
 	init();
 	animate();
@@ -30,12 +28,11 @@
 		
 		css = document.body.appendChild( document.createElement('style') );
 		css.innerHTML = 'body { font: 600 12pt monospace; margin: 0; overflow: hidden; text-align: center; }' +
-		'h1.red { color: red; }' +
-		'h1.green { color: green; }' ;
+		'' ;
 
 		info = document.body.appendChild( document.createElement( 'div' ) );
 		info.style.cssText = 'margin 0; position: absolute; top: 0px; width: 100% ';
-		info.innerHTML = info.txt = '<h1>pointing-or-not</h1>' +
+		info.innerHTML = info.txt = '<h1>draw-line</h1>' +
 			'' +
 		'';
 		
@@ -107,6 +104,13 @@ light.shadowCameraVisible = true;
 			scene.add( mesh );
 			fingers.push( mesh );
 		}	
+		
+		geometry = new THREE.CubeGeometry( 20, 20, 20 );
+		material = new THREE.MeshNormalMaterial();
+		drawCube = new THREE.Mesh( geometry, material );
+		drawCube.castShadow = true;
+		drawCube.receiveShadow = true;
+		// scene.add( palm );		
 	}
 
 	var fr;
@@ -119,50 +123,46 @@ light.shadowCameraVisible = true;
 			palm.position.set( hand.stabilizedPalmPosition[0], hand.stabilizedPalmPosition[1], hand.stabilizedPalmPosition[2] );
 			direction = v( hand.direction[0], hand.direction[1], hand.direction[2] );  // best so far
 			palm.lookAt( direction.add( palm.position ) );
-			roll = Math.atan2( hand.palmNormal[0], hand.palmNormal[1] );
-			palm.rotation.z = roll;
+			roll = Math.atan2( hand.palmNormal[0], -hand.palmNormal[1] );
+			palm.rotateOnAxis(new THREE.Vector3( 0, 0, -1 ), roll);
 			palm.visible = true;
 		} else {
 			palm.visible = false;
 		}
 
 		len = frame.pointables.length;
-		var hang, pang, dang;
+		var mesh, hang, pang, dang, pointing
 		if ( len > 0) {
-			palm.hasFingers = true;
 			for (var i = 0; i < 5; i++) {
 				finger = fingers[i];
-				
 				if ( i < len ) {
 					pointable = frame.pointables[i];
-					if ( len === 1 && hand ) {
-						hang = v( hand.direction[0], hand.direction[1], hand.direction[2] );
-						pang = v( pointable.direction[0], pointable.direction[1], pointable.direction[2] );
-						dang = hang.angleTo( pang ).toFixed(3);
-						pointing = ( dang < 0.5 ) ? '<h1 class=green > I can see that you are pointing a finger. Yay!</h1>' : '<h1>You are not pointing, because your finger appears to be bent or turned.</h1>';
-						//  info.innerHTML = info.txt + hand.direction + '<br>' + pointable.direction + '<br>' +
-						//  'ang: ' + dang + pointing;
-						info.innerHTML = info.txt + pointing;
-						
-					} else {
-						info.innerHTML = info.txt + '<h1>You are not pointing, because I see more than one finger.</h1>';
-// need to add code here that identifies spurious fingers						
-					}
 					finger.position.set( pointable.stabilizedTipPosition[0], pointable.stabilizedTipPosition[1], pointable.stabilizedTipPosition[2] );
 					direction = v( pointable.direction[0], pointable.direction[1], pointable.direction[2]);  // best so far
 					finger.lookAt( direction.add( finger.position ) );
 					finger.scale.z = 0.05 * pointable.length;
 					finger.visible = true;
+					
+					if ( len === 1 && hand ) {
+						hang = v( hand.direction[0], hand.direction[1], hand.direction[2] );
+						pang = v( pointable.direction[0], pointable.direction[1], pointable.direction[2] );
+						dang = hang.angleTo( pang ).toFixed(3);
+						pointing = ( dang < 0.5 ) ? ' I can see that you are pointing a finger!' : 'You are not pointing, because your finger appears to be bent or turned.';
+						info.innerHTML = info.txt + pointing;
+						mesh = drawCube.clone();
+						mesh.position = finger.position.clone();
+						mesh.lookAt( direction.add( finger.position ) );
+						scene.add( mesh );
+						
+					} else {
+						info.innerHTML = info.txt + 'You are not pointing, because I see more than one finger';						
+					}					
+					
 				} else {
 					fingers[i].visible = false;
+					info.innerHTML = info.txt + 'You are not pointing, because I don\'t see any fingers';
 				}
 			}
-		} else {
-			for (var i = 0; i < 5; i++) {
-				fingers[i].visible = false;
-			}
-			// info.innerHTML = info.txt + '<h1>You are not pointing, because I don\'t see any fingers.<br>' + txts[ Math.floor(Math.random() * 3) ] + '</h1>';
-			info.innerHTML = info.txt + '<h1 class=red>You are not pointing, because I don\'t see any fingers.</h1>';
 		}
 	});
 

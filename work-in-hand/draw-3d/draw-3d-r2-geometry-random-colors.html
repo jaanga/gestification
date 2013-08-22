@@ -1,7 +1,7 @@
 ﻿<!doctype html>
 <html lang=en>
 <head>
-<title></title>
+<title>Draw Objects in 3D</title>
 <meta charset=utf-8>
 </head>
 <body>
@@ -18,10 +18,10 @@
 
 <script>
 	var renderer, scene, camera, controls, stats;
-	var info, palm, fingers = [];
+	var size = 10;
+	var geo = 'cube';
+	var info, drawGeo, palm, fingers = [];
 	
-	var txts = ['Kindly get with the program.','Let\'s not be tricky.','I\'m waiting...'];
-
 	init();
 	animate();
 
@@ -30,14 +30,19 @@
 		
 		css = document.body.appendChild( document.createElement('style') );
 		css.innerHTML = 'body { font: 600 12pt monospace; margin: 0; overflow: hidden; text-align: center; }' +
-		'h1.red { color: red; }' +
-		'h1.green { color: green; }' ;
+		'' ;
 
 		info = document.body.appendChild( document.createElement( 'div' ) );
 		info.style.cssText = 'margin 0; position: absolute; top: 0px; width: 100% ';
-		info.innerHTML = info.txt = '<h1>pointing-or-not</h1>' +
-			'' +
-		'';
+		info.innerHTML = info.txt = '<h1>Point with one Finger: Draw Objects in 3D</h1>' +
+			'Objects: <a href="#" onclick="geo=\'tetra\';buildGeo(geo,size);">tetrahedron</a> ' +
+			'<a href="#" onclick="geo=\'cube\';buildGeo(geo,size);">cube</a> ' +
+			'<a href="#" onclick="geo=\'sphere\';buildGeo(geo,size);">sphere</a> ' +
+   ' - Size: <a href="#" onclick="size=5;buildGeo(geo,size);">5</a> ' +
+			'<a href="#" onclick="size=10;buildGeo(geo,size);">10</a> ' +
+			'<a href="#" onclick="size=15;buildGeo(geo,size);">15</a>' +
+			' - Use your mouse to zoom, pan and rotate.<br />' +
+		'<br />';
 		
 // Basics
 		renderer = new THREE.WebGLRenderer( { antialias: true } );
@@ -56,39 +61,28 @@
 		stats.domElement.style.cssText = 'position: absolute; top: 0px; zIndex: 100; ';
 		document.body.appendChild( stats.domElement );
 
-//  Lights
- 		light = new THREE.DirectionalLight( 0xffffff, 1 );
-		light.position.set( 0, 500, 0 );
+		var light = new THREE.DirectionalLight( 0xffffff, 1 );
+		light.position.set( 500, 500, 0 );
+		// light.castShadow = true;
 		scene.add( light );
-		light.castShadow = true;
-		light.shadowMapWidth = 2048;
-		light.shadowMaHeight = 2048;
-		var d = 200;
-		light.shadowCameraLeft = -d;
-		light.shadowCameraRight = d;
-		light.shadowCameraTop = d * 2;
-		light.shadowCameraBottom = -d * 2;
+// light.shadowCameraVisible = true;		
 
-		light.shadowCameraNear = 100;
-		light.shadowCameraFar = 600;
-light.shadowCameraVisible = true;
+		light = new THREE.DirectionalLight( 0xffffff, 1 );
+		light.castShadow = true;
+		light.position.set( -500, 500, 0 );
+		scene.add( light );
 
 // axes
-        scene.add( new THREE.ArrowHelper( v(1, 0, 0), v(0, 0, 0), 100, 0xcc0000) );
-        scene.add( new THREE.ArrowHelper( v(0, 1, 0), v(0, 0, 0), 100, 0x00cc00) );
-        scene.add( new THREE.ArrowHelper( v(0, 0, 1), v(0, 0, 0), 100, 0x0000cc) );
+        // scene.add( new THREE.ArrowHelper( v(1, 0, 0), v(0, 0, 0), 100, 0xcc0000) );
+        // scene.add( new THREE.ArrowHelper( v(0, 1, 0), v(0, 0, 0), 100, 0x00cc00) );
+        // scene.add( new THREE.ArrowHelper( v(0, 0, 1), v(0, 0, 0), 100, 0x0000cc) );
 
 // Assets
 		material = new THREE.MeshBasicMaterial( {color: Math.random() * 0xffffff } );
-		geometry = new THREE.CubeGeometry( 600, 10, 300 );
+		geometry = new THREE.CubeGeometry( 600, 20, 300 );
 		mesh = new THREE.Mesh( geometry, material );
-		// mesh.position.set( 0, 0, 0 );
 		mesh.castShadow = true;
 		mesh.receiveShadow = true;
-		scene.add( mesh );
-		
-		mesh = mesh.clone();
-		mesh.material = new THREE.MeshBasicMaterial( { wireframe: true } );
 		scene.add( mesh );
 		
 		geometry = new THREE.CubeGeometry( 100, 20, 80 );
@@ -107,62 +101,79 @@ light.shadowCameraVisible = true;
 			scene.add( mesh );
 			fingers.push( mesh );
 		}	
+		buildGeo();
 	}
 
-	var fr;
-
+	function buildGeo() {
+		if ( geo === 'tetra' ) {
+			geometry = new THREE.TetrahedronGeometry( size );
+		} else if ( geo === 'sphere' ) {	
+			geometry = new THREE.SphereGeometry( size );
+		} else {
+			geometry = new THREE.CubeGeometry( size, size, size );
+		}	
+		material = new THREE.MeshLambertMaterial( { color: 0xffffff * Math.random(), ambient: 0xff0000, opacity: 0.7});
+		drawGeo = new THREE.Mesh( geometry, material );
+		drawGeo.castShadow = true;
+		drawGeo.receiveShadow = true;		
+	}
+	
 	Leap.loop( function( frame ) {
-		fr = frame;
 		var hand, direction, roll, len, finger, pointable;
 		if ( frame.hands.length > 0) {
 			hand = frame.hands[0];
 			palm.position.set( hand.stabilizedPalmPosition[0], hand.stabilizedPalmPosition[1], hand.stabilizedPalmPosition[2] );
 			direction = v( hand.direction[0], hand.direction[1], hand.direction[2] );  // best so far
 			palm.lookAt( direction.add( palm.position ) );
-			roll = Math.atan2( hand.palmNormal[0], hand.palmNormal[1] );
-			palm.rotation.z = roll;
+			roll = Math.atan2( hand.palmNormal[0], -hand.palmNormal[1] );
+			palm.rotateOnAxis(new THREE.Vector3( 0, 0, -1 ), roll);
 			palm.visible = true;
 		} else {
 			palm.visible = false;
 		}
 
 		len = frame.pointables.length;
-		var hang, pang, dang;
+		var mesh, hang, pang, dang, pointing;
 		if ( len > 0) {
-			palm.hasFingers = true;
 			for (var i = 0; i < 5; i++) {
 				finger = fingers[i];
-				
+				palm.dirty = true;
 				if ( i < len ) {
 					pointable = frame.pointables[i];
-					if ( len === 1 && hand ) {
-						hang = v( hand.direction[0], hand.direction[1], hand.direction[2] );
-						pang = v( pointable.direction[0], pointable.direction[1], pointable.direction[2] );
-						dang = hang.angleTo( pang ).toFixed(3);
-						pointing = ( dang < 0.5 ) ? '<h1 class=green > I can see that you are pointing a finger. Yay!</h1>' : '<h1>You are not pointing, because your finger appears to be bent or turned.</h1>';
-						//  info.innerHTML = info.txt + hand.direction + '<br>' + pointable.direction + '<br>' +
-						//  'ang: ' + dang + pointing;
-						info.innerHTML = info.txt + pointing;
-						
-					} else {
-						info.innerHTML = info.txt + '<h1>You are not pointing, because I see more than one finger.</h1>';
-// need to add code here that identifies spurious fingers						
-					}
 					finger.position.set( pointable.stabilizedTipPosition[0], pointable.stabilizedTipPosition[1], pointable.stabilizedTipPosition[2] );
 					direction = v( pointable.direction[0], pointable.direction[1], pointable.direction[2]);  // best so far
 					finger.lookAt( direction.add( finger.position ) );
 					finger.scale.z = 0.05 * pointable.length;
 					finger.visible = true;
+					
+					if ( len === 1 && hand ) {
+						hang = v( hand.direction[0], hand.direction[1], hand.direction[2] );
+						pang = v( pointable.direction[0], pointable.direction[1], pointable.direction[2] );
+						dang = hang.angleTo( pang ).toFixed(3);
+						pointing = ( dang < 0.5 ) ? ' I can see that you are pointing a finger!' : 'You are not pointing, because your finger appears to be bent or turned.';
+						info.innerHTML = info.txt + pointing;
+						
+						mesh = drawGeo.clone();
+						mesh.position = finger.position.clone();
+						mesh.translateZ( -10 - pointable.length );
+						mesh.lookAt( direction.add( finger.position ) );
+						scene.add( mesh );
+						
+					} else {
+						info.innerHTML = info.txt + 'You are not pointing, because I see more than one finger. Objects: ' + scene.children.length;	
+						drawGeo.material = new THREE.MeshLambertMaterial( { color: 0xffffff * Math.random(), ambient: 0xff0000, opacity: 0.7});				
+					}					
 				} else {
 					fingers[i].visible = false;
 				}
 			}
-		} else {
+		} else if ( palm.dirty ) {
 			for (var i = 0; i < 5; i++) {
 				fingers[i].visible = false;
+				info.innerHTML = info.txt + 'You are not pointing, because I don\'t see any fingers. Objects: ' + scene.children.length;	
+				drawGeo.material = new THREE.MeshLambertMaterial( { color: 0xffffff * Math.random(), ambient: 0xff0000, opacity: 0.7});	
+				palm.dirty = false;				
 			}
-			// info.innerHTML = info.txt + '<h1>You are not pointing, because I don\'t see any fingers.<br>' + txts[ Math.floor(Math.random() * 3) ] + '</h1>';
-			info.innerHTML = info.txt + '<h1 class=red>You are not pointing, because I don\'t see any fingers.</h1>';
 		}
 	});
 

@@ -35,11 +35,12 @@
 		css = document.body.appendChild( document.createElement('style') );
 		css.innerHTML = 'body { font: 600 12pt monospace;margin: auto; overflow: hidden; text-align: center; }' +
 		'div.parent {clear: both;}' +
-		'div.row { float: left; outline: 1px solid black; width: 170px; }' +
-		'div.red { background-color: #ebb; }';;
+		'div.row { float: left; outline: 1px solid black; width: 120px; }' +
+		'div.red { background-color: #ebb; }' +
+		'div.title { float: left; outline: 1px solid black; width: 170px; }';
 
 		info = document.body.appendChild( document.createElement( 'div' ) );
-		info.style.cssText = ' left: 0; margin: auto; position: absolute;  right: 0; width: 70%;';
+		info.style.cssText = ' left: 0; margin: auto; position: absolute;  right: 0; width: 75%;';
 		info.innerHTML = info.txt = '<h1>phalanges</h1>' +
 			'<p>Wiggle your fingers over <a href="http://leapmotion.com" target="_blank">Leap Motion</a> device' +
 			' ~ <a href="https://github.com/jaanga/gestification/tree/gh-pages/work-in-hand/phalanges">source code</a></p>' +
@@ -186,14 +187,14 @@ info.innerHTML = info.txt + '';
 				palm.hasFiveFingers = true;
 				palm.hadFiveFingers = true;
 
-info.innerHTML += '<div class=parent><div class="row" >Pointable # </div>';		
+info.innerHTML += '<div class=parent><div class="title" >Pointable # </div>';		
 				for (var i = 0; i < len; i++) {
 info.innerHTML += '<div class=row>' + i  + '</div>';						
 				}
 info.innerHTML += '</div>';	
 				
 				
-info.innerHTML += '<div class=parent><div class="row" >P Position: </div>';				
+info.innerHTML += '<div class=parent><div class="title" >P Position: </div>';				
 				for (var i = 0; i < len; i++) {
 					posX.push( frame.pointables[i].stabilizedTipPosition[0] );
 info.innerHTML += '<div class="row" >' + frame.pointables[i].stabilizedTipPosition[0].toFixed(0) + '</div>';	
@@ -201,7 +202,7 @@ info.innerHTML += '<div class="row" >' + frame.pointables[i].stabilizedTipPositi
 info.innerHTML += '</div';	
 
 
-info.innerHTML += '<div class=parent><div class="row red" >P ID: </div>';		
+info.innerHTML += '<div class=parent><div class="title red" >P ID: </div>';		
 				for (var i = 0; i < len; i++) {
 					fingerTips[i].id = frame.pointables[ i ].id;
 info.innerHTML += '<div class="row red" >' + fingerTips[i].id  + '</div>';						
@@ -211,7 +212,7 @@ info.innerHTML += '</div>';
 				var posXclone = posX.slice(0);
 				posXclone.sort(function(a,b){return a-b});
 				
-info.innerHTML += '<div class=parent><div class="row" >P Sort by #: </div>';					
+info.innerHTML += '<div class=parent><div class="title" >P Sort by #: </div>';					
 				for (var i = 0; i < len; i++) {
 					// pointablePosition = frame.pointables[i].stabilizedTipPosition[0];
 					// positionIndex = posXclone.indexOf( pointablePosition );
@@ -225,14 +226,14 @@ info.innerHTML += '<div class=row>' + pos + '</div>';
 info.innerHTML += '</div>';					
 				
 				
-info.innerHTML += '<div class=parent><div class="row" >P sort by pos: </div>';					
+info.innerHTML += '<div class=parent><div class="title" >P sort by pos: </div>';					
 				for (var i = 0; i < len; i++) {
 info.innerHTML += '<div class=row>' + posXclone[i].toFixed(0)  + '</div>';		
 				}
 info.innerHTML += '</div>';	
 				
 				
-info.innerHTML += '<div class=parent><div class="row red" >P Sort by ID: </div>';
+info.innerHTML += '<div class=parent><div class="title red" >P Sort by ID: </div>';
 				for (var i = 0; i < len; i++) {
 info.innerHTML += '<div class="row red">' + fingerBases[ i ].id  + '</div>';		
 				}
