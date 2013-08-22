@@ -125,8 +125,8 @@
 			palm.position.set( hand.stabilizedPalmPosition[0], hand.stabilizedPalmPosition[1], hand.stabilizedPalmPosition[2] );
 			direction = v( hand.direction[0], hand.direction[1], hand.direction[2] );  // best so far
 			palm.lookAt( direction.add( palm.position ) );
-			roll = Math.atan2( hand.palmNormal[0], -hand.palmNormal[1] );
-			palm.rotateOnAxis(new THREE.Vector3( 0, 0, -1 ), roll);
+			roll = Math.atan2( hand.palmNormal[0], hand.palmNormal[1] );
+			palm.rotation.z = roll;
 			palm.visible = true;
 		} else {
 			palm.visible = false;
@@ -135,9 +135,9 @@
 		len = frame.pointables.length;
 		var mesh, hang, pang, dang, pointing;
 		if ( len > 0) {
+			palm.hasFingers = true;
 			for (var i = 0; i < 5; i++) {
 				finger = fingers[i];
-				palm.dirty = true;
 				if ( i < len ) {
 					pointable = frame.pointables[i];
 					finger.position.set( pointable.stabilizedTipPosition[0], pointable.stabilizedTipPosition[1], pointable.stabilizedTipPosition[2] );
@@ -167,13 +167,13 @@
 					fingers[i].visible = false;
 				}
 			}
-		} else if ( palm.dirty ) {
+		} else if ( palm.hasFingers ) {
 			for (var i = 0; i < 5; i++) {
-				fingers[i].visible = false;
-				info.innerHTML = info.txt + 'You are not pointing, because I don\'t see any fingers. Objects: ' + scene.children.length;	
-				drawGeo.material = new THREE.MeshLambertMaterial( { color: 0xffffff * Math.random(), ambient: 0xff0000, opacity: 0.7});	
-				palm.dirty = false;				
+				fingers[i].visible = false;	
 			}
+			info.innerHTML = info.txt + 'You are not pointing, because I don\'t see any fingers. Objects: ' + scene.children.length;
+			drawGeo.material = new THREE.MeshLambertMaterial( { color: 0xffffff * Math.random(), ambient: 0xff0000, opacity: 0.7});	
+			palm.hasFingers = false;				
 		}
 	});
 

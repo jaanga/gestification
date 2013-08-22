@@ -1,0 +1,238 @@
+﻿<!doctype html>
+<html lang=en>
+<head>
+<title>phalanges</title>
+<meta charset=utf-8>
+<meta name='viewport' content='width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0'>
+</head>
+<body>
+<script src="http://js.leapmotion.com/0.2.0/leap.min.js"></script>
+<!--
+<script src=../../../git-repos/three.js/examples/js/Detector.js></script>
+<script src=../../../git-repos/three.js/build/three.min.js></script>
+<script src=../../../git-repos/three.js/examples/js/controls/TrackballControls.js></script>
+<script src=../../../git-repos/three.js/examples/js/libs/stats.min.js></script>
+-->
+<script src=http://mrdoob.github.com/three.js/examples/js/Detector.js></script>
+<script src=http://mrdoob.github.com/three.js/build/three.min.js></script>
+<script src=http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js></script>
+<script src=http://mrdoob.github.com/three.js/examples/js/libs/stats.min.js></script>
+
+<script src=../../../modec-threejs-utils/r4/modec-threejs-utils-r4.js ></script>
+
+<script>
+	if ( ! Detector.webgl ) { Detector.addGetWebGLMessage(); }
+
+	var renderer, scene, camera, controls, stats;
+	var info, palm, fingerTips = [], fingerJoints = [], fingerBases = [];
+
+	init();
+	animate();
+
+	function init() {
+		var css, light, geometry, material, mesh;
+		
+		css = document.body.appendChild( document.createElement('style') );
+		css.innerHTML = 'body { font: 600 12pt monospace; margin: 0; overflow: hidden; text-align: center; }';
+
+		info = document.body.appendChild( document.createElement( 'div' ) );
+		info.style.cssText = 'position: absolute; width: 100%;';
+		info.innerHTML = info.txt = '<h1>phalanges</h1>' +
+			'<p>Wiggle your fingers over <a href="http://leapmotion.com" target="_blank">Leap Motion</a> device' +
+			' ~ <a href="https://github.com/jaanga/gestification/tree/gh-pages/work-in-hand/phalanges">source code</a></p>' +
+		'';	
+
+// Three.js Basics
+		if ( ! Detector.webgl ) {
+			renderer = new THREE.CanvasRenderer( { antialias: true } );
+		} else {
+			renderer = new THREE.WebGLRenderer( { antialias: true } );
+		}
+
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		renderer.shadowMapEnabled = true;
+		document.body.appendChild( renderer.domElement );
+		scene = new THREE.Scene();
+
+		camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 3000 );
+		camera.position.set( 0, 250, 600 );
+		controls = new THREE.TrackballControls( camera, renderer.domElement );
+		controls.target.set( 0, 100, 0 );
+
+		stats = new Stats();
+		stats.domElement.style.cssText = 'position: absolute; top: 0px; zIndex: 100; ';
+		document.body.appendChild( stats.domElement );
+
+//  Lights
+		light = new THREE.AmbientLight( 0xffffff);
+		light.color.setHSL( 0.1, 0.5, 0.3 );
+		scene.add( light );
+
+		light = new THREE.DirectionalLight( 0xffffff, 1 );
+		light.position.set( 1, 1, 1 ).normalize();
+		scene.add( light );
+
+		light = new THREE.DirectionalLight( 0xffffff, 1 );
+		light.position.set( -1, -1, -1 ).normalize();
+		scene.add( light );
+
+		light = new THREE.SpotLight( 0xffffff, 1.5 );
+		light.position.set( 0, 1700, 0 );
+		light.castShadow = true;
+
+		light.shadowMapWidth = 1024;
+		light.shadowMapHeight = 1024;
+		light.shadowCameraNear = 1000;
+		light.shadowCameraFar = 1900;
+		light.shadowCameraFov = 25;
+		scene.add( light );
+// light.shadowCameraVisible = true;
+
+// Assets
+
+// Ground
+		material = new THREE.MeshBasicMaterial( {color: Math.random() * 0xffffff, side: THREE.DoubleSide } );
+		geometry = new THREE.CubeGeometry( 600, 10, 500 );
+		mesh = new THREE.Mesh( geometry, material );
+		mesh.position.set( 0, -50, 0 );
+		mesh.castShadow = true;
+		mesh.receiveShadow = true;
+		scene.add( mesh );
+		
+// Palm
+		geometry = new THREE.CubeGeometry( 90, 25, 80 );
+// move palm off-center to more natural looking position		
+		geometry.applyMatrix( new THREE.Matrix4().makeTranslation( -15, 5, -55 ) );
+		material = new THREE.MeshNormalMaterial();
+		palm = new THREE.Mesh( geometry, material );
+		palm.castShadow = true;
+		palm.receiveShadow = true;
+		scene.add( palm );
+
+		for (var i = 0; i < 5; i++) {
+			geometry = new THREE.CubeGeometry( 16, 12, 1 );
+			var texture = canvasText( i , { backgroundColor: 'random', color: '#000000', fontSize: '48pt', globalAlpha: 0.8, height: 200, lineWidth: 2, textAlign: 'center', textBaseline: 'middle', width: 100, X: 50, Y: 100} );
+			material = new THREE.MeshPhongMaterial( { map: texture, color: Math.random() * 0xffffff, specular: 0x333333, shininess: 20, side: THREE.DoubleSide, transparent: true } );
+			mesh = new THREE.Mesh( geometry, material );
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			scene.add( mesh );
+			fingerTips.push( mesh );
+
+			geometry = new THREE.CubeGeometry( 10, 10, 1 );
+			mesh = new THREE.Mesh( geometry, material );
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			scene.add( mesh );
+			fingerJoints.push( mesh );
+
+			geometry = new THREE.CubeGeometry( 2, 50, 2 );
+			mesh = new THREE.Mesh( geometry, material );
+			scene.add( mesh );
+			fingerBases.push( mesh );
+		}
+	}
+
+	Leap.loop( function( frame ) {
+		var hand, direction, len, fingerTip, fingerJoint, fingerBase, pointable, distance, clone, fingerId;
+// positions around the palm for the finger bases		
+		var tranX = [ 30, 10, -10, -30, -50 ];
+		var tranZ = [ -70, -15, -15, -15, -15 ];		
+		var posX = [];
+		var tips = [];		
+		if ( frame.hands.length > 0) {
+			hand = frame.hands[0];
+			palm.position.set( hand.stabilizedPalmPosition[0], hand.stabilizedPalmPosition[1], hand.stabilizedPalmPosition[2] );
+			direction = v( hand.direction[0], hand.direction[1], hand.direction[2] );
+			palm.lookAt( direction.add( palm.position ) ); 
+			palm.rotation.z = Math.atan2( hand.palmNormal[0], hand.palmNormal[1] );
+			palm.visible = true;
+		} else {
+			palm.visible = false;
+		}
+		
+		len = frame.pointables.length;
+		if ( len > 0) {
+			palm.hasFingers = true;
+			for (var i = 0; i < len; i++) {
+				posX.push( frame.pointables[i].stabilizedTipPosition[0] );
+			}	
+			posX = posX.sort(function(a,b){return a-b});
+			
+info.innerHTML = info.txt; // + ' - ' + posX + '<br>';			
+			if ( len === 5) {
+			
+			
+				for (var i = 0; i < 5; i++) {
+					pointablePosition = frame.pointables[i].stabilizedTipPosition[0];
+					positionRank = posX.indexOf( pointablePosition );		
+					fingerBases[ positionRank ].id = frame.pointables[i].id;
+// info.innerHTML += 'pointable: ' i + ' - pointablePosition:  ' + pointablePosition + ' - positionRank: ' + positionRank + '<br>';
+				} 
+				
+				for (var i = 0; i < 5 ; i++) {
+info.innerHTML += 'fingerBases ' + i + ' - id: ' + fingerBases[ i ].id + ' - ' + posX[ i] + '<br>';
+				} 
+			}
+
+			for (var i = 0; i < 5; i++) {
+				fingerTip = fingerTips[i];
+				fingerJoint = fingerJoints[i];	
+				fingerBase = fingerBases[i];
+				if ( i < len ) {
+					pointable = frame.pointables[i];
+					fingerTip.position.set( pointable.stabilizedTipPosition[0], pointable.stabilizedTipPosition[1], pointable.stabilizedTipPosition[2] );
+					direction = v( pointable.direction[0], pointable.direction[1], pointable.direction[2]);  // best so far
+					fingerTip.lookAt( direction.add( fingerTip.position ) );
+					fingerTip.scale.z = 0.8 * pointable.length;
+					fingerTip.translateZ( -0.4 * pointable.length  );
+
+// move and align the finger bases to their designated positions around the palm					
+					clone = palm.clone();
+					fingerBase.position = clone.position;
+					fingerBase.rotation.set( clone.rotation.x, clone.rotation.y, clone.rotation.z ) ;
+					fingerBase.translateX( tranX[ i ] );
+					fingerBase.translateZ( tranZ[ i ] );					
+
+// move and align the finger joints so that they are at the inside end of the finger tips					
+					fingerJoint.position.set( pointable.stabilizedTipPosition[0], pointable.stabilizedTipPosition[1], pointable.stabilizedTipPosition[2] );					
+					direction = v( pointable.direction[0], pointable.direction[1], pointable.direction[2]);
+					fingerJoint.lookAt( direction.add( fingerJoint.position ) );
+					fingerJoint.translateZ( -pointable.length );
+					
+// now point the joint towards the appropriate base and scale it to fit in the space					
+					fingerId = posX.indexOf( pointable.stabilizedTipPosition[0] );
+					fingerBasePosition = fingerBases[fingerId].position;
+					fingerJoint.lookAt( fingerBasePosition );
+					distance = fingerJoint.position.distanceTo( fingerBasePosition );
+					fingerJoint.scale.z = 0.8 * distance;
+					fingerJoint.translateZ( 0.4 * distance);
+					
+					viz (i, true);
+				} else {
+					viz (i, false);
+				}
+			}
+		} else if ( palm.hasFingers ) {
+			for (var i = 0; i < 5; i++) {
+				viz( i, false );
+			}
+			palm.hasFingers = false;
+		}		
+	});
+
+	function viz( i, bool ) {
+		fingerTips[i].visible = bool;
+		fingerJoints[i].visible = bool;
+		fingerBases[i].visible = bool;	
+	}
+	
+	function animate() {
+		requestAnimationFrame( animate );
+		controls.update();
+		renderer.render( scene, camera );
+		stats.update();	
+	}
+</script>
+</body>
+</html>

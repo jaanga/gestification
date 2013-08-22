@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang=en>
+<head>
+<title>save json</title>
+<meta charset=utf-8>
+</head>
+<body>
+<script src="http://js.leapmotion.com/0.2.0/leap.min.js"></script>
+<script src=../FileSaver.min.js >   // see https://github.com/eligrey/FileSaver.js/   </script> 
+<script>
+	document.body.style.cssText = ' font: bold 9pt monospace; ';
+
+	var menu = document.body.appendChild( document.createElement( 'div' ) );
+	menu.innerHTML = '<h1 style="display: inline;">Save Leap Motion Data to JSON </h1> Press spacebar to pause. Press \'x\' to clear. Must show at least one hand and fingers to trigger recording. <button onclick=saveFile() >Save File</button>';
+	
+	var outputDiv = document.body.appendChild( document.createElement( 'div' ) );
+	outputDiv.innerHTML = '<p></p>';
+	
+	var textarea = document.body.appendChild( document.createElement( 'textarea' ) );
+	textarea.style.cssText = 'height: ' + (window.innerHeight - 90) + 'px; width: ' + (window.innerWidth - 40) + 'px; ';
+
+	var pausedFrame = null;
+	var latestFrame = null;
+	
+	window.onkeypress = function(e) {
+// you pressed the spacebar	
+		if (e.charCode == 32) { 
+			if (pausedFrame == null) {
+				pausedFrame = latestFrame;
+			} else {
+				pausedFrame = null;
+			}
+		}
+// you pressed the letter x		
+		if ( e.charCode == 120 ) {
+			textarea.value = '';
+		}		
+	};
+
+	Leap.loop( function( frame ) {
+		latestFrame = frame;
+		outputDiv.innerHTML = '<b>Latest frame: </b>' + JSON.stringify( (pausedFrame || latestFrame).data );
+		if ( !pausedFrame && frame.hands.length > 0 && frame.pointables.length > 4 ) {
+			textarea.value += JSON.stringify( frame.data ) + '\n\n';
+// Or just record some particular values			
+// 			textarea.value += 'Hand: ' + JSON.stringify( frame.data.hands[0] ) + '\n\n';
+//			textarea.value += 'Pointable: ' + JSON.stringify( frame.data.pointables[0] ) + '\n\n';
+		}
+	});	
+	
+	function saveFile() {
+		var blob = new Blob( [ textarea.value ] , {type: "text/plain;charset=utf-8"} );
+		saveAs(blob, 'leapmotion.json');
+	}	
+</script>
+</body>
+</html>
