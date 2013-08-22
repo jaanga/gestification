@@ -5,12 +5,14 @@ JavaScript web-apps from Jaanga for the awesome [Leap Motion](http://leapmotion.
 
 Live demos that work in your browser: http://jaanga.github.io/gestification/
 
-####Featured App####
+####Featured Apps####
 [Draw 3D Objects](http://jaanga.github.io/gestification/cookbook/draw-3d-objects/r1/draw-3d-objects.html)
+
+[Phalanges](http://jaanga.github.io/gestification/work-in-hand/phalanges/r3/phalanges.html)
 
 ***
 
-All the apps here are built with the help of Leap.js and Three.js.
+All the apps here are built with the help of [Leap.js](http://js.leapmotion.com/) and [Three.js](http://threejs.org).
 
 The mission is to build apps that are 3D in every aspect - all interaction, movement is inworld 3D in your browser. 
 The tools and designs for this sort of work are still at a very early stage of development.
