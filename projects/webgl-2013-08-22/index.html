@@ -55,6 +55,7 @@
 		ifr = document.body.appendChild( document.createElement('iframe') );
 		ifr.style.cssText = 'left: 0; height: 800px; margin: auto; outline: 5px solid #000; position: absolute; right: 0; top: 0; width: 80%; zIndex: 100;';
 		ifr.src = 'http://example.com';	
+		ifr.src = 'splash.html';	
 		// ifr.src = '../../work-in-hand/phalanges/r3/phalanges.html';
 		
 		MDU.setHeadsUp();
@@ -115,13 +116,27 @@
 		scene.add( mesh );
 
 // menu left side
+
+
+
+		geometry = new THREE.SphereGeometry( 30 );
+		// material = new THREE.MeshNormalMaterial();
+		texture = canvasText( 'Splash', { fontSize: '18pt',  height: 200, textAlign: 'center', textBaseline: 'middle', width: 200, X: 90, Y: 100} );
+		material = new THREE.MeshBasicMaterial( {  map: texture} );		
+		mesh = new THREE.Mesh( geometry, material );
+		mesh.position.set( -250, 300, -40 );
+		mesh.castShadow = true;
+		mesh.receiveShadow = true;
+		mesh.doIt = function() { window.location.href = 'splash.html'; };
+		MDU.collidableMeshList.push( mesh );
+		scene.add( mesh );
 		
 		geometry = new THREE.SphereGeometry( 30 );
 		// material = new THREE.MeshNormalMaterial();
 		texture = canvasText( 'GitHub repo', { fontSize: '18pt',  height: 200, textAlign: 'center', textBaseline: 'middle', width: 200, X: 90, Y: 100} );
 		material = new THREE.MeshBasicMaterial( {  map: texture} );		
 		mesh = new THREE.Mesh( geometry, material );
-		mesh.position.set( -250, 300, -40 );
+		mesh.position.set( -250, 250, -40 );
 		mesh.castShadow = true;
 		mesh.receiveShadow = true;
 		mesh.doIt = function() { window.location.href = 'https://github.com/jaanga/gestification'; };
@@ -131,7 +146,7 @@
 		texture = canvasText( 'Gestification', { fontSize: '18pt',  height: 200, textAlign: 'center', textBaseline: 'middle', width: 200, X: 90, Y: 100} );
 		material = new THREE.MeshBasicMaterial( {  map: texture} );		
 		mesh = new THREE.Mesh( geometry, material );
-		mesh.position.set( -250, 230, -50 );
+		mesh.position.set( -250, 200, -50 );
 		mesh.castShadow = true;
 		mesh.receiveShadow = true;
 		mesh.doIt = function() { ifr.src = '../../index.html'; };
@@ -141,7 +156,7 @@
 		texture = canvasText( 'draw3Dobj', { fontSize: '18pt',  height: 200, textAlign: 'center', textBaseline: 'middle', width: 200, X: 90, Y: 100} );
 		material = new THREE.MeshBasicMaterial( {  map: texture} );		
 		mesh = new THREE.Mesh( geometry, material );
-		mesh.position.set( -250, 180, -50 );
+		mesh.position.set( -250, 150, -50 );
 		mesh.castShadow = true;
 		mesh.receiveShadow = true;
 		mesh.doIt = function() { ifr.src = '../../cookbook/draw-3d-objects/r1/draw-3d-objects.html#'; };
@@ -151,7 +166,7 @@
 		texture = canvasText( 'holdEm', { fontSize: '18pt',  height: 200, textAlign: 'center', textBaseline: 'middle', width: 200, X: 90, Y: 100} );
 		material = new THREE.MeshBasicMaterial( {  map: texture} );		
 		mesh = new THREE.Mesh( geometry, material );
-		mesh.position.set( -250, 130, -50 );
+		mesh.position.set( -250, 100, -50 );
 		mesh.castShadow = true;
 		mesh.receiveShadow = true;
 		mesh.doIt = function() { ifr.src = '../../work-in-hand/holdem/holdem.html'; };
@@ -181,27 +196,27 @@
 		scene.add( mesh );			
 
 // right side
-		
-		texture = canvasText( 'Phalanges', { fontSize: '18pt',  height: 200, textAlign: 'center', textBaseline: 'middle', width: 200, X: 60, Y: 100} );
+		texture = canvasText( 'youGest', { fontSize: '18pt',  height: 200, textAlign: 'center', textBaseline: 'middle', width: 200, X: 50, Y: 100} );
 		material = new THREE.MeshBasicMaterial( {  map: texture} );		
 		mesh = new THREE.Mesh( geometry, material );
 		mesh.position.set( 250, 300, 0 );
+		mesh.castShadow = true;
+		mesh.receiveShadow = true;
+		mesh.doIt = function() { ifr.src = '../../cookbook/yougest/r4/index.html'; };
+		MDU.collidableMeshList.push( mesh );
+		scene.add( mesh );
+				
+		texture = canvasText( 'Phalanges', { fontSize: '18pt',  height: 200, textAlign: 'center', textBaseline: 'middle', width: 200, X: 60, Y: 100} );
+		material = new THREE.MeshBasicMaterial( {  map: texture} );		
+		mesh = new THREE.Mesh( geometry, material );
+		mesh.position.set( 250, 250, 0 );
 		mesh.castShadow = true;
 		mesh.receiveShadow = true;
 		mesh.doIt = function() { ifr.src = '../../work-in-hand/phalanges/r3/phalanges.html'; };
 		MDU.collidableMeshList.push( mesh );
 		scene.add( mesh );
 
-		texture = canvasText( 'youGest', { fontSize: '18pt',  height: 200, textAlign: 'center', textBaseline: 'middle', width: 200, X: 50, Y: 100} );
-		material = new THREE.MeshBasicMaterial( {  map: texture} );		
-		mesh = new THREE.Mesh( geometry, material );
-		mesh.position.set( 250, 250, 0 );
-		mesh.castShadow = true;
-		mesh.receiveShadow = true;
-		mesh.doIt = function() { ifr.src = '../../cookbook/yougest/r4/index.html'; };
-		MDU.collidableMeshList.push( mesh );
-		scene.add( mesh );
-		
+
 		texture = canvasText( 'showOfHands', { fontSize: '18pt',  height: 200, textAlign: 'center', textBaseline: 'middle', width: 200, X: 80, Y: 100} );
 		material = new THREE.MeshBasicMaterial( {  map: texture} );		
 		mesh = new THREE.Mesh( geometry, material );
