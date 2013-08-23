@@ -101,11 +101,11 @@
 		//mesh.material = new THREE.MeshBasicMaterial( { wireframe: true } );
 		//scene.add( mesh );
 		
-		//geometry = new THREE.CubeGeometry( 200, 50, 80 );
-		//material = new THREE.MeshNormalMaterial();
-		//palm = new THREE.Mesh( geometry, material );
-		//palm.castShadow = true;
-		//palm.receiveShadow = true;
+		geometry = new THREE.CubeGeometry( 200, 50, 80 );
+		material = new THREE.MeshNormalMaterial();
+		palm = new THREE.Mesh( geometry, material );
+		palm.castShadow = true;
+		palm.receiveShadow = true;
 		// scene.add( palm );
 
 		var texts = ['San Francisco WebGL MeetUp', 'Khronos Group', 'Tony Parisi glTF', 'Ken Russell Google', 'Adam Singer IGT'];
@@ -124,7 +124,7 @@
 
 	Leap.loop( function( frame ) {
 		var hand, direction, len, finger, pointable;
-/*		
+/*
 		if ( frame.hands.length > 0) {
 			hand = frame.hands[0];
 			palm.position.set( hand.stabilizedPalmPosition[0], hand.stabilizedPalmPosition[1], hand.stabilizedPalmPosition[2] );
