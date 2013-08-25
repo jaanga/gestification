@@ -15,7 +15,7 @@
 <script src=http://mrdoob.github.com/three.js/examples/js/Detector.js></script>
 <script src=http://mrdoob.github.com/three.js/build/three.min.js></script>
 <script src=http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js></script>
-<script src=FirstPersonControls-theo.js></script>
+<script src=first-person-controls-theo.js></script>
 <script src=http://mrdoob.github.com/three.js/examples/js/libs/stats.min.js></script>
 
 <script>
@@ -179,7 +179,7 @@
 		plane.geometry.computeVertexNormals();
 
 		var loader = new THREE.JSONLoader();
-		loader.load( '../../models/hands/w-hand-02-01.js', function ( geometry ) {
+		loader.load( '../../../models/hands/w-hand-02-01.js', function ( geometry ) {
 			geometry.applyMatrix( new THREE.Matrix4().makeRotationX( Math.PI ) );
 			for (var i = 0, index; i < 8; i++) {
 				index = Math.floor( Math.random() *  10000 );

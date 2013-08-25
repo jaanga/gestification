@@ -1,9 +1,9 @@
 hand2Go2
 ========
 
-Live Demo: http://jaanga.github.io/gestification/projects/hand2go2/r1/hand2go2.html
+Live Demo: http://jaanga.github.io/gestification/projects/hand2go2/hand2go2.html
 
-Leap.js + Three.js: a Leaped first person camera controller
+Leap.js + Three.js
 
 
 
