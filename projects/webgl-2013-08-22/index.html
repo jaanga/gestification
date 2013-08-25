@@ -47,7 +47,7 @@
 			//'<p>See also the Leap Motion JavaScript <a href="http://js.leapmotion.com/api/v0.2.0/docs" target="_blank">API</a> ' +
 			//'and <a href="http://js.leapmotion.com/examples" target="_blank">Examples</a> for more details.</p>' +
 			'<p>Tested on Chrome. Broken on Firefox, Safari and IE.</p>' +
-			'<p>Report bugs, view source code on <a href="https://github.com/jaanga/gestification/tree/gh-pages/yougest" target="_blank">GitHub</a>.</p>' +
+			'<p>Report bugs, view source code on <a href="https://github.com/jaanga/gestification/" target="_blank">GitHub</a>.</p>' +
 			'<p style=font-size:8pt; >Copyright &copy 2013 Jaanga authors. MIT License</small></p>' +
 		'';
 
@@ -69,6 +69,13 @@
 		document.body.appendChild( renderer.domElement );
 		renderer.domElement.style.cssText = 'left: 0; position: absolute; top: 0; width: 100%;';
 		scene = new THREE.Scene();
+		
+		info = document.body.appendChild( document.createElement( 'div' ) );
+		info.style.cssText = ' bottom: 10px; left: 0; margin: auto; position: absolute;  right: 0; width: 75%;';
+		info.innerHTML = info.txt = '<h1></h1>' +
+			//'<p>Wiggle your fingers over <a href="http://leapmotion.com" target="_blank">Leap Motion</a> device' +
+			//' ~ <a href="https://github.com/jaanga/gestification/tree/gh-pages/work-in-hand/phalanges">source code</a></p>' +
+		'';
 
 		MDU.resetCamera( { camY: 180, camZ: 600, conY: 180 } );
 
@@ -117,8 +124,6 @@
 
 // menu left side
 
-
-
 		geometry = new THREE.SphereGeometry( 30 );
 		// material = new THREE.MeshNormalMaterial();
 		texture = canvasText( 'Splash', { fontSize: '18pt',  height: 200, textAlign: 'center', textBaseline: 'middle', width: 200, X: 90, Y: 100} );
@@ -127,7 +132,7 @@
 		mesh.position.set( -250, 300, -40 );
 		mesh.castShadow = true;
 		mesh.receiveShadow = true;
-		mesh.doIt = function() { window.location.href = 'splash.html'; };
+		mesh.doIt = function() { window.location.href = 'splash.html'; info.innerHTML = 'splash screen for tonight\'s meetup';};
 		MDU.collidableMeshList.push( mesh );
 		scene.add( mesh );
 		
@@ -202,7 +207,7 @@
 		mesh.position.set( 250, 300, 0 );
 		mesh.castShadow = true;
 		mesh.receiveShadow = true;
-		mesh.doIt = function() { ifr.src = '../../cookbook/yougest/r4/index.html'; };
+		mesh.doIt = function() { ifr.src = '../../cookbook/yougest/r4/index.html'; info.innerHTML = '<h1>The first app I built - has come a long way</h1>';};
 		MDU.collidableMeshList.push( mesh );
 		scene.add( mesh );
 				
