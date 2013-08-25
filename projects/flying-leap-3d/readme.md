@@ -7,6 +7,13 @@ Built for Nicolás Berríos of Iquique, Chile
 
 Leap.js + Three.js: a Leaped first person camera controller
 
+###Leap Actions
+
+Hand open over device:
+* Supports the following FirstPersonControls parameters: moveLeft, moveRight, moveUp, moveUp, moveForward, moveBackword a
+* Supports pitch and ywa via lat and lon parameters
+* Supports Freeze toggle via a swipe gesture.
+
 
 
 ###Copyright and License

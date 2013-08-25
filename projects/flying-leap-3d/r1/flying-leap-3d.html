@@ -1,7 +1,7 @@
 ﻿<!doctype html>
 <html lang=en>
 <head>
-<title></title>
+<title>Flying Leap 3D</title>
 <meta charset=utf-8>
 </head>
 <body>
@@ -54,10 +54,10 @@
 		info.style.cssText = 'background-color: #eee; border-radius: 8px; color: #333; left: 0; ' +
 				'margin: -20px auto 0 auto; opacity: 0.85; padding: 10px;' +
 				'position: absolute; right: 0; text-align: left; top: 0 !important; min-width: 280px; max-width: 1000px; }' ;
-		info.txt = '<h1>hand2Go2</h1>';
+		info.txt = '<h1>Flying Leap 3D</h1>';
 		info.innerHTML = info.txt +	'With your Leap Motion controller:<br>Swipe side-to-side: Freeze/Unfreeze. Fist: stand in place and look around. ' +
 		'<br>Open hand: Move forward/backward, left/right, up/down<br><br>' +
-			'Theo Armour ~ 2013-08-24' +
+			'Theo Armour ~ 2013-08-24 ~ built for Nico' +
 		'';
 
 // Three.js Basics
@@ -267,7 +267,7 @@
 			var tmp = ( controls.freeze ) ? 'class=red' : '';
 			
 			info.innerHTML = info.txt + 'freeze: <scan ' + tmp + '>' + controls.freeze + '</scan> lookSpeed: ' + controls.lookSpeed.toFixed(3) + ' movementSpeed:  ' + controls.movementSpeed +
-			' mouseX: ' + controls.mouseX.toFixed() + ' mouseY: ' + controls.mouseY + '<br>' +
+			' mouseX: ' + controls.mouseX.toFixed() + ' mouseY: ' + controls.mouseY.toFixed() + '<br>' +
 			'hand.x: ' + hand.stabilizedPalmPosition[0].toFixed(0) + ' hand.y: ' + hand.stabilizedPalmPosition[1].toFixed(0) + ' hand.z: ' + hand.stabilizedPalmPosition[2].toFixed(0) + '<br>' +
 			'pitchAng: ' + pitchAng.toFixed(2) + ' yawAng: ' + yawAng.toFixed(2) ;
 		}
