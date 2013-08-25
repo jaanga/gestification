@@ -12,10 +12,14 @@ THREE.FirstPersonControls = function ( object, domElement ) {
 	this.domElement = ( domElement !== undefined ) ? domElement : document;
 
 	this.movementSpeed = 1.0;
+	
+// 2 new parmeters	
 	this.movementSpeedMin = 0.5;
 	this.movementSpeedMax = 10.0;
 	
 	this.lookSpeed = 0.005;
+	
+// 2 new parameters	
 	this.lookSpeedMin = 0.002;
 	this.lookSpeedMax = 0.009;
 
@@ -143,6 +147,7 @@ THREE.FirstPersonControls = function ( object, domElement ) {
 
 	};
 
+// new mouse wheel function 
 	this.onDocumentMouseWheel = function( event ) {
 
 		// WebKit
@@ -220,7 +225,10 @@ THREE.FirstPersonControls = function ( object, domElement ) {
 
 			case 82: /*R*/ this.moveUp = true; break;
 			case 70: /*F*/ this.moveDown = true; break;
-
+				
+			case 81: /*Q*/ this.freeze = !this.freeze; break;
+			
+// 6 new keyboard commends
 			case 33: /*page up*/ this.moveUp = true; break;
 			case 34: /*page down*/ this.moveDown = true; break;
 			
@@ -229,8 +237,6 @@ THREE.FirstPersonControls = function ( object, domElement ) {
 
 			case 188: /*<rf or ,*/ this.lookSpeed = 0; this.lon -= 0.5; break;
 			case 190: /*> or .*/ this.lookSpeed = 0; this.lon += 0.5; break;				
-
-			case 81: /*Q*/ this.freeze = !this.freeze; break;
 
 		}
 
@@ -341,8 +347,11 @@ THREE.FirstPersonControls = function ( object, domElement ) {
 	this.domElement.addEventListener( 'mousemove', bind( this, this.onMouseMove ), false );
 	this.domElement.addEventListener( 'mousedown', bind( this, this.onMouseDown ), false );
 	this.domElement.addEventListener( 'mouseup', bind( this, this.onMouseUp ), false );
+	
+// 2 new event listeners
 	this.domElement.addEventListener( 'mousewheel', bind( this, this.onDocumentMouseWheel ), false );
 	this.domElement.addEventListener( 'DOMMouseScroll', bind( this, this.onDocumentMouseWheel ), false);
+	
 	this.domElement.addEventListener( 'keydown', bind( this, this.onKeyDown ), false );
 	this.domElement.addEventListener( 'keyup', bind( this, this.onKeyUp ), false );
 
