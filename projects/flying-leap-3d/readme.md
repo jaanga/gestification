@@ -1,7 +1,9 @@
-hand2Go2
-========
+Flying Leap 3D
+==============
 
-Live Demo: http://jaanga.github.io/gestification/projects/hand2go2/r1/hand2go2.html
+Live Demo: http://jaanga.github.io/gestification/projects/flying-leap-3d/r1/flying-leap-3d.html
+
+Built for Nicolás Berríos of Iquique, Chile
 
 Leap.js + Three.js: a Leaped first person camera controller
 
