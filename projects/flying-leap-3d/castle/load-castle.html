@@ -51,8 +51,14 @@
 		
 		info = document.body.appendChild( document.createElement( 'div' ) );
 		info.style.cssText = 'position: absolute; width: 100%; ';
-		info.innerHTML = info.txt = '<h1>Castle Flying Leap 3D</h1>' +
+		info.txt = '<h1>Castle Flying Leap 3D</h1>' +
 		'';
+		
+		info.innerHTML = info.txt + 'With your Leap Motion controller:<br>Swipe side-to-side: Freeze/Unfreeze. Fist: stand in place and look around. ' +
+		'<br>Open hand: Move forward/backward, left/right, up/down<br><br>' +
+			'Theo Armour ~ 2013-08-26 ~ built for Nico' +
+		'';
+		
 		
 // Three.js Basics
 		renderer = new THREE.WebGLRenderer( { antialias: true } );
