@@ -1,7 +1,8 @@
 Flying Leap 3D
 ==============
 
-Live Demo: http://jaanga.github.io/gestification/projects/flying-leap-3d/r1/flying-leap-3d.html
+Live Demo #1: http://jaanga.github.io/gestification/projects/flying-leap-3d/r1/flying-leap-3d.html
+Live Demo #2: http://jaanga.github.io/gestification/projects/flying-leap-3d/castle/load-castle.html
 
 Built for Nicolás Berríos of Iquique, Chile
 
@@ -9,7 +10,7 @@ Leap.js + Three.js: a Leaped first person camera controller
 
 ###Leap Actions
 
-Hand open over Lea device:
+Hand open over Leap device:
 * Supports the following FirstPersonControls parameters: moveLeft, moveRight, moveUp, moveUp, moveForward, moveBackword a
 * Supports pitch and yaw via lat and lon parameters
 * Making fist reatricts camera movement to lat and lon only
@@ -18,8 +19,8 @@ Hand open over Lea device:
 ### New Mouse Actions
 * The app supports all the standard Three.js First Person Control functions
 * The fork supports the following additions:
-* The scroll wheel controls the speed of movementSpeed and lookSpeed
-* Clicking he scroll wheel toggles freeze
+* Turning the scroll wheel controls the speed of movementSpeed and lookSpeed
+* Clicking he scroll wheel toggles Freeze on and off.
 
 ###New keyboard Commands
 	The following new keyboard commands are added to the fork:
@@ -43,8 +44,11 @@ MIT License
 
 ###Change Log
 
+2013-08-26 ~ Theo
+* Added castle demo
+
 2013-08-24 ~ Theo
-* Foders and filess added
+* Folders and filess added
 * Updates a forked Three.js FirstPersonControls
 * Adds freeze and speed controls via mousewheel
 * Adds more keyboard commands
