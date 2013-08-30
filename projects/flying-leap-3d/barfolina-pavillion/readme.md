@@ -1,7 +1,7 @@
 barfolina pavillion
 ===================
 
-Live Demo: http://github.com/jaanga/gestification/projects/flying-leap-3d/barfolina-pavillion/r1/barfolina-pavillion.html
+Live Demo: http://jaanga.github.io/gestification/projects/flying-leap-3d/barfolina-pavillion/r1/barfolina-pavillion.html
 
 This demo app is intended to help users Laap Motion learn how to fly through 3D space using their hands.
 

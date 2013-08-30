@@ -446,11 +446,11 @@
 		}
 
 // background	
-		material = new THREE.MeshBasicMaterial( { color: 0x55855} );
+		material = new THREE.MeshBasicMaterial( { color: 0x33833} );
 		for (var i = 0; i < len; i++) {
-			geometry = new THREE.PlaneGeometry( 20 * Math.random(), 12 * Math.random() );
+			geometry = new THREE.PlaneGeometry( 20 * Math.random(), 5 + 20 * Math.random() );
 			mesh = new THREE.Mesh( geometry, material );
-			mesh.position.set( 35 + ( 20 * Math.random() + 90) * Math.cos( delta * i), 8 + 3 * Math.random(), -10 + ( 15 * Math.random() + 55) * Math.sin( delta * i ) );
+			mesh.position.set( 35 + ( 20 * Math.random() + 90) * Math.cos( delta * i), 5 + 3 * Math.random(), -0 + ( 15 * Math.random() + 60) * Math.sin( delta * i ) );
 			mesh.lookAt( v( 35, 0, -20) );
 			scene.add( mesh );	
 		}				
