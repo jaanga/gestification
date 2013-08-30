@@ -5,20 +5,22 @@ Live Demo #1: http://jaanga.github.io/gestification/projects/flying-leap-3d/r1/f
 
 Live Demo #2: http://jaanga.github.io/gestification/projects/flying-leap-3d/castle/load-castle.html
 
+Live Demo #3: http://jaanga.github.io/gestification/projects/flying-leap-3d/barfolina-pavillion/r1/barfolina-pavillion.html
+
 Built for Nicolás Berríos of Iquique, Chile
 
 Leap.js + Three.js: a Leaped first person camera controller
 
-###Current Demos: Issues
-* Castle does not have double-side materials. So when you go through a wall and turn around, you see no wall
+###Demos: Status and Issues
+See the readme in each deos folders for more details and status of issues
 
 
 ###Leap Actions
 Hand open over Leap device:
 * Supports the following FirstPersonControls parameters: moveLeft, moveRight, moveUp, moveUp, moveForward, moveBackword a
-* Supports pitch and yaw via lat and lon parameters
-* Making fist reatricts camera movement to lat and lon only
-* Supports Freeze toggle via a swipe gesture.
+* Supports pitch and yaw via Three.js lat and lon parameters
+* Making fist restricts camera movement to lat and lon only
+* Supports Freeze all interaction toggle via a swipe gesture.
 
 ###New Mouse Actions
 * The app supports all the standard Three.js First Person Control functions
@@ -49,6 +51,9 @@ Copyright &copy; 2013 Jaanga authors
 MIT License
 
 ###Change Log
+
+2013-08-29 ~ Theo
+* barofolina pavillion demp added
 
 2013-08-26 ~ Theo
 * Added castle demo
