@@ -1,0 +1,20 @@
+ply
+format ascii 1.0
+comment Created by Blender 2.68 (sub 0) - www.blender.org, source file: 'Pabellon_Barcelona_v1.3.blend'
+element vertex 4
+property float x
+property float y
+property float z
+property float nx
+property float ny
+property float nz
+property float s
+property float t
+element face 1
+property list uchar uint vertex_indices
+end_header
+-25.286779 -11.209791 1.292768 0.000000 0.000000 1.000000 -2.854893 -1.016333
+-4.277687 -11.177404 1.292768 0.000000 0.000000 1.000000 3.983662 -1.005791
+-4.277687 -1.293146 1.292768 0.000000 0.000000 1.000000 3.983662 2.211580
+-25.286779 -1.325533 1.292768 0.000000 0.000000 1.000000 -2.854893 2.201037
+4 0 1 2 3

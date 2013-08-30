@@ -1,0 +1,624 @@
+﻿<!doctype html>
+<html lang=en>
+<head>
+<title>barfolina pavillion</title>
+<meta charset=utf-8>
+</head>
+<body>
+<script src=http://mrdoob.github.com/three.js/examples/js/Detector.js ></script>
+<script src=http://mrdoob.github.com/three.js/build/three.min.js ></script>
+
+<script src=http://mrdoob.github.com/three.js/examples/js/libs/stats.min.js></script>
+<script src=http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js ></script>
+<script src=first-person-controls-theo.js></script>
+<script src=http://js.leapmotion.com/0.2.0/leap.min.js></script>
+<script>
+	var info, renderer, scene, camera, controls, stats;
+
+	var clock = new THREE.Clock();
+	var delta = 0, x, y;
+	var oFrame;
+	
+	init();
+	animate();
+
+	function init() {
+		var css, light, geometry, material, mesh;
+		
+		css = document.body.appendChild( document.createElement('style') );
+		css.innerHTML = 'body { color: #00ff00; font: 600 12pt monospace; margin: 0; overflow: hidden; text-align: center; }';
+
+		info = document.body.appendChild( document.createElement( 'div' ) );
+		info.style.cssText = 'position: absolute; width: 100%; ';
+		info.innerHTML = info.txt = '<h1>barfolina pavillion</h1>' +
+			'Use your mouse to pan, zoom and rotate.<br>' +
+			'<a href="http://www.khronos.org/webgl/" target="_blank">WebGL</a> - <a href="http://three.js.org" target="_blank">Three.js</a> - ' +
+			'<a href="http://jaanga.github.io" target="_blank">Jaanga</a><br>' +
+		
+		'';
+		
+		renderer = new THREE.WebGLRenderer( { antialias: true }  );	
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		renderer.shadowMapEnabled = true;
+
+		document.body.appendChild( renderer.domElement );
+		scene = new THREE.Scene();
+
+		camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 1000 );
+		camera.position.set( 8, 5, 5 );
+		//controls = new THREE.TrackballControls( camera, renderer.domElement );
+		//controls.target.set( 35, 0, -10);
+		
+		controls = new THREE.FirstPersonControls( camera );
+		controls.lookSpeedDefault = controls.lookSpeed = 0.015; // 0.0125;
+		
+		controls.lookSpeedMin = 0.04;
+		controls.lookSpeedMax = 0.09;
+		
+		controls.movementSpeedDefault = controls.movementSpeed = 1;
+		controls.movementSpeedMin = 0.2;
+		controls.movementSpeedMax = 10;
+		
+		controls.heightSpeed = true;
+		controls.heightCoef = 1.0;
+		controls.heightMin = 1.0;
+		controls.heightMax = 18.0;	
+	
+		controls.noFly = false;
+		controls.lookVertical = true;
+		controls.constrainVertical = true;
+		controls.verticalMin = 1.5;
+		controls.verticalMax = 2.0;
+		this.autoSpeedFactor = 0.0;
+		controls.lon = -40;		
+		
+		stats = new Stats();
+		stats.domElement.style.cssText = 'position: absolute; top: 0px; zIndex: 100; ';
+		document.body.appendChild( stats.domElement );  
+		
+//  Lights
+		light = new THREE.AmbientLight( 0x333333);
+		// light.color.setHSL( 0.1, 0.5, 0.3 );
+		scene.add( light );
+
+		light = new THREE.DirectionalLight( 0x555555, 1 );
+		light.position.set( 1, 1, 1 ).normalize();
+		scene.add( light );
+
+		light = new THREE.DirectionalLight( 0x555555, 1 );
+		light.position.set( -1, -1, -1 ).normalize();
+		scene.add( light );
+		
+ 		light = new THREE.DirectionalLight( 0x555555, 1 );
+		light.position.set( 80, 200, 200 );
+		light.target.position.set( 30, 0, -20);
+		scene.add( light );
+		light.castShadow = true;
+		light.shadowMapWidth = 2048;
+		light.shadowMaHeight = 2048;
+		var d = 33;
+		light.shadowCameraLeft = -d;
+		light.shadowCameraRight = d;
+		light.shadowCameraTop = 0.3 * d;
+		light.shadowCameraBottom = 0.5 * -d;
+
+		light.shadowCameraNear = 270;
+		light.shadowCameraFar = 320;
+//		light.shadowCameraVisible = true;
+
+// Axes
+        //scene.add( new THREE.ArrowHelper( v(1, 0, 0), v(0, 0, 0), 100, 0xcc0000) );
+        //scene.add( new THREE.ArrowHelper( v(0, 1, 0), v(0, 0, 0), 100, 0x00cc00) );
+        //scene.add( new THREE.ArrowHelper( v(0, 0, 1), v(0, 0, 0), 100, 0x0000cc) );
+
+// Assets
+		var gridSize = 1.2;
+		var groundLevel = 0;
+	
+// Ground plane
+		geometry = new THREE.PlaneGeometry( 200, 200, 30, 20 );
+		geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
+		var texture = THREE.ImageUtils.loadTexture( "./textures/grass_mid_seamless.jpg" );
+		texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+		texture.repeat.set( 20, 20 );
+		material = new THREE.MeshLambertMaterial( { map: texture, shading: THREE.SmoothShading, side: THREE.DoubleSide } );
+		mesh = new THREE.Mesh( geometry, material );
+		mesh.position.set( 30, groundLevel + 0.3, -20 );	
+		mesh.castShadow = true;
+		mesh.receiveShadow = true;		
+		scene.add( mesh );
+		
+		for (var i = 0, vtx, dis, len = mesh.geometry.vertices.length; i < len; i++) {
+			vtx = mesh.geometry.vertices[i];
+			dis = vtx.distanceTo( v( 0, 0, 0 ) );
+			if (  dis < 45 ) {
+				vtx.y = 0.75 * Math.random();
+			} else {
+				vtx.y = 5 * Math.random();
+			}
+		}		
+
+// Front steps / path
+		floorLevel = gridSize;
+		geometry = new THREE.CubeGeometry( 5 * gridSize, 0.6, 90 * gridSize );
+		material = new THREE.MeshBasicMaterial( {color: 10724259 } );
+		var mesh = new THREE.Mesh( geometry, material );
+		mesh.position.set( 27 * gridSize, floorLevel, - 55 * gridSize );
+		mesh.castShadow = true;
+		mesh.receiveShadow = true;
+		scene.add( mesh );
+
+		geometry = new THREE.CubeGeometry( 7 * gridSize, 1, 5 * gridSize );
+		material = new THREE.MeshBasicMaterial( {color: 10724259} );
+		var mesh = new THREE.Mesh( geometry, material );
+		mesh.position.set( 27 * gridSize, floorLevel + 0.25, - 19 * gridSize );
+		mesh.castShadow = true;
+		mesh.receiveShadow = true;
+		scene.add( mesh );		
+
+// Foundation
+		material = new THREE.MeshNormalMaterial();
+		floorLevel = groundLevel;	
+		var thickness = gridSize;
+		var wallHeight = gridSize;
+		
+// in end not used - just made a thick floor		
+// remember these are grid units not meters. '0.5' here actually equals 600mm...
+		//wall = [ [ -0.5, 0], [ -0.5, 22], [ 9 - 0.5, 22], [9 - 0.5, 16], [52 - 0.5, 16], [ 52 - 0.5, 4], [35 - 0.5, 4 ], [35 - 0.5, 1 ] ];	
+		//buildWall( gridSize, floorLevel, wall, wallHeight, thickness, material );
+
+		//wall = [ [ -0.5, 0], [ 38 - 0.5, 0] ];	
+		//buildWall( gridSize, floorLevel, wall, wallHeight, thickness, material );
+		
+		// by big pool
+		//wall = [ [ 1 - 0.5, 10], [ 22 - 0.5, 10], [ 22 - 0.5, 1] ];	
+		//buildWall( gridSize, floorLevel, wall, wallHeight, thickness, material );
+		// by small pool
+		//wall = [ [ 47 - 0.5, 5], [ 47 - 0.5, 15] ];	
+		//buildWall( gridSize, floorLevel, wall, wallHeight, thickness, material );		
+
+// pools - cudes for the textures
+		floorLevel += gridSize;		
+		geometry = new THREE.CubeGeometry( gridSize * 21, 0.5 * gridSize, 9 * gridSize );
+		texture = THREE.ImageUtils.loadTexture( "./textures/rocks-512.jpg" );
+		texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+		texture.repeat.set( 6,4 );
+		material = new THREE.MeshBasicMaterial( { color: 0x5555aa, map: texture, opacity: 0.5, transparent: true } );
+		mesh = new THREE.Mesh( geometry, material );
+		mesh.position.set( gridSize * 11, floorLevel + 0.15, -5 * gridSize );
+		scene.add( mesh );
+		
+		var clone = mesh.clone();
+		texture = THREE.ImageUtils.loadTexture( "./textures/water-bump.jpg" );
+		clone.material = new THREE.MeshBasicMaterial( { color: 0x5555aa, map: texture, opacity: 0.5, transparent: true } );
+		scene.add( clone );
+
+		geometry = new THREE.CubeGeometry( gridSize * 4, 1, 11 * gridSize );
+		// material = new THREE.MeshBasicMaterial( {color: 0x00ff00 } );
+		texture = THREE.ImageUtils.loadTexture( "./textures/rocks-512.jpg" );
+		texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+		texture.repeat.set( 2,4 );
+		material = new THREE.MeshBasicMaterial( { color: 0x5555aa, map: texture, opacity: 0.5, transparent: true } );
+		mesh = new THREE.Mesh( geometry, material );
+		mesh.position.set( 49.5 * gridSize, floorLevel + 0.15, gridSize * -10 );
+		scene.add( mesh );		
+
+		var clone = mesh.clone();
+		texture = THREE.ImageUtils.loadTexture( "./textures/water-bump.jpg" );
+		clone.material = new THREE.MeshBasicMaterial( { color: 0x5555aa, map: texture, opacity: 0.5, transparent: true } );
+		scene.add( clone );		
+		
+// 	Floor
+
+		var floor = [];
+		floor[22] = [1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+		floor[21] = [1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+		floor[20] = [1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+		floor[19] = [1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+		floor[18] = [1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+		floor[17] = [1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+		floor[16] = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
+		floor[15] = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1];	
+		floor[14] = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1];
+		floor[13] = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1];
+		floor[12] = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1];
+		floor[11] = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1];
+		floor[10] = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1];
+		floor[9] =  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1];
+		floor[8] =  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1];
+		floor[7] =  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1];
+		floor[6] =  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1];
+		floor[5] =  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1];
+		floor[4] =  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
+		floor[3] =  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+		floor[2] =  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+		floor[1] =  [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+		floor[0] =  [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+		
+		geometry = new THREE.CubeGeometry( gridSize, 2 * gridSize , gridSize );
+		tiles = [];
+		tiles.push( THREE.ImageUtils.loadTexture( "./textures/floor-tile-100.jpg" ) );
+		tiles.push( THREE.ImageUtils.loadTexture( "./textures/floor-tile-2-100.jpg" ) );
+		tiles.push( THREE.ImageUtils.loadTexture( "./textures/floor-tile-3-100.jpg" ) );
+		tiles.push( THREE.ImageUtils.loadTexture( "./textures/floor-tile-4-100.jpg" ) );
+
+		for (var z = 0, zlen = floor.length; z < zlen; z++) {
+			for (var x = 0, xLen = floor[z].length; x < xLen; x++) {
+				if ( floor[z][x] > 0 ) {		
+					material = new THREE.MeshBasicMaterial( { color: 0xcccccc, map: tiles[ Math.floor(Math.random() * 4)] } );
+					mesh = new THREE.Mesh( geometry, material );
+					mesh.position.set( x * gridSize, floorLevel, z * -gridSize );
+					mesh.rotation.y = Math.floor( Math.random() * 4 ) * 1.5708;
+					mesh.castShadow = true;
+					mesh.receiveShadow = true;
+					scene.add( mesh );
+				}	
+			}
+		}		
+
+// Walls		
+		wallHeight = 4;	
+		var thickness = 0.3;
+		// material = new THREE.MeshNormalMaterial();
+		floorLevel += gridSize;
+		
+		// Left side - around big pool
+		texture = THREE.ImageUtils.loadTexture( "./textures/Mies-BCN_M121-512.jpg" );
+		texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+		texture.repeat.set( 5, 0.6 );
+		material = new THREE.MeshBasicMaterial( { map: texture, side: THREE.DoubleSide } );
+		var wall = [ [ 7, 0], [ 0, 0], [ 0, 21], [8, 21], [8, 16] ];	
+		buildWall( gridSize, floorLevel, wall, wallHeight, thickness, material );
+		
+		// Wall to right of entry
+		//texture = THREE.ImageUtils.loadTexture( "./textures/Mies-BCN_M081-512.jpg" );
+		texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+		texture.repeat.set( 2, 0.6 );
+		material = new THREE.MeshBasicMaterial( { map: texture, side: THREE.DoubleSide } );
+		wall = [ [7, 14], [ 27, 14] ];
+		buildWall( gridSize, floorLevel, wall, wallHeight, thickness, material );
+		
+		// Black wall
+		texture = THREE.ImageUtils.loadTexture( "./textures/water-bump.jpg" );
+		//texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+		//texture.repeat.set( 2, 0.6 );
+		material = new THREE.MeshBasicMaterial( { color: 0x888888, map: texture,  side: THREE.DoubleSide  } );
+		wall = [ [25, 6], [ 34, 6] ];
+		buildWall( gridSize, floorLevel, wall, wallHeight, thickness, material );
+		
+		// Brown wall
+		texture = THREE.ImageUtils.loadTexture( "./textures/Mies-BCN_M01.jpg" );
+		material = new THREE.MeshLambertMaterial( { map: texture } );
+		wall = [ [ 37, 10], [ 41, 10] ];
+		buildWall( gridSize, floorLevel, wall, wallHeight, thickness, material );		
+		
+		// Wall around small pool  
+		texture = THREE.ImageUtils.loadTexture( "./textures/Mies-BCN_M11-512.jpg" );
+		texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+		texture.repeat.set( 1.5, 1 );		
+		material = new THREE.MeshBasicMaterial( { map: texture } );
+		wall = [ [ 39, 4], [ 51, 4], [ 51, 15], [ 36, 15] ];
+		buildWall( gridSize, floorLevel, wall, wallHeight, thickness, material );	
+
+// Office walls
+		thickness = 0.2;
+
+		material = new THREE.MeshBasicMaterial( { color: 0xdacccc } );
+		wall = [ [ 4, 16], [ 4, 21] ];
+		buildWall( gridSize, floorLevel, wall, wallHeight, thickness, material );		
+
+		wall = [ [ 4, 19], [ 8, 19] ];
+		buildWall( gridSize, floorLevel, wall, wallHeight, thickness, material );			
+
+// Colomns
+		for (var x = 0; x < 4; x++) {
+			for (var z = 0; z < 2; z++) {
+				geometry = new THREE.CylinderGeometry( 0.25, 0.25, wallHeight);
+				material = new THREE.MeshBasicMaterial( {color: 0xeeeeee } );	
+				mesh = new THREE.Mesh( geometry, material );				
+				mesh.position.set( gridSize * 26 + x * 6.66 * gridSize, floorLevel + 0.5 * wallHeight, -6 * gridSize - z * 8 * gridSize );
+				mesh.castShadow = true;
+				mesh.receiveShadow = true;	
+				scene.add( mesh );
+			}		
+		}
+
+// Extras
+
+// Sculpure in fountain
+			geometry = new THREE.CubeGeometry( gridSize, gridSize, gridSize );
+			material = new THREE.MeshLambertMaterial( {color: 0xaaaaaa } );
+			var mesh = new THREE.Mesh( geometry, material );
+			mesh.position.set( 50 * gridSize, floorLevel - 0.5 * gridSize, -14 * gridSize );
+			scene.add( mesh );
+
+			geometry = new THREE.CubeGeometry( 0.6 * gridSize, 2 * gridSize, 0.6 * gridSize);
+			material = new THREE.MeshLambertMaterial( {color: 0xdddddd } );
+			var mesh = new THREE.Mesh( geometry, material );
+			mesh.position.set( 50 * gridSize, floorLevel + 1.5 * gridSize, -14 * gridSize );
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;				
+			scene.add( mesh );			
+			
+// Stone bench
+			geometry = new THREE.CubeGeometry( 15 * gridSize, 0.3, 0.9 * gridSize );
+			texture = THREE.ImageUtils.loadTexture( "./textures/Mies-BCN_M121-512.jpg" );
+			texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+			texture.repeat.set( 2, 0.3 );
+			material = new THREE.MeshBasicMaterial( { map: texture } );
+			var mesh = new THREE.Mesh( geometry, material );
+			mesh.position.set( 16 * gridSize, floorLevel + 0.6, - 14 * gridSize + 0.3 );
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;				
+			scene.add( mesh );
+			
+		for (var i = 0; i < 8; i++) {
+			geometry = new THREE.CubeGeometry( gridSize * 0.333, 0.5, 0.9 * gridSize );
+			mesh = new THREE.Mesh( geometry, material );
+			mesh.position.set( 9 * gridSize + i * 2 * gridSize + 0.25, floorLevel + 0.25, -14 * gridSize + 0.2 );
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;	
+			scene.add( mesh );	
+		}
+			
+// back steps
+		var tmpLevel = floorLevel - 0.6;
+		for (var i = 0; i < 9; i++) {
+			geometry = new THREE.CubeGeometry( gridSize * 0.333, gridSize, 3 * gridSize );
+			//texture = THREE.ImageUtils.loadTexture( "./textures/Mies-BCN_M121-512.jpg" );
+			//texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+			//texture.repeat.set( 0.5, 0.3 );
+			material = new THREE.MeshBasicMaterial( { color: 0xcccccc, map: tiles[ Math.floor(Math.random() * 4)] } );
+			mesh = new THREE.Mesh( geometry, material );
+			
+			if ( i > 1 ) { tmpLevel -= 0.225; }
+			mesh.position.set( gridSize * 36 + i * 0.333 * gridSize - 0.4, tmpLevel, -2.0 * gridSize );
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;	
+			scene.add( mesh );			
+		}	
+
+// glass walls
+		
+		for (var i = 0; i < 7; i++) {
+			buildWindow( gridSize, wallHeight, v( 45 * gridSize, floorLevel, -i * gridSize - 6 * gridSize), 1.5708 );
+		} 
+
+		for (var i = 0; i < 2; i++) {
+			buildWindow( 3.3 * gridSize, wallHeight, v( 32 * gridSize, floorLevel, -i * 3.3 * gridSize - 6.4 * gridSize), 1.5708 );
+		} 
+		
+		for (var i = 0; i < 10; i++) {
+			buildWindow( gridSize, wallHeight, v( i * gridSize + 31 * gridSize, floorLevel, - 13 * gridSize), 0 );
+		} 	
+
+		for (var i = 0; i < 3; i++) {
+			buildWindow( 3 * gridSize, wallHeight, v( i * 3 * gridSize + 30.5 * gridSize, floorLevel, - 4.4 * gridSize), 0 );
+		}	
+		
+		for (var i = 0; i < 3; i++) {
+			buildWindow( 1.2 * gridSize, wallHeight, v( i * 1.2 * gridSize + 0.8 * gridSize, floorLevel, - 16.5 * gridSize), 0 );
+		}	
+		
+		for (var i = 0; i < 3; i++) {
+			buildWindow( 1.2 * gridSize, wallHeight, v( i * 1.2 * gridSize + 4.7 * gridSize, floorLevel, - 16.5 * gridSize), 0 );
+		}		
+
+// Sky box		
+		var imgTexture2 = THREE.ImageUtils.loadTexture( 'textures/skybox/px.jpg' );
+		var imgTexture6 = THREE.ImageUtils.loadTexture( 'textures/skybox/nx.jpg' );
+		var imgTexture3 = THREE.ImageUtils.loadTexture( 'textures/skybox/py.jpg' );
+		var imgTexture4 = THREE.ImageUtils.loadTexture( 'textures/skybox/ny.jpg' );
+		var imgTexture1 = THREE.ImageUtils.loadTexture( 'textures/skybox/pz.jpg' );
+		var imgTexture5 = THREE.ImageUtils.loadTexture( 'textures/skybox/nz.jpg' );
+
+		var materials = [				
+			new THREE.MeshBasicMaterial( { map: imgTexture6 } ),
+			new THREE.MeshBasicMaterial( { map: imgTexture2 } ),
+			new THREE.MeshBasicMaterial( { map: imgTexture3 } ),
+			new THREE.MeshBasicMaterial( { map: imgTexture4 } ),
+			new THREE.MeshBasicMaterial( { map: imgTexture5 } ),
+			new THREE.MeshBasicMaterial( { map: imgTexture1 } )
+		];
+
+		mesh = new THREE.Mesh( new THREE.CubeGeometry( 300, 300, 300 ), new THREE.MeshFaceMaterial( materials, { side: THREE.BackSide } ) );
+		mesh.scale.x = - 1;
+		//material = new THREE.MeshNormalMaterial( { color: 0xff0000, opacity: 0.2, side: THREE.BackSide, transparent: true });
+		//mesh = new THREE.Mesh( new THREE.CubeGeometry( 100, 100, 100 ), material );
+		mesh.position.set( 30, 40, -20 );
+		mesh.rotation.y = 3.14;
+		scene.add( mesh );	
+
+// trees
+		var trees = [];
+		for (var i = 0; i < 6; i++) {
+			trees.push( THREE.ImageUtils.loadTexture( 'textures/trees/tree' + i + '.png' ) );
+		} 
+		
+		var len = 100, delta = 6.28 / len;
+		geometry = new THREE.PlaneGeometry( 15, 15 );
+		for (var i = 0; i < len; i++) {
+			material = new THREE.MeshBasicMaterial( { map: trees[ Math.floor( 6 * Math.random() ) ], transparent: true })
+			mesh = new THREE.Mesh( geometry, material );
+			mesh.position.set( 35 + ( 20 * Math.random() + 70) * Math.cos( delta * i), 7 + 3 * Math.random(), -10 + ( 15 * Math.random() + 40) * Math.sin( delta * i ) );
+			mesh.lookAt( v( 35, 0, -20) );
+			scene.add( mesh );	
+		}
+
+// background	
+		material = new THREE.MeshBasicMaterial( { color: 0x55855} );
+		for (var i = 0; i < len; i++) {
+			geometry = new THREE.PlaneGeometry( 20 * Math.random(), 12 * Math.random() );
+			mesh = new THREE.Mesh( geometry, material );
+			mesh.position.set( 35 + ( 20 * Math.random() + 90) * Math.cos( delta * i), 8 + 3 * Math.random(), -10 + ( 15 * Math.random() + 55) * Math.sin( delta * i ) );
+			mesh.lookAt( v( 35, 0, -20) );
+			scene.add( mesh );	
+		}				
+	}
+
+	function animate() {
+		requestAnimationFrame( animate );
+		var delta = clock.getDelta()
+		controls.update( delta );
+		renderer.render( scene, camera );
+		stats.update();
+	}
+	
+	Leap.loop( { enableGestures: true }, function( frame ) {
+		var hand, pitchAng, yawAng;
+
+		if ( controls.mouseDragOn ) { return;}
+
+		oFrame = oFrame || frame;
+
+		if ( frame.gestures[0] && !oFrame.gestures[0] && frame.gestures[0].type === 'swipe' ) {
+			controls.freeze = !controls.freeze;
+		}
+
+		oFrame = frame;
+
+		hand = frame.hands[0];
+
+		if ( hand ) {
+			//if ( frame.pointables.length <= 1) {
+				yawAng = Math.atan2( hand.direction[0], -hand.direction[1]);
+				if ( yawAng < 0 ) {
+					yawAng = -500 * ( Math.PI + yawAng);
+					yawAng = THREE.Math.clamp( yawAng, -1000, 0.1 );
+
+				} else if ( yawAng > 0 ) {
+					yawAng = 500 * ( Math.PI - yawAng);
+					yawAng = THREE.Math.clamp( yawAng, 0.1, 1000 );
+				}
+				controls.mouseX = yawAng;
+				
+				pitchAng = -900 * Math.atan2( hand.direction[1] , -hand.direction[2] );
+				controls.mouseY = pitchAng;
+			//} else {
+				// yawAng = 0;
+			//}
+
+			if ( frame.pointables.length > 1 ) {
+				var point = v( hand.stabilizedPalmPosition[0], hand.stabilizedPalmPosition[1], hand.stabilizedPalmPosition[2] )
+				var distance = camera.position.distanceTo( v( 0, -50, 0));
+/*		
+				if ( distance < 200  ) {
+// console.log( point, distance );						
+					controls.lookSpeed = 0.015;
+					controls.movementSpeed = 10;
+				} else {
+					controls.lookSpeed = controls.lookSpeedDefault;
+					controls.movementSpeed = controls.movementSpeedDefault;
+				}
+*/			
+				if (hand.stabilizedPalmPosition[2] < 0 ) {
+					controls.moveForward = true;
+					controls.moveBackward = false;
+				} else {
+					controls.moveBackward = true;
+					controls.moveForward = false;
+				}
+
+				if ( hand.stabilizedPalmPosition[1] > 150 ) {
+					controls.moveUp = true;
+					controls.moveDown = false;
+				} else {
+					controls.moveDown = true;
+					controls.moveUp = false;
+				}
+
+				if ( hand.stabilizedPalmPosition[0] > 0 ) {
+					controls.moveRight = true;
+					controls.moveLeft = false;
+				} else {
+					controls.moveLeft = true;
+					controls.moveRight = false;
+				}
+			} else {
+				controls.moveBackward = false;
+				controls.moveForward = false;
+				controls.moveLeft = false;
+				controls.moveRight = false;
+				controls.moveUp = false;
+				controls.moveDown = false;
+			}
+			var tmp = ( controls.freeze ) ? 'class=red' : '';
+			
+			info.innerHTML = info.txt + 'freeze: <scan ' + tmp + '>' + controls.freeze + '</scan> lookSpeed: ' + controls.lookSpeed.toFixed(3) + ' movementSpeed:  ' + controls.movementSpeed +
+			' mouseX: ' + controls.mouseX.toFixed() + ' mouseY: ' + controls.mouseY.toFixed() + '<br>' +
+			'hand.x: ' + hand.stabilizedPalmPosition[0].toFixed(0) + ' hand.y: ' + hand.stabilizedPalmPosition[1].toFixed(0) + ' hand.z: ' + hand.stabilizedPalmPosition[2].toFixed(0) + '<br>' +
+			'pitchAng: ' + pitchAng.toFixed(2) + ' yawAng: ' + yawAng.toFixed(2) + '<br>' +
+			'camX: ' + camera.position.x.toFixed(1) + ' - camY: ' + camera.position.y.toFixed(1) + ' - camZ: ' + camera.position.z.toFixed(0) + 
+			' - con.autoSpeedFactor: ' + controls.autoSpeedFactor.toFixed(3) + ' - con.actualMoveSpeed: ' + controls.actualMoveSpeed.toFixed(2) + '<br>' + 
+			'';
+		}
+	});	
+
+	function buildWall( gridSize, floorLevel, wall, wallHeight, thickness, material ) {
+		var startPoint, endPoint, distance, offset, position;
+		offset = -0.5 * gridSize + 0.5 * thickness;
+		for (var i = 0, len = wall.length; i < len; i++) {
+			if ( i + 1 < len ) {
+				startPoint = v( 0.5 * gridSize  + gridSize * wall[i][0], floorLevel + 0.5 * wallHeight, offset - gridSize * wall[i][1] );
+				endPoint = v( 0.5 * gridSize + gridSize * wall[i + 1][0],  floorLevel + 0.5 * wallHeight, offset - gridSize * wall[i + 1][1] );
+				distance = startPoint.distanceTo( endPoint );
+				geometry = new THREE.CubeGeometry( thickness, wallHeight, distance + thickness );
+				mesh = new THREE.Mesh( geometry, material );
+				position = endPoint.clone();
+				position.sub( startPoint ).divideScalar( 2 );
+				mesh.position = startPoint.add( position );
+				mesh.lookAt( endPoint );
+				mesh.castShadow = true;
+				mesh.receiveShadow = true;
+				scene.add( mesh );			
+			}
+		}	
+	}
+	
+	function buildWindow( width, wallHeight, position, rotation ) {
+		geometry = new THREE.CubeGeometry( 1, 1, 1 );
+		material = new THREE.MeshBasicMaterial( { color: 0x000000 } );
+		mesh = new THREE.Mesh( geometry, material );
+		
+		var obj = new THREE.Object3D();
+		
+		var clone = mesh.clone();
+		clone.scale.set( 0.05, wallHeight, 0.1);
+		clone.position.set( 0.025, 0.5 * wallHeight, 0 );
+		clone.castShadow = true;
+		obj.add( clone );
+		
+		clone = mesh.clone();
+		clone.scale.set( 0.05, wallHeight, 0.1);
+		clone.position.set( width - 0.025, 0.5 * wallHeight, 0 );
+		clone.castShadow = true;
+		obj.add( clone );
+		
+		clone = mesh.clone();
+		clone.scale.set( width, 0.05, 0.1);
+		clone.position.set( 0.5 * width, 0.025, 0);
+		clone.castShadow = true;
+		obj.add( clone );	
+
+		clone = mesh.clone();
+		clone.scale.set( width, 0.05, 0.1);
+		clone.position.set( 0.5 * width, wallHeight - 0.025, 0);
+		clone.castShadow = true;
+		obj.add( clone );	
+		
+		geometry = new THREE.PlaneGeometry( width - 0.1, wallHeight - 0.1 );
+		material = new THREE.MeshBasicMaterial( { color: 0x003300, opacity: 0.2, side: THREE.DoubleSide, transparent: true } );
+		mesh = new THREE.Mesh( geometry, material );	
+		mesh.position.set( 0.5 * width, 0.5 * wallHeight, 0 );	
+		mesh.castShadow = true;		
+		obj.add( mesh );	
+		
+		obj.position = position;
+		obj.rotation.y = rotation;
+		scene.add( obj );
+	}
+	
+	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }
+</script>
+</body>
+</html>

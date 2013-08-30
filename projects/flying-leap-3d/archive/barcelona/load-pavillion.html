@@ -1,0 +1,338 @@
+﻿<!doctype html>
+<html lang=en>
+<head>
+<title>castle</title>
+<meta charset=utf-8>
+</head>
+<body>
+<script src="http://js.leapmotion.com/0.2.0/leap.min.js"></script>
+<!--
+<script src=../../../git-repos/three.js/examples/js/Detector.js></script>
+<script src=../../../git-repos/three.js/build/three.min.js></script>
+<script src=../../../git-repos/three.js/examples/js/controls/TrackballControls.js></script>
+<script src=../../../git-repos/three.js/examples/js/libs/stats.min.js></script>
+-->
+<script src=http://mrdoob.github.com/three.js/build/three.min.js></script>
+<script src=http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js></script>
+<script src=http://mrdoob.github.com/three.js/examples/js/libs/stats.min.js></script>
+<script src=http://mrdoob.github.com/three.js/examples/js/loaders/MTLLoader.js></script>
+<script src=http://mrdoob.github.com/three.js/examples/js/loaders/OBJMTLLoader.js></script>
+<script src=first-person-controls-theo.js></script>
+<script>
+	var renderer, scene, camera, controls, stats;
+	var clock = new THREE.Clock();
+	var info, palm, fingers = [];
+	
+	var oFrame;
+	var delta = 0, x, y;
+
+	init();
+	animate();
+
+	function init() {
+		var css, light, geometry, material, mesh;
+		
+		//css = document.body.appendChild( document.createElement('style') );
+		//css.innerHTML = 'body { font: 600 12pt monospace; margin: 0; overflow: hidden; text-align: center; }';
+		
+		css = document.body.appendChild( document.createElement('style') );
+		var col1 = "#" + Math.random().toString(16).slice(2, 8);
+		var col2 = "#" + Math.random().toString(16).slice(2, 8);
+		var col3 = "#" + Math.random().toString(16).slice(2, 8);
+		var X = ( Math.random() * window.innerWidth ).toFixed(0);
+		var Y = (Math.random() * window.innerHeight).toFixed(0);
+		var center =  20 + (Math.random() * 60).toFixed(0);
+
+		css.innerHTML = 'body { color: #888; font: 600 14pt monospace; margin: 0; height: 1000px; overflow: hidden; text-align: center; ' +
+			'background: -webkit-radial-gradient(' + X + 'px ' + Y + 'px, farthest-corner, ' + col1 + ' 0%, ' + col2 + ' 50%, ' + col3 + ' 100%); ' +
+			'background: -moz-radial-gradient(' + X + 'px ' + Y + 'px, farthest-corner, ' + col1 + ' 0%, ' + col2 + ' 50%, ' + col3 + ' 100%); ' +
+			'background: radial-gradient(' + X + 'px ' + Y + 'px, farthest-corner, ' + col1 + ' 0%, ' + col2 + ' 50%, ' + col3 + ' 100%); }' +
+		'';
+		
+		info = document.body.appendChild( document.createElement( 'div' ) );
+		info.style.cssText = 'position: absolute; width: 100%; ';
+		info.txt = '<h1>Castle Flying Leap 3D</h1>' +
+		'';
+		
+		info.innerHTML = info.txt + 'With your Leap Motion controller:<br>Swipe side-to-side: Freeze/Unfreeze. Fist: stand in place and look around. ' +
+		'<br>Open hand: Move forward/backward, left/right, up/down<br><br>' +
+			'Theo Armour ~ 2013-08-26 ~ built for Nico' +
+		'';
+		
+		
+// Three.js Basics
+		renderer = new THREE.WebGLRenderer( { antialias: true } );
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		//renderer.setClearColor(0xffffff, 1);
+		renderer.shadowMapEnabled = true;
+		document.body.appendChild( renderer.domElement );
+		scene = new THREE.Scene();
+
+		camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 3000 );
+		camera.position.set( -500, 150, 150 );
+
+		
+		controls = new THREE.FirstPersonControls( camera );
+		//controls.target.set( 0, 550, 0 );
+		controls.lookSpeedDefault = controls.lookSpeed = 0.015; // 0.0125;
+		
+		controls.lookSpeedMin = 0.005;
+		controls.lookSpeedMax = 0.15;
+		controls.movementSpeedDefault = controls.movementSpeed = 50;
+		controls.movementSpeedMin = 5;
+		controls.movementSpeedMax = 300;
+		controls.noFly = false;
+		controls.lookVertical = true;
+		controls.constrainVertical = true;
+		controls.verticalMin = 1.5;
+		controls.verticalMax = 2.0;
+		this.autoSpeedFactor = 0.0;
+		// controls.lon = -110;		
+
+		stats = new Stats();
+		stats.domElement.style.cssText = 'position: absolute; top: 0px; zIndex: 100; ';
+		document.body.appendChild( stats.domElement );
+
+//  Lights
+		light = new THREE.AmbientLight( 0x333333);
+		light.color.setHSL( 0.1, 0.5, 0.3 );
+		scene.add( light );
+
+		light = new THREE.DirectionalLight( 0x555555, 1 );
+		light.position.set( 1, 1, 1 ).normalize();
+		scene.add( light );
+
+		light = new THREE.DirectionalLight( 0x555555, 1 );
+		light.position.set( -1, -1, -1 ).normalize();
+		scene.add( light );
+		
+ 		light = new THREE.DirectionalLight( 0x555555, 1 );
+		light.position.set( 0, 500, 200 );
+		scene.add( light );
+		light.castShadow = true;
+		light.shadowMapWidth = 2048;
+		light.shadowMaHeight = 2048;
+		var d = 300;
+		light.shadowCameraLeft = -d;
+		light.shadowCameraRight = d;
+		light.shadowCameraTop = d;
+		light.shadowCameraBottom = -d;
+
+		light.shadowCameraNear = 200;
+		light.shadowCameraFar = 800;
+//		light.shadowCameraVisible = true;
+
+// Axes
+        //scene.add( new THREE.ArrowHelper( v(1, 0, 0), v(0, 0, 0), 100, 0xcc0000) );
+        //scene.add( new THREE.ArrowHelper( v(0, 1, 0), v(0, 0, 0), 100, 0x00cc00) );
+        //scene.add( new THREE.ArrowHelper( v(0, 0, 1), v(0, 0, 0), 100, 0x0000cc) );
+
+// Assets
+
+// Ground plane
+		material = new THREE.MeshBasicMaterial( {color: Math.random() * 0xffffff } );
+		geometry = new THREE.PlaneGeometry( 400, 400, 100, 100 );
+		geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
+		mesh = new THREE.Mesh( geometry, material );
+		mesh.position.set( 40, -69, 0 );
+		mesh.castShadow = true;
+		mesh.receiveShadow = true;
+		scene.add( mesh );
+		
+		for (var i = 0, vtx, dis, len = mesh.geometry.vertices.length; i < len; i++) {
+			vtx = mesh.geometry.vertices[i];
+			dis = vtx.distanceTo( v( 0, -69, 0 ) );
+			if (  dis > 150 ) {
+				vtx.y = 300 - 2 * dis - 80 * Math.random();
+			}
+		}
+		mesh.scale.x = 1.2;
+		
+		mesh = mesh.clone();
+		mesh.material = new THREE.MeshBasicMaterial( { wireframe: true } );
+		scene.add( mesh );
+/*		
+		geometry = new THREE.CubeGeometry( 200, 20, 80 );
+		material = new THREE.MeshNormalMaterial();
+		palm = new THREE.Mesh( geometry, material );
+		palm.position.set( 0, -50, 0 )
+		palm.castShadow = true;
+		palm.receiveShadow = true;
+		scene.add( palm );
+
+		geometry = new THREE.CubeGeometry( 16, 12, 20 );
+		material = new THREE.MeshNormalMaterial();
+		for (var j = 0; j < 5; j++) {
+			mesh = new THREE.Mesh( geometry, material );
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			scene.add( mesh );
+			fingers.push( mesh );
+		}	
+*/		
+		var loader = new THREE.OBJMTLLoader();
+		loader.addEventListener( 'load', function ( event ) {
+			mesh = event.content;
+			mesh.position.set( 0, 0, 0 );
+			
+			mesh.scale.set( 10, 10, 10 );
+			for (var i = 0, len = mesh.children[0].children.length; i < len; i++) {
+				mesh.children[0].children[i].castShadow = true;
+				mesh.children[0].children[i].receiveShadow = true;	
+/*				
+				mesh.children[0].children[i].material.color.r = Math.random();
+				mesh.children[0].children[i].material.color.g = Math.random();
+				mesh.children[0].children[i].material.color.b = Math.random();
+				mesh.children[0].children[i].material.emissive.r = Math.random();
+				mesh.children[0].children[i].material.emissive.g = Math.random();
+				mesh.children[0].children[i].material.emissive.b = Math.random();	
+*/				
+			}
+
+			scene.add( mesh );
+console.log( mesh );			
+		});
+
+		loader.load( 'Pabellon_Barcelona_v1.3.obj', 'Pabellon_Barcelona_v1.3.mtl' );
+
+	}
+
+	Leap.loop( { enableGestures: true }, function( frame ) {
+		var hand, pitchAng, yawAng;
+
+		if ( controls.mouseDragOn ) { return;}
+
+		oFrame = oFrame || frame;
+
+		if ( frame.gestures[0] && !oFrame.gestures[0] && frame.gestures[0].type === 'swipe' ) {
+			controls.freeze = !controls.freeze;
+		}
+
+		oFrame = frame;
+
+		hand = frame.hands[0];
+
+		if ( hand ) {
+			//if ( frame.pointables.length <= 1) {
+				yawAng = Math.atan2( hand.direction[0], -hand.direction[1]);
+				if ( yawAng < 0 ) {
+					yawAng = -500 * ( Math.PI + yawAng);
+					yawAng = THREE.Math.clamp( yawAng, -1000, 0.1 );
+
+				} else if ( yawAng > 0 ) {
+					yawAng = 500 * ( Math.PI - yawAng);
+					yawAng = THREE.Math.clamp( yawAng, 0.1, 1000 );
+				}
+				controls.mouseX = yawAng;
+				
+				pitchAng = -900 * Math.atan2( hand.direction[1] , -hand.direction[2] );
+				controls.mouseY = pitchAng;
+			//} else {
+				// yawAng = 0;
+			//}
+
+			if ( frame.pointables.length > 1 ) {
+				var point = v( hand.stabilizedPalmPosition[0], hand.stabilizedPalmPosition[1], hand.stabilizedPalmPosition[2] )
+				var distance = camera.position.distanceTo( v( 0, -50, 0));
+		
+				if ( distance < 2  ) {
+// console.log( point, distance );						
+					controls.lookSpeed = 0.015;
+					controls.movementSpeed = 10;
+				} else {
+					controls.lookSpeed = controls.lookSpeedDefault;
+					controls.movementSpeed = controls.movementSpeedDefault;
+				}
+			
+				if (hand.stabilizedPalmPosition[2] < 0 ) {
+					controls.moveForward = true;
+					controls.moveBackward = false;
+				} else {
+					controls.moveBackward = true;
+					controls.moveForward = false;
+				}
+
+				if ( hand.stabilizedPalmPosition[1] > 150 ) {
+					controls.moveUp = true;
+					controls.moveDown = false;
+				} else {
+					controls.moveDown = true;
+					controls.moveUp = false;
+				}
+
+				if ( hand.stabilizedPalmPosition[0] > 0 ) {
+					controls.moveRight = true;
+					controls.moveLeft = false;
+				} else {
+					controls.moveLeft = true;
+					controls.moveRight = false;
+				}
+			} else {
+				controls.moveBackward = false;
+				controls.moveForward = false;
+				controls.moveLeft = false;
+				controls.moveRight = false;
+				controls.moveUp = false;
+				controls.moveDown = false;
+			}
+			var tmp = ( controls.freeze ) ? 'class=red' : '';
+			
+			info.innerHTML = info.txt + 'freeze: <scan ' + tmp + '>' + controls.freeze + '</scan> lookSpeed: ' + controls.lookSpeed.toFixed(3) + ' movementSpeed:  ' + controls.movementSpeed +
+			' mouseX: ' + controls.mouseX.toFixed() + ' mouseY: ' + controls.mouseY.toFixed() + '<br>' +
+			'hand.x: ' + hand.stabilizedPalmPosition[0].toFixed(0) + ' hand.y: ' + hand.stabilizedPalmPosition[1].toFixed(0) + ' hand.z: ' + hand.stabilizedPalmPosition[2].toFixed(0) + '<br>' +
+			'pitchAng: ' + pitchAng.toFixed(2) + ' yawAng: ' + yawAng.toFixed(2) ;
+		}
+	});
+	
+/*	
+	Leap.loop( function( frame ) {
+		var hand, direction, len, finger, pointable;
+		if ( frame.hands.length > 0) {
+			hand = frame.hands[0];
+			palm.position.set( hand.stabilizedPalmPosition[0], hand.stabilizedPalmPosition[1], hand.stabilizedPalmPosition[2] );
+			direction = v( hand.direction[0], hand.direction[1], hand.direction[2] );  // best so far
+			palm.lookAt( direction.add( palm.position ) );
+			roll = Math.atan2( hand.palmNormal[0], hand.palmNormal[1] );
+			palm.rotation.z = roll;
+			palm.visible = true;
+		} else {
+			palm.visible = false;
+		}
+
+		len = frame.pointables.length
+		if ( len > 0) {
+			palm.hasFingers = true;
+			for (var i = 0; i < 5; i++) {
+				finger = fingers[i];
+				if ( i < len ) {
+					pointable = frame.pointables[i];
+					finger.position.set( pointable.stabilizedTipPosition[0], pointable.stabilizedTipPosition[1], pointable.stabilizedTipPosition[2] );
+					direction = v( pointable.direction[0], pointable.direction[1], pointable.direction[2]);  // best so far
+					finger.lookAt( direction.add( finger.position ) );
+					finger.scale.z = 0.05 * pointable.length;
+					finger.visible = true;
+				} else {
+					fingers[i].visible = false;
+				}
+			}
+		} else if ( palm.hasFingers ) {
+			for (var i = 0; i < 5; i++) {
+				fingers[i].visible = false;
+			}
+			palm.hasFingers = false;
+		}
+	});
+*/
+
+	function animate() {
+		requestAnimationFrame( animate );
+		var delta = clock.getDelta()
+		controls.update( delta );
+		renderer.render( scene, camera );
+		stats.update();
+	}
+
+	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }
+</script>
+</body>
+</html>

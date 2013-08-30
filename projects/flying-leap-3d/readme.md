@@ -9,21 +9,26 @@ Built for Nicolás Berríos of Iquique, Chile
 
 Leap.js + Three.js: a Leaped first person camera controller
 
-###Leap Actions
+###Current Demos: Issues
+* Castle does not have double-side materials. So when you go through a wall and turn around, you see no wall
 
+
+###Leap Actions
 Hand open over Leap device:
 * Supports the following FirstPersonControls parameters: moveLeft, moveRight, moveUp, moveUp, moveForward, moveBackword a
 * Supports pitch and yaw via lat and lon parameters
 * Making fist reatricts camera movement to lat and lon only
 * Supports Freeze toggle via a swipe gesture.
 
-### New Mouse Actions
+###New Mouse Actions
 * The app supports all the standard Three.js First Person Control functions
 * The fork supports the following additions:
-* Turning the scroll wheel controls the speed of movementSpeed and lookSpeed
+* Turning the scroll wheel controls the speed of movementSpeed and lookSpeed << This feature is wonderful. Try it!
+* When a mouse button is being pressed, the scroll wheel updates movementSpeed
+* When a mouse button is not being pressed the scroll wheel updates lookSpeed.
 * Clicking he scroll wheel toggles Freeze on and off.
 
-###New keyboard Commands
+###New Keyboard Commands
 	The following new keyboard commands are added to the fork:
 	
 	````
