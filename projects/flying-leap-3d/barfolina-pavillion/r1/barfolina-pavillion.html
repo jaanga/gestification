@@ -454,8 +454,8 @@
 		offset = -0.5 * gridSize + 0.5 * thickness;
 		for (var i = 0, len = wall.length; i < len; i++) {
 			if ( i + 1 < len ) {
-				startPoint = v( 0.5 * gridSize  + gridSize * wall[i][0], floorLevel + 0.5 * wallHeight, offset - gridSize * wall[i][1] );
-				endPoint = v( 0.5 * gridSize + gridSize * wall[i + 1][0],  floorLevel + 0.5 * wallHeight, offset - gridSize * wall[i + 1][1] );
+				startPoint = v( 0.5 * gridSize  + gridSize * wall[i][0], floorLevel + 0.45 * wallHeight, offset - gridSize * wall[i][1] );
+				endPoint = v( 0.5 * gridSize + gridSize * wall[i + 1][0],  floorLevel + 0.45 * wallHeight, offset - gridSize * wall[i + 1][1] );
 				distance = startPoint.distanceTo( endPoint );
 				geometry = new THREE.CubeGeometry( thickness, wallHeight, distance + thickness );
 				mesh = new THREE.Mesh( geometry, material );

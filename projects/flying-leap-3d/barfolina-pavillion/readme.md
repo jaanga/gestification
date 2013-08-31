@@ -25,7 +25,7 @@ LeapMotion Interactions:
 
 
 ##Roadmap / ideas
-* use hand roll to speed up and slow down lookSpeed ans movementSpeed
+* use hand roll to speed up and slow down lookSpeed and movementSpeed
 
 ##Copyright and License
 Copyright &copy; 2013 Jaanga authors
@@ -37,12 +37,12 @@ MIT License
 2013-08-30 ~ Theo
 * Added select controller menu and functions - helps with debugging
 * Fixed placement of background 
-* Added red css clas for freeze warning
+* Added red css class to highlight freeze warning
 * Sped up lookSpeed a bit
 * Worked on various move parameters
-* Added '+' shaped colums
-* Added Geork Kolbe's 'Alba' sculpture - with temporary material
-* Set indows to be a bit more opaque
+* Added '+' shaped columns
+* Added Georg Kolbe's 'Alba' sculpture - with temporary material
+* Set windows to be a bit more opaque
 * Various minor code clean-ups
 
 2013-08-29 ~ Theo
