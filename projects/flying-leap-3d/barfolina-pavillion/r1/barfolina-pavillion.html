@@ -26,7 +26,8 @@
 		var css, light, geometry, material, mesh;
 		
 		css = document.body.appendChild( document.createElement('style') );
-		css.innerHTML = 'body { color: #00ff00; font: 600 12pt monospace; margin: 0; overflow: hidden; text-align: center; }';
+		css.innerHTML = 'body { color: #00ff00; font: 600 12pt monospace; margin: 0; overflow: hidden; text-align: center; }' +
+			'.red { color: red; }';
 
 		info = document.body.appendChild( document.createElement( 'div' ) );
 		info.style.cssText = 'position: absolute; width: 100%; ';
@@ -34,7 +35,7 @@
 			'Use your mouse to pan, zoom and rotate.<br>' +
 			'<a href="http://leapmotion.com" target="_blank">Leap Motion</a> - <a href="http://three.js.org" target="_blank">Three.js</a> - ' +
 			'<a href="http://www.khronos.org/webgl/" target="_blank">WebGL</a> - <a href="http://jaanga.github.io" target="_blank">Jaanga</a><br>' +
-		
+			'<a href="JavaScript:getTrackballController();" >Trackball Controller</a> - <a href="JavaScript:getFirstPersonController();" >First Person Controller</a><br>' +
 		'';
 		
 		renderer = new THREE.WebGLRenderer( { antialias: true }  );	
@@ -43,38 +44,13 @@
 
 		document.body.appendChild( renderer.domElement );
 		scene = new THREE.Scene();
-
-		camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 1000 );
-		camera.position.set( 8, 5, 5 );
-		//controls = new THREE.TrackballControls( camera, renderer.domElement );
-		//controls.target.set( 35, 0, -10);
 		
-		controls = new THREE.FirstPersonControls( camera );
-		controls.lookSpeedDefault = controls.lookSpeed = 0.015; // 0.0125;
-		
-		controls.lookSpeedMin = 0.04;
-		controls.lookSpeedMax = 0.09;
-		
-		controls.movementSpeedDefault = controls.movementSpeed = 1;
-		controls.movementSpeedMin = 0.2;
-		controls.movementSpeedMax = 10;
-		
-		controls.heightSpeed = true;
-		controls.heightCoef = 1.0;
-		controls.heightMin = 1.0;
-		controls.heightMax = 18.0;	
-	
-		controls.noFly = false;
-		controls.lookVertical = true;
-		controls.constrainVertical = true;
-		controls.verticalMin = 1.5;
-		controls.verticalMax = 2.0;
-		this.autoSpeedFactor = 0.0;
-		controls.lon = -40;		
+		getFirstPersonController();
 		
 		stats = new Stats();
 		stats.domElement.style.cssText = 'position: absolute; top: 0px; zIndex: 100; ';
 		document.body.appendChild( stats.domElement );  
+
 		
 //  Lights
 		light = new THREE.AmbientLight( 0x333333);
@@ -157,10 +133,10 @@
 		scene.add( mesh );		
 
 // Foundation
-		material = new THREE.MeshNormalMaterial();
-		floorLevel = groundLevel;	
-		var thickness = gridSize;
-		var wallHeight = gridSize;
+		//material = new THREE.MeshNormalMaterial();
+		//floorLevel = groundLevel;	
+		//var thickness = gridSize;
+		//var wallHeight = gridSize;
 		
 // in end not used - just made a thick floor		
 // remember these are grid units not meters. '0.5' here actually equals 600mm...
@@ -245,7 +221,7 @@
 		for (var z = 0, zlen = floor.length; z < zlen; z++) {
 			for (var x = 0, xLen = floor[z].length; x < xLen; x++) {
 				if ( floor[z][x] > 0 ) {		
-					material = new THREE.MeshBasicMaterial( { color: 0xcccccc, map: tiles[ Math.floor(Math.random() * 4)] } );
+					material = new THREE.MeshBasicMaterial( { color: 0xcccccc, map: tiles[ Math.floor(Math.random() * 4)], side: THREE.DoubleSide } );
 					mesh = new THREE.Mesh( geometry, material );
 					mesh.position.set( x * gridSize, floorLevel, z * -gridSize );
 					mesh.rotation.y = Math.floor( Math.random() * 4 ) * 1.5708;
@@ -313,13 +289,8 @@
 // Colomns
 		for (var x = 0; x < 4; x++) {
 			for (var z = 0; z < 2; z++) {
-				geometry = new THREE.CylinderGeometry( 0.25, 0.25, wallHeight);
-				material = new THREE.MeshBasicMaterial( {color: 0xeeeeee } );	
-				mesh = new THREE.Mesh( geometry, material );				
-				mesh.position.set( gridSize * 26 + x * 6.66 * gridSize, floorLevel + 0.5 * wallHeight, -6 * gridSize - z * 8 * gridSize );
-				mesh.castShadow = true;
-				mesh.receiveShadow = true;	
-				scene.add( mesh );
+				p = v( gridSize * 26 + x * 6.66 * gridSize, floorLevel, -6 * gridSize - z * 8 * gridSize );
+				buildColumn( 0.25 * gridSize, wallHeight, p );			
 			}		
 		}
 
@@ -331,7 +302,20 @@
 			var mesh = new THREE.Mesh( geometry, material );
 			mesh.position.set( 50 * gridSize, floorLevel - 0.5 * gridSize, -14 * gridSize );
 			scene.add( mesh );
-
+			
+			loader = new THREE.JSONLoader();
+			loader.load( '../sculpture/alba-simplified.js', function ( geometry ) {
+				var offset = THREE.GeometryUtils.center( geometry ); 
+				material = new THREE.MeshNormalMaterial( { side: THREE.DoubleSide} );
+				mesh = new THREE.Mesh( geometry, material );
+				mesh.position.set( 50 * gridSize, floorLevel + 1.5 * gridSize, -14 * gridSize );
+				mesh.scale.set( 0.18, 0.18, 0.18);	
+				mesh.rotation.y = -1.5;
+				mesh.castShadow = true;
+				mesh.receiveShadow = true;	
+				scene.add( mesh );
+			} );	
+/*			
 			geometry = new THREE.CubeGeometry( 0.6 * gridSize, 2 * gridSize, 0.6 * gridSize);
 			material = new THREE.MeshLambertMaterial( {color: 0xdddddd } );
 			var mesh = new THREE.Mesh( geometry, material );
@@ -339,6 +323,7 @@
 			mesh.castShadow = true;
 			mesh.receiveShadow = true;				
 			scene.add( mesh );			
+*/
 			
 // Stone bench
 			geometry = new THREE.CubeGeometry( 15 * gridSize, 0.3, 0.9 * gridSize );
@@ -450,7 +435,7 @@
 		for (var i = 0; i < len; i++) {
 			geometry = new THREE.PlaneGeometry( 20 * Math.random(), 5 + 20 * Math.random() );
 			mesh = new THREE.Mesh( geometry, material );
-			mesh.position.set( 35 + ( 20 * Math.random() + 90) * Math.cos( delta * i), 5 + 3 * Math.random(), -0 + ( 15 * Math.random() + 60) * Math.sin( delta * i ) );
+			mesh.position.set( 35 + ( 20 * Math.random() + 90) * Math.cos( delta * i), 5 + 3 * Math.random(), -10 + ( 15 * Math.random() + 60) * Math.sin( delta * i ) );
 			mesh.lookAt( v( 35, 0, -20) );
 			scene.add( mesh );	
 		}				
@@ -462,6 +447,124 @@
 		controls.update( delta );
 		renderer.render( scene, camera );
 		stats.update();
+	}
+
+	function buildWall( gridSize, floorLevel, wall, wallHeight, thickness, material ) {
+		var startPoint, endPoint, distance, offset, position;
+		offset = -0.5 * gridSize + 0.5 * thickness;
+		for (var i = 0, len = wall.length; i < len; i++) {
+			if ( i + 1 < len ) {
+				startPoint = v( 0.5 * gridSize  + gridSize * wall[i][0], floorLevel + 0.5 * wallHeight, offset - gridSize * wall[i][1] );
+				endPoint = v( 0.5 * gridSize + gridSize * wall[i + 1][0],  floorLevel + 0.5 * wallHeight, offset - gridSize * wall[i + 1][1] );
+				distance = startPoint.distanceTo( endPoint );
+				geometry = new THREE.CubeGeometry( thickness, wallHeight, distance + thickness );
+				mesh = new THREE.Mesh( geometry, material );
+				position = endPoint.clone();
+				position.sub( startPoint ).divideScalar( 2 );
+				mesh.position = startPoint.add( position );
+				mesh.lookAt( endPoint );
+				mesh.castShadow = true;
+				mesh.receiveShadow = true;
+				scene.add( mesh );			
+			}
+		}	
+	}
+	
+	function buildWindow( width, wallHeight, position, rotation ) {
+		geometry = new THREE.CubeGeometry( 1, 1, 1 );
+		material = new THREE.MeshBasicMaterial( { color: 0x000000 } );
+		mesh = new THREE.Mesh( geometry, material );
+		mesh.castShadow = true;	
+		
+		var obj = new THREE.Object3D();
+		
+		var clone = mesh.clone();
+		clone.scale.set( 0.05, wallHeight, 0.1);
+		clone.position.set( 0.025, 0.5 * wallHeight, 0 );
+		obj.add( clone );
+		
+		clone = mesh.clone();
+		clone.scale.set( 0.05, wallHeight, 0.1);
+		clone.position.set( width - 0.025, 0.5 * wallHeight, 0 );
+		obj.add( clone );
+		
+		clone = mesh.clone();
+		clone.scale.set( width, 0.05, 0.1);
+		clone.position.set( 0.5 * width, 0.025, 0);
+		obj.add( clone );	
+
+		clone = mesh.clone();
+		clone.scale.set( width, 0.05, 0.1);
+		clone.position.set( 0.5 * width, wallHeight - 0.025, 0);
+		obj.add( clone );	
+		
+		geometry = new THREE.PlaneGeometry( width - 0.1, wallHeight - 0.1 );
+		material = new THREE.MeshBasicMaterial( { color: 0x003300, opacity: 0.3, side: THREE.DoubleSide, transparent: true } );
+		mesh = new THREE.Mesh( geometry, material );	
+		mesh.position.set( 0.5 * width, 0.5 * wallHeight, 0 );		
+		obj.add( mesh );	
+		
+		obj.position = position;
+		obj.rotation.y = rotation;
+		scene.add( obj );
+	}
+	
+	function buildColumn( width, wallHeight, position ) {
+		geometry = new THREE.CubeGeometry( 1, 1, 1 );
+		material = new THREE.MeshBasicMaterial( { color: 0x000000 } );
+		mesh = new THREE.Mesh( geometry, material );
+		mesh.position.y = 0.5 * wallHeight;
+		mesh.castShadow = true;
+		
+		var obj = new THREE.Object3D();
+		
+		clone = mesh.clone();
+		clone.scale.set( width, wallHeight, width / 3);
+		obj.add( clone );
+		
+		clone = mesh.clone();
+		clone.scale.set( width / 3, wallHeight, width);
+		obj.add( clone );
+		
+		obj.position = position;
+		scene.add( obj );
+	}
+	
+	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }
+
+	function getTrackballController() {
+		var target = controls.target
+		controls = new THREE.TrackballControls( camera, renderer.domElement );
+		controls.target = target;
+		info.innerHTML = info.txt;
+	}
+	
+	function getFirstPersonController() {
+		camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 1000 );
+		camera.position.set( 8, 5, 5 );
+
+		controls = new THREE.FirstPersonControls( camera );
+		controls.lookSpeedDefault = controls.lookSpeed = 0.025; // 0.0125;
+		
+		controls.lookSpeedMin = 0.04;
+		controls.lookSpeedMax = 0.09;
+		
+		controls.movementSpeedDefault = controls.movementSpeed = 1;
+		controls.movementSpeedMin = 0.2;
+		controls.movementSpeedMax = 10;
+		
+		controls.heightSpeed = true;
+		controls.heightCoef = 1.0;
+		controls.heightMin = 1.0;
+		controls.heightMax = 18.0;	
+	
+		controls.noFly = false;
+		controls.lookVertical = true;
+		controls.constrainVertical = true;
+		controls.verticalMin = 1.5;
+		controls.verticalMax = 2.0;
+		this.autoSpeedFactor = 0.0;
+		controls.lon = -40;			
 	}
 	
 	Leap.loop( { enableGestures: true }, function( frame ) {
@@ -543,82 +646,19 @@
 				controls.moveDown = false;
 			}
 			var tmp = ( controls.freeze ) ? 'class=red' : '';
-			
-			info.innerHTML = info.txt + 'freeze: <scan ' + tmp + '>' + controls.freeze + '</scan> lookSpeed: ' + controls.lookSpeed.toFixed(3) + ' movementSpeed:  ' + controls.movementSpeed +
-			' mouseX: ' + controls.mouseX.toFixed() + ' mouseY: ' + controls.mouseY.toFixed() + '<br>' +
-			'hand.x: ' + hand.stabilizedPalmPosition[0].toFixed(0) + ' hand.y: ' + hand.stabilizedPalmPosition[1].toFixed(0) + ' hand.z: ' + hand.stabilizedPalmPosition[2].toFixed(0) + '<br>' +
-			'pitchAng: ' + pitchAng.toFixed(2) + ' yawAng: ' + yawAng.toFixed(2) + '<br>' +
-			'camX: ' + camera.position.x.toFixed(1) + ' - camY: ' + camera.position.y.toFixed(1) + ' - camZ: ' + camera.position.z.toFixed(0) + 
-			' - con.autoSpeedFactor: ' + controls.autoSpeedFactor.toFixed(3) + ' - con.actualMoveSpeed: ' + controls.actualMoveSpeed.toFixed(2) + '<br>' + 
-			'';
+
+			info.innerHTML = info.txt + 
+				'freeze: <scan ' + tmp + '>' + controls.freeze + '</scan> lookSpeed: ' + controls.lookSpeed.toFixed(3) + 
+				' movementSpeed:  ' + controls.movementSpeed + 
+				' mouseX: ' + controls.mouseX.toFixed() + ' mouseY: ' + controls.mouseY.toFixed() + '<br>';
+				'hand.x: ' + hand.stabilizedPalmPosition[0].toFixed(0) + ' hand.y: ' + hand.stabilizedPalmPosition[1].toFixed(0) + ' hand.z: ' + hand.stabilizedPalmPosition[2].toFixed(0) + '<br>' +
+				'pitchAng: ' + pitchAng.toFixed(2) + ' yawAng: ' + yawAng.toFixed(2) + '<br>' +
+				'camX: ' + camera.position.x.toFixed(1) + ' - camY: ' + camera.position.y.toFixed(1) + ' - camZ: ' + camera.position.z.toFixed(0) + 
+				' - con.autoSpeedFactor: ' + controls.autoSpeedFactor.toFixed(3) + ' - con.actualMoveSpeed: ' + controls.actualMoveSpeed.toFixed(2) + '<br>' + 
+				'';
 		}
 	});	
 
-	function buildWall( gridSize, floorLevel, wall, wallHeight, thickness, material ) {
-		var startPoint, endPoint, distance, offset, position;
-		offset = -0.5 * gridSize + 0.5 * thickness;
-		for (var i = 0, len = wall.length; i < len; i++) {
-			if ( i + 1 < len ) {
-				startPoint = v( 0.5 * gridSize  + gridSize * wall[i][0], floorLevel + 0.5 * wallHeight, offset - gridSize * wall[i][1] );
-				endPoint = v( 0.5 * gridSize + gridSize * wall[i + 1][0],  floorLevel + 0.5 * wallHeight, offset - gridSize * wall[i + 1][1] );
-				distance = startPoint.distanceTo( endPoint );
-				geometry = new THREE.CubeGeometry( thickness, wallHeight, distance + thickness );
-				mesh = new THREE.Mesh( geometry, material );
-				position = endPoint.clone();
-				position.sub( startPoint ).divideScalar( 2 );
-				mesh.position = startPoint.add( position );
-				mesh.lookAt( endPoint );
-				mesh.castShadow = true;
-				mesh.receiveShadow = true;
-				scene.add( mesh );			
-			}
-		}	
-	}
-	
-	function buildWindow( width, wallHeight, position, rotation ) {
-		geometry = new THREE.CubeGeometry( 1, 1, 1 );
-		material = new THREE.MeshBasicMaterial( { color: 0x000000 } );
-		mesh = new THREE.Mesh( geometry, material );
-		
-		var obj = new THREE.Object3D();
-		
-		var clone = mesh.clone();
-		clone.scale.set( 0.05, wallHeight, 0.1);
-		clone.position.set( 0.025, 0.5 * wallHeight, 0 );
-		clone.castShadow = true;
-		obj.add( clone );
-		
-		clone = mesh.clone();
-		clone.scale.set( 0.05, wallHeight, 0.1);
-		clone.position.set( width - 0.025, 0.5 * wallHeight, 0 );
-		clone.castShadow = true;
-		obj.add( clone );
-		
-		clone = mesh.clone();
-		clone.scale.set( width, 0.05, 0.1);
-		clone.position.set( 0.5 * width, 0.025, 0);
-		clone.castShadow = true;
-		obj.add( clone );	
-
-		clone = mesh.clone();
-		clone.scale.set( width, 0.05, 0.1);
-		clone.position.set( 0.5 * width, wallHeight - 0.025, 0);
-		clone.castShadow = true;
-		obj.add( clone );	
-		
-		geometry = new THREE.PlaneGeometry( width - 0.1, wallHeight - 0.1 );
-		material = new THREE.MeshBasicMaterial( { color: 0x003300, opacity: 0.2, side: THREE.DoubleSide, transparent: true } );
-		mesh = new THREE.Mesh( geometry, material );	
-		mesh.position.set( 0.5 * width, 0.5 * wallHeight, 0 );	
-		mesh.castShadow = true;		
-		obj.add( mesh );	
-		
-		obj.position = position;
-		obj.rotation.y = rotation;
-		scene.add( obj );
-	}
-	
-	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }
 </script>
 </body>
 </html>
