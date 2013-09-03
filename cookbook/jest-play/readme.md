@@ -1,7 +1,7 @@
 jestPlay - Save & Read Leap Motion JSON Files
 =============================================
 
-Demo: http://jaanga.github.io/gestification/cookbook/save-read-json/r1/save-read-json.html
+Demo: http://jaanga.github.io/gestification/cookbook/jest-play/r1/jest-play.html
 
 Usage:
 1. Wave a hand and at least one finger over the Leap Motion device to start recording.
@@ -24,7 +24,8 @@ that you can use to start developing your own code.
 The app provides full access to your operating systems file save and file open dialog boxes 
 - which are features not normally found in JavaScript as they were recentrly introduced in HTML 5.
 
-Based on the [Three.js](http://threejs.org) library, the app allows you to zoom, pan and and rotate the views of the replays.
+Based on the [Three.js](http://threejs.org) library, the app allows you to zoom, pan and and rotate the views of the replays
+ - so you can see them from another person's point of view.
 
 This app supersedes '[save-json](https://github.com/jaanga/gestification/tree/gh-pages/work-in-hand/save-json)'.
 
