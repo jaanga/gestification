@@ -13,25 +13,24 @@
 <script src=../FileSaver.min.js >   // see https://github.com/eligrey/FileSaver.js/   </script> 
 <script>
 	var renderer, scene, camera, controls, stats;
-	var clock = new THREE.Clock();
-	clock.previousTime = 1000000;	
 	var reader = new FileReader();
 	var outputDiv, textarea, tmpText = '';
-	var data, palm, fingers = [];
+	var palm, fingers = [];
 	var pausedFrame = null;
 	var latestFrame = null;
-
+	var clock = new THREE.Clock();
+	
 	init();
 	animate();
 
 	function init() {
-		var css, menu, light, geometry, material, mesh;
+		var css, light, geometry, material, mesh;
 		
 		css = document.body.appendChild( document.createElement('style') );
 		css.innerHTML = 'body { font: 600 12pt monospace; overflow: hidden; }' +
 			'input, button { font: 600 12pt monospace; }';		
 	
-		menu = document.body.appendChild( document.createElement( 'div' ) );
+		var menu = document.body.appendChild( document.createElement( 'div' ) );
 		menu.innerHTML = '<h1 style="display: inline;">jestPlay</h1> Record and replay Leap Motion data: ' +
 			' 1. Show one hand and fingers to trigger recording.  ' +
 			'Spacebar: pause. \'x\': clear.<br>' +
@@ -46,11 +45,7 @@
 		
 		textarea = document.body.appendChild( document.createElement( 'textarea' ) );
 		textarea.style.cssText = 'height: ' + (window.innerHeight - 120) + 'px; width: ' +  0.49 * window.innerWidth + 'px; ';
-		textarea.placeholder = 'Data will appear here when you move a hand over the Leap /motion device...';	
-
-		stats = new Stats();
-		stats.domElement.style.cssText = 'position: absolute; right: 0; top: 0px; zIndex: 100; ';
-		document.body.appendChild( stats.domElement ); 		
+		textarea.placeholder = 'data will appear here when you move a hand over the device here...';		
 
 		renderer = new THREE.WebGLRenderer( { antialias: true }  );	
 		renderer.setSize( 0.49 * window.innerWidth, window.innerHeight - 120 );
@@ -61,6 +56,10 @@
 		camera = new THREE.PerspectiveCamera( 40, (0.45 * window.innerWidth) / (window.innerHeight - 150) , 1, 5000 );
 		camera.position.set( 0, 500, 500 );
 		controls = new THREE.TrackballControls( camera, renderer.domElement );
+
+		stats = new Stats();
+		stats.domElement.style.cssText = 'position: absolute; right: 0; top: 0px; zIndex: 100; ';
+		document.body.appendChild( stats.domElement );    
 
 		geometry = new THREE.AxisHelper( 80 );
 		scene.add( geometry );
@@ -98,7 +97,6 @@
 			} else {
 				pausedFrame = null;
 			}
-			textareaOutput.value = 'Paused - ' + textareaOutput.value 
 		}
 // you pressed the letter x		
 		if ( e.charCode == 120 ) {
@@ -115,29 +113,22 @@
 		if ( that.files && that.files[0]){
 			var reader = new FileReader();
 			reader.onload = function (e) {  
-				textareaOutput.value = 'Replay file loaded. Click on \'Replay\' to view... ';
 				textarea.value = e.target.result;
-				clock.previousTime = 100000;
 			};
 			reader.readAsText(that.files[0]);
 		}
 	} 	
 	
 	Leap.loop( function( frame ) {
-		if ( clock.previousTime === 1000000 ) {
-			latestFrame = frame;
-			var status = 'No motion detected - bytes recorded: ';
-			if ( !pausedFrame && frame.hands.length > 0 && frame.pointables.length > 0 ) {
-				status = '*** Recording *** bytes recorded: ';
-				tmpText += JSON.stringify( frame.data ) + ',\n\n';			
-			}else {
-				if ( pausedFrame ) status =++ '### Paused ### ';
-				textarea.value += tmpText;
-				tmpText  = '';
-			}
-			textareaOutput.value = status + textarea.value.length + ' - Latest frame: ' + JSON.stringify( (pausedFrame || latestFrame).data ) + '';			
-			playLoop( frame );	
-		}
+		latestFrame = frame;
+		textareaOutput.value = 'Latest frame: ' + JSON.stringify( (pausedFrame || latestFrame).data ) + '';
+		if ( !pausedFrame && frame.hands.length > 0 && frame.pointables.length > 4 ) {
+			tmpText += JSON.stringify( frame.data ) + ',\n\n';			
+		}else {
+			textarea.value += tmpText;
+			tmpText  = '';
+		}			
+		playLoop( frame );				
 	});	
 		
 	
@@ -178,16 +169,21 @@
 			palm.hasFingers = false;
 		}		
 	}
-	
-	function dataReplay() {	  
-		textareaOutput.value = 'replay... ';
-		data = JSON.parse( textarea.value );
-		data.replay = true;
-		data.index = 0;
 
-		var duration = data[ data.length - 1 ].timestamp - data[0].timestamp;
-		clock.step = 0.000001 * duration / data.length;
-		clock.previousTime = 0;	
+	function dataReplay() {	  
+		data = JSON.parse( textarea.value );
+		var last = data.length - 1;
+		var i = 0;
+		var duration = (data[last].timestamp - data[0].timestamp)/1000;
+		step = duration / data.length;
+		function run() {
+			if (i == last) return;
+			var frame = new Leap.Frame( data[i] );
+			playLoop(frame);
+			i++;
+			setTimeout(run, step);
+		};
+		run();	
 	};
 	
 	function animate() {
@@ -195,12 +191,6 @@
 		controls.update();
 		renderer.render( scene, camera );
 		stats.update();		
-		if ( clock.getElapsedTime() - clock.previousTime > clock.step ) {
-			var frame = new Leap.Frame( data[ data.index ] );
-			playLoop(frame);
-			clock.previousTime = clock.getElapsedTime(); 
-			if ( ++data.index >= data.length ) clock.previousTime = 1000000;
-		}
 	}	
 	
 	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }
