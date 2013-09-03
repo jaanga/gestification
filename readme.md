@@ -25,7 +25,7 @@ The '[cookbook](https://github.com/jaanga/gestification/tree/gh-pages/cookbook)'
 
 The '[projects](https://github.com/jaanga/gestification/tree/gh-pages/projects)' folder contains work that probably has start and finish dates and tends to be more complicated stuff.
 
-The '[work-in-hand](https://github.com/jaanga/gestification/tree/gh-pages/work-in-hand}' folder contains more experimental work where the final outcome is more up in the air.
+The '[work-in-hand](https://github.com/jaanga/gestification/tree/gh-pages/work-in-hand)' folder contains more experimental work where the final outcome is more up in the air.
 
 If you do not have the Leap Motion device, but you want to see what the demos look like, try this file: http://jaanga.github.io/gestification/no-leap-view-only.html
 
@@ -42,7 +42,7 @@ MIT License
 2013-09-02 ~ Theo
 * Updated this readme
 * Moved these out of Feature Apps: [Draw 3D Objects](http://jaanga.github.io/gestification/cookbook/draw-3d-objects/r1/draw-3d-objects.html)
-[Phalanges](http://jaanga.github.io/gestification/work-in-hand/phalanges/r3/phalanges.html)
+- [Phalanges](http://jaanga.github.io/gestification/work-in-hand/phalanges/r3/phalanges.html)
 
 2013-08-19 ~ Theo
 * Updated this readme
