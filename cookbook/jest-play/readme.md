@@ -22,7 +22,7 @@ It does, however, provide you with a simple working example in under two hundred
 that you can use to start developing your own code.
 
 The app provides full access to your operating systems file save and file open dialog boxes 
-- which are features not normally found in JavaScript as they were recentrly introduced in HTML 5.
+- which are features not normally found in JavaScript as they were recently introduced in HTML 5.
 
 Based on the [Three.js](http://threejs.org) library, the app allows you to zoom, pan and and rotate the views of the replays
  - so you can see them from another person's point of view.
