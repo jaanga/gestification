@@ -25,6 +25,7 @@
 
 	var renderer, scene, camera, controls, stats;
 	var info, palm, fingerTips = [], fingerJoints = [], fingerBases = [], lines = [];
+	var order = [4, 2, 0, 1, 3];
 	var handIdPrevious = 0;
 
 	init();
@@ -113,7 +114,8 @@
 		palm.castShadow = true;
 		palm.receiveShadow = true;
 		scene.add( palm );
-
+		
+		
 		for (var i = 0; i < 5; i++) {
 			geometry = new THREE.CubeGeometry( 16, 12, 1 );
 			var texture = canvasText( i , { backgroundColor: 'random', color: '#000000', fontSize: '48pt', globalAlpha: 0.8, height: 200, lineWidth: 2, textAlign: 'center', textBaseline: 'middle', width: 100, X: 50, Y: 100} );
@@ -142,6 +144,7 @@
 			geometry.vertices.push( v(100 * Math.random() - 50, 100 * Math.random(), 100 * Math.random() - 50));
 			material = new THREE.LineBasicMaterial( {color: 0x000000 } );
 			mesh = new THREE.Line( geometry, material );
+			mesh.order = order[i];
 			lines.push( mesh );
 			scene.add( mesh );		
 		}
@@ -186,8 +189,8 @@ var fr;
 			palm.hadFiveFingers - false; 
 			
 			txt = info.txt + '';		
-			//if ( len === 5 ) {
-			if ( len > 0 ) {
+			if ( len === 5 ) {
+			// if ( len > 0 ) {
 				palm.hasFiveFingers = true;
 				palm.hadFiveFingers = true;
 
@@ -233,8 +236,8 @@ txt += '<br><div class=parent><div class="title red" >Pointable Sort by FingerID
 					var pos = posX.indexOf( num );	
 					positions.push( pos );
 txt += '<div class="row red">' + pos + '</div>';						
-					fingerBases[ i ].id = fingerTips[ pos ].id
-					fingerTips[pos].pos = fingerBases[ i ].position;
+					fingerBases[ order[i] ].id = fingerTips[ pos ].id
+					fingerTips[pos].pos = fingerBases[ order[i] ].position;
 				// positionRank + ' pos: ' + fingerTips[i].x + '<br>';
 				}
 txt += '</div>';					
@@ -261,8 +264,8 @@ txt += '</div>';
 
 				for (var i = 0; i < len; i++) {
 					for (var j = 0; j < 5; j++) {
-						if ( fingerTips[i].id === fingerBases[ j ].id ) {
-							fingerTips[i].pos = fingerBases[ j ].position;
+						if ( fingerTips[i].id === fingerBases[ order[i] ].id ) {
+							fingerTips[i].pos = fingerBases[ order[j] ].position;
 							break;
 						} else {
 							fingerTips[i].pos = null;
@@ -276,9 +279,9 @@ txt += '</div>';
 				
 				fingerTip = fingerTips[ i ];
 				fingerJoint = fingerJoints[ i ];
-				// lines[ i ].visible = false;
+				lines[ i ].visible = false;
 				if ( i < len ) {
-					pointable = frame.pointables[ i ];
+					pointable = frame.pointables[ order[i] ];
 					fingerTip.position.set( pointable.stabilizedTipPosition[0], pointable.stabilizedTipPosition[1], pointable.stabilizedTipPosition[2] );
 					direction = v( pointable.direction[0], pointable.direction[1], pointable.direction[2]);  // best so far
 					fingerTip.lookAt( direction.add( fingerTip.position ) );
@@ -343,7 +346,7 @@ txt += '</div>';
 		fingerTips[i].visible = bool;
 		fingerJoints[i].visible = bool;
 		fingerBases[i].visible = bool;
-		// lines[i].visible = bool;
+		lines[i].visible = bool;
 	}
 
 	function animate() {

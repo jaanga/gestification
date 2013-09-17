@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang=en>
+<head>
+<title>jestPlay Read BVH - Jaanga</title>
+<meta charset=utf-8>
+</head>
+<body>
+<script src='http://mrdoob.github.com/three.js/examples/js/Detector.js'></script>
+<script src='http://mrdoob.github.com/three.js/build/three.min.js'></script>
+<script src='http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js'></script>
+<script src='http://mrdoob.github.com/three.js/examples/js/libs/stats.min.js'></script>
+<script>
+// copyright (c) 2013 Jaanga authors ~ MIT License
+
+// Thank you, Saqoosha ~ http://saqoo.sh/a/
+
+	var renderer, scene, camera, controls, stats;
+	var reader = new FileReader();
+	var textarea;
+	var xmlhttp;
+	var Bvh = {};
+	requestFile( '../../bvh-samples/lm-hands-thumb.bvh' );
+	
+	init();
+
+	function init() {
+		var css, geometry, material, mesh;
+
+		css = document.body.appendChild( document.createElement('style') );
+		css.innerHTML = 'body { font: 600 12pt monospace; overflow: hidden; }' +
+			'input { font: 600 12pt monospace; }';
+
+		Bvh.info = document.body.appendChild( document.createElement( 'div' ) );
+		
+		Bvh.info.innerHTML = '<h1>jestPlay Read BVH - Leap Motion files</h1>' +
+			'Select sample: <select id=selBvh onchange=requestFile("../../bvh-samples/"+Bvh.files[this.selectedIndex]) ></select> ' +
+			'or <input type=file onchange=readText(this) /> <input type="checkbox" id="play" checked>Play - ' +
+			'<button type=button onclick=Bvh.play.checked=false;Bvh.animate(0); >First frame</button> - ' +
+			'<button type=button onclick=Bvh.play.checked=false;Bvh.animate(1); >Second Frame frame</button> - ' +
+			'<a href="https://github.com/jaanga/gestification/tree/gh-pages/cookbook/jest-play" target="_blank">Source Code</a> ' + 
+			'' ;
+
+		Bvh.files = [ 'lm-hands-thumb.bvh', 'leapmotion.bvh' ];
+		
+		for (var len = Bvh.files.length, option, i = 0; i < len; i++) {
+			option = document.createElement( 'option' );
+			option.innerText = Bvh.files[i];
+			selBvh.appendChild( option );
+
+		}
+		Bvh.play = document.getElementById('play');
+		selBvh.selectedIndex = 1;			
+
+		textarea = document.body.appendChild( document.createElement( 'textarea' ) );
+		textarea.style.cssText = 'height: ' + (window.innerHeight - 150) + 'px; width: ' +  0.45 * window.innerWidth + 'px; ';
+		textarea.value = 'text here...';
+
+		renderer = new THREE.WebGLRenderer( { antialias: true }  );
+		renderer.setSize( 0.5 * window.innerWidth, window.innerHeight - 150 );
+
+		document.body.appendChild( renderer.domElement );
+		scene = new THREE.Scene();
+
+		camera = new THREE.PerspectiveCamera( 40, (0.45 * window.innerWidth) / (window.innerHeight - 150) , 1, 5000 );
+		camera.position.set( 0, 500, 500 );
+		controls = new THREE.TrackballControls( camera, renderer.domElement );
+
+		stats = new Stats();
+		stats.domElement.style.cssText = 'position: absolute; right: 0; top: 0px; zIndex: 100; ';
+		document.body.appendChild( stats.domElement );
+
+		geometry = new THREE.AxisHelper( 80 );
+		scene.add( geometry );
+
+		geometry = new THREE.PlaneGeometry( 600, 600, 1, 1 );
+		geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
+		material = new THREE.MeshBasicMaterial( {color: Math.random() * 0xffffff, side: THREE.DoubleSide } );
+		mesh = new THREE.Mesh( geometry, material );
+		mesh.position.set( 0, 0, 0 );
+		scene.add( mesh );
+	}
+
+	function readText( that ){
+		if ( that.files && that.files[0] ){
+			var reader = new FileReader();
+			reader.onload = function (event) {
+				if ( scene.children.length > 1 ) {
+					scene.remove( scene.children[2] );
+				}
+				var data = event.target.result;
+				textarea.value = data;
+				Bvh.parseData( data );
+			};
+			reader.readAsText(that.files[0]);
+		}
+	}
+
+	function requestFile( fname ) {
+		dataPlay = false;
+		xmlhttp = new XMLHttpRequest();
+		xmlhttp.open( 'GET', fname, true );
+		xmlhttp.onreadystatechange = callbackFile;
+		xmlhttp.send( null );
+		callbackCount = 0;
+	}
+
+	function callbackFile() {
+		if ( xmlhttp.readyState == 4  ) {
+			if ( scene.children.length > 1 ) {
+				scene.remove( scene.children[2] );
+			}
+			var data = xmlhttp.responseText;
+			textarea.value = data;
+			Bvh.parseData ( data );
+		} else {
+// console.log('waiting...');
+		}
+	}
+
+	Bvh.parseData = function ( data ) {
+		var _this = Bvh;
+		_this.data = data.split(/\s+/g);
+		_this.channels = [];
+		done = false;
+		while (!done) {
+			switch (_this.data.shift()) {
+			case 'ROOT':
+				_this.root = _this.parseNode(_this.data);
+				scene.add(_this.root);
+				break;
+			case 'MOTION':
+				_this.data.shift();
+				_this.numFrames = parseInt( _this.data.shift() );
+				_this.data.shift();
+				_this.data.shift();
+				_this.secsPerFrame = parseFloat(_this.data.shift());
+				done = true;
+			}
+		}
+		_this.root.material = new THREE.MeshBasicMaterial({ color: 0xff0000});
+		_this.startTime = Date.now();
+		animate();
+    }
+
+    Bvh.animate = function( frame ) {
+		var ch, frame, n, torad, ref;
+		n = frame % this.numFrames * this.channels.length;
+		if ( Bvh.play.checked && n === 0 ) { 
+			n = this.channels.length; 
+			console.log( 'n', n );   
+		} 			
+		// torad = Math.PI / 180;
+		ref = this.channels;
+		for ( var i = 0, len = ref.length; i < len; i++) {
+			ch = ref[ i ];
+			switch ( ch.prop ) {
+				case 'Xrotation':
+					ch.node.rotation.x = ( parseFloat(this.data[n]) ) * d2r;
+					break;
+				case 'Yrotation':
+					ch.node.rotation.y = ( parseFloat(this.data[n]) ) * d2r;
+					break;
+				case 'Zrotation':
+					ch.node.rotation.z = ( parseFloat(this.data[n]) ) * d2r;
+					break;
+				case 'Xposition':
+					ch.node.position.x = ch.node.offset.x + parseFloat( this.data[n]);
+					break;
+				case 'Yposition':
+					ch.node.position.y = ch.node.offset.y + parseFloat( this.data[n] );
+					break;
+				case 'Zposition':
+					ch.node.position.z = ch.node.offset.z + parseFloat( this.data[n] );
+			}
+			n++;
+		}
+	};	
+	
+    Bvh.parseNode = function( data) {
+		var name, done, geometry, i, material, n, node, t;
+		name = data.shift();
+		
+		if ( name === 'Site' ) {
+			geometry = new THREE.SphereGeometry( 3 );
+			material = new THREE.MeshNormalMaterial();
+			node = new THREE.Mesh(geometry, material);	
+		
+		} else if ( name === 'rHand' || name === 'rHand' ) {
+			geometry = new THREE.CubeGeometry( 30, 5, 20 );
+			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 0, 0 ) );
+			material = new THREE.MeshNormalMaterial();
+			node = new THREE.Mesh(geometry, material);	
+			
+/*				
+		} else if ( name === 'Neck' ) {
+			geometry = new THREE.CubeGeometry( 10, 10, 10 );
+			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 4, 0 ) );
+			material = new THREE.MeshNormalMaterial();
+			node = new THREE.Mesh(geometry, material);	
+			
+		} else if ( name === 'LeftCollar' ) {
+			geometry = new THREE.CubeGeometry( 30, 10, 10 );
+			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( -10, 0, 0 ) );
+			material = new THREE.MeshNormalMaterial();
+			node = new THREE.Mesh(geometry, material);				
+		} else if ( name === 'RightCollar' ) {
+			geometry = new THREE.CubeGeometry( 30, 10, 10 );
+			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 10, 0, 0 ) );
+			material = new THREE.MeshNormalMaterial();
+			node = new THREE.Mesh(geometry, material);	
+			
+		} else if ( name === 'LeftShoulder' ||  name === 'LeftElbow' ) {
+			geometry = new THREE.CubeGeometry( 35, 8, 8 );
+			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 20, 0, 0 ) );
+			material = new THREE.MeshNormalMaterial();
+			node = new THREE.Mesh(geometry, material);		
+		} else if ( name === 'RightShoulder' || name === 'RightElbow' ) {
+			geometry = new THREE.CubeGeometry( 35, 8, 8 );
+			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( -20, 0, 0 ) );
+			material = new THREE.MeshNormalMaterial();
+			node = new THREE.Mesh(geometry, material);	
+			
+		} else if ( name === 'LeftWrist' ) {
+			geometry = new THREE.CubeGeometry( 15, 12, 5 );
+			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 20, 0, 0 ) );
+			material = new THREE.MeshNormalMaterial();
+			node = new THREE.Mesh(geometry, material);		
+		} else if ( name === 'RightWrist' ) {
+			geometry = new THREE.CubeGeometry( 15, 12, 5 );
+			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( -20, 0, 0 ) );
+			material = new THREE.MeshNormalMaterial();
+			node = new THREE.Mesh(geometry, material);				
+			
+		} else if ( name === 'Chest' || name === 'Chest2' || name === 'Chest3' || name === 'Chest4' ) {
+			geometry = new THREE.CubeGeometry( 30, 10, 10 );
+			material = new THREE.MeshNormalMaterial();
+			node = new THREE.Mesh(geometry, material);				
+			
+		} else if ( name === 'RightHip' ||  name === 'LeftHip') {
+			geometry = new THREE.CubeGeometry( 10, 50, 10 );
+			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, -18, 0 ) );
+			material = new THREE.MeshNormalMaterial();
+			node = new THREE.Mesh(geometry, material);				
+
+		} else if ( name === 'LeftKnee' || name === 'RightKnee' ) {
+			geometry = new THREE.CubeGeometry( 10, 45, 10 );
+			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, -25, 0 ) );
+			material = new THREE.MeshNormalMaterial();
+			node = new THREE.Mesh(geometry, material);		
+			
+			
+		} else if ( name === 'LeftAnkle' || name === 'RightAnkle' ) {
+			geometry = new THREE.CubeGeometry( 8, 8, 8 );
+			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 0, 0 ) );
+			material = new THREE.MeshNormalMaterial();
+			node = new THREE.Mesh(geometry, material);	
+		} else if ( name === 'LeftToe' || name === 'RightToe' ) {
+			geometry = new THREE.CubeGeometry( 10, 5, 20 );
+			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 0, -10 ) );
+			material = new THREE.MeshNormalMaterial();
+			node = new THREE.Mesh(geometry, material);	
+*/				
+		} else {	
+	
+			geometry = new THREE.CubeGeometry( 3, 3, 3 );
+			material = new THREE.MeshNormalMaterial();
+			node = new THREE.Mesh(geometry, material);
+		}
+		node.name = name; // data.shift();
+console.log( node.name );		
+		// node.rotation.order = 'ZYX';
+		done = false;
+		while ( !done ) {
+			switch (t = data.shift()) {
+				case 'OFFSET':
+					node.position.set( parseFloat( data.shift() ), parseFloat( data.shift() ), parseFloat( data.shift() ) );
+					node.offset = node.position.clone();
+					break;
+				case 'CHANNELS':
+					n = parseInt( data.shift() );
+					for ( i = 0;  0 <= n ? i < n : i > n;  0 <= n ? i++ : i-- ) {  // OMG
+						this.channels.push({
+							node: node,
+							prop: data.shift()
+						});
+					}
+					break;
+				case 'JOINT':
+				case 'End':
+					node.add( this.parseNode(data) );
+					break;
+				case '}':
+					done = true;
+			}
+		}
+		return node;
+    };	
+
+	function animate() {
+		requestAnimationFrame( animate );
+		controls.update();
+		renderer.render( scene, camera );
+		stats.update();
+		if ( Bvh.play.checked ) { 
+			var frame = ( (Date.now() - Bvh.startTime ) / Bvh.secsPerFrame / 1000) | 0; 
+			Bvh.animate( frame ); 
+		}
+	}
+	
+	var pi = Math.PI, pi2 = 0.5 * Math.PI;
+	var d2r = pi / 180, r2d = 180 / pi;  // degress / radians		
+</script>
+</body>
+</html>
