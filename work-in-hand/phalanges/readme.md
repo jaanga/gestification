@@ -1,6 +1,9 @@
 Phalanges
 =========
 
+Watch the gentle progress of each revision:
+
+
 Demo: http://jaanga.github.io/gestification/work-in-hand/phalanges/r1/phalanges.html  
 - Note that finger bases cross each other and tips connect to inappropriate bases
 
