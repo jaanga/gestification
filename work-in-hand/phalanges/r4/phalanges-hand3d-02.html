@@ -20,8 +20,8 @@
 	var renderer, scene, camera, controls, stats;
 	var info, hand3D, palm, fingers, fingerBases = [];
 	var fr;
-	// var order = [ 4, 2, 0, 1, 3 ];
-	// var idOrder;
+	var order = [ 4, 2, 0, 1, 3 ];
+	var idOrder;
 	
 	init();
 	animate();
@@ -35,8 +35,7 @@
 		info = document.body.appendChild( document.createElement( 'div' ) );
 		info.style.cssText = 'position: absolute; width: 100%; ';
 		info.innerHTML = info.txt = '<h1>phalanges</h1>' +
-			'Show one hand and five fingers to start ' +
-			' ~ <a href="https://github.com/jaanga/gestification/tree/gh-pages/work-in-hand/phalanges">source code</a></p>' +
+			'' +
 		'';
 		
 // Three.js Basics
@@ -109,19 +108,22 @@
 		geometry.applyMatrix( new THREE.Matrix4().makeTranslation( -10, 0, -15 ) );
 		material = new THREE.MeshNormalMaterial();
 		palm = new THREE.Mesh( geometry, material );
+		
 		palm.castShadow = true;
 		palm.receiveShadow = true;
 		hand3D.add( palm );
 		
-		//var fingerX = [ 70, 30, 10, -10, -30 ];
-		//var fingerZ = [ -0, 80, 80, 80, 80 ];
+		var fingerX = [ 70, 30, 10, -10, -30 ];
+		var fingerZ = [ -0, 80, 80, 80, 80 ];
 		var tranX = [ 30, 20, 0, -20, -40 ];
 		var tranZ = [ -30, 30, 30, 30, 30 ];
 		material = new THREE.MeshNormalMaterial();
 		for (var i = 0; i < 5; i++) {
-			geometry = new THREE.CubeGeometry( 15, 15, 1);
+			geometry = new THREE.CubeGeometry( 15, 15, 5);
+			// geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 25, 0, 0 ) );
+			//geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 0, 25 ) );
 			mesh = new THREE.Mesh( geometry, material );
-			// mesh.pointableIndex = order[ i ];
+			mesh.pointableIndex = order[ i ];
 			// mesh.position.x = fingerX[ i ];
 			// mesh.position.z = fingerZ[ i ];	
 			mesh.castShadow = true;
@@ -134,18 +136,14 @@
 			mesh = new THREE.Mesh( geometry, material );
 			mesh.position.x = tranX[ i ];
 			mesh.position.z = tranZ[ i ];			
-			mesh.castShadow = true;
-			mesh.receiveShadow = true;			
-			fingerBases.push( mesh );
 			hand3D.add( mesh );
+			fingerBases.push( mesh );
 		}	
 		hand3D.add( fingers );
 		scene.add( hand3D );
 	}
 
-	var pointablesX;
-	var pointablesXsortedClone;
-	
+
 	Leap.loop( function( frame ) {
 		fr = frame;
 		var hand, direction, len, finger, pointable;
@@ -165,53 +163,51 @@
 		if ( len > 0 && hand ) {
 			hand3D.hasFingers = true;
 			if ( len > 4 ) {
+				//idOrder = [];
+				//for (var i = 0; i < 5; i++) {
+				//	pointable = frame.pointables[ order[ i ] ];
+				//	idOrder.push( pointable.id );
+				//}
 				hand3D.hasFiveIds = true;
-				pointablesX = [];
-				for (var i = 0; i < len; i++) {
-					pointablesX.push( frame.pointables[i].stabilizedTipPosition[0] );
-				}
-				pointablesXsortedClone = pointablesX.slice(0);
-				pointablesXsortedClone.sort(function(a,b){return a-b});
-			
-				for (var i = 0; i < len; i++) {
-					index = pointablesX.indexOf( pointablesXsortedClone[i] );
-					pointable = frame.pointables[ index ];
-					fingers[ i ].pointableId = pointable.id;
-					fingers[ i ].pointableIndex = index;					
-				}
-			}	
+			}
 		} else if ( hand3D.hasFingers ) {
 			for (var i = 0; i < 5; i++) {
 				fingers[i].visible = false;
-				fingerBases[i].visible = false;
 			}
 			hand3D.hasFingers = false;
 			hand3D.hasFiveIds = false;
 			return;
 		}	
-	
+			
 		if ( hand3D.hasFiveIds ) {
-			var index, position, positionV3;
-			for (var i = 0; i < 5; i++) {
+			var position, positionV3;
+			for (var i = 0; i < len; i++) {
+				//pointable = frame.pointables[i];
+				// var id = pointable.id;
 				finger = fingers[ i ];
 				pointable = frame.pointables[ finger.pointableIndex ];
 				
-				if ( pointable && pointable.id === finger.pointableId ) {
+				if ( pointable ) {
 					position = pointable.stabilizedTipPosition;				
-					position = v( position[0], position[1], position[2] );	
-					position = hand3D.worldToLocal( position );	
+					positionV3 = v( position[0], position[1], position[2] );	
+					position = hand3D.worldToLocal( positionV3 );	
 					finger.position.copy( position );
 					
-					direction = v( 30 * pointable.direction[0], -30 * ( pointable.direction[1]), 30 * pointable.direction[2]);  
-					position = position.add( direction );
-					finger.lookAt( position );
-					finger.scale.z = 0.5 * pointable.length;
-					finger.translateZ( 0.5 * pointable.length  );		
+					//finger.position.set( hand.stabilizedPalmPosition[0] - pointable.stabilizedTipPosition[0], 
+					//	pointable.stabilizedTipPosition[1] - hand.stabilizedPalmPosition[1], 
+					//	hand.stabilizedPalmPosition[2] - pointable.stabilizedTipPosition[2] 
+					//)
+					direction = v( pointable.direction[0], -pointable.direction[1], pointable.direction[2] );
+					//direction2 = hand3D.worldToLocal( direction );
+// console.log( direction, direction2 );					
+					// finger.lookAt( direction.sub( finger.position ) );
+					finger.lookAt( direction.add( positionV3 ) );
+					
+					// finger.rotation.set( pointable.direction[0], -pointable.direction[1], pointable.direction[2] );
 					finger.visible = true;
 					
 					fingerBase = fingerBases[ i ];
-					fingerBase.lookAt( position );
-					fingerBase.visible = true;
+					fingerBase.lookAt( finger.position );
 				}
 			}
 		}
@@ -225,7 +221,6 @@
 	}
 
 	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }
-	var pi = Math.PI, pi2 = 0.5 * Math.PI;
 </script>
 </body>
 </html>
