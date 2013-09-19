@@ -9,6 +9,11 @@ Demo: http://jaanga.github.io/gestification/work-in-hand/motion-device-detector/
 
 Original code forked from Mr.doob's detector.js. Same idea - detect if there is a mmotion detection device available.
 
+See also this Stackoverflow conversation:
+
+http://stackoverflow.com/questions/17895202/how-can-a-javascript-app-detect-if-a-leap-motion-device-is-connected
+
+
 2013-08-08 ~ Theo
 * links to demos added to readme.
 
