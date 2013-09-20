@@ -11,7 +11,7 @@ Release 4 of the project to build a working, usable skin and bones framework for
 
 [Phalanges](http://jaanga.github.io/gestification/work-in-hand/phalanges/r4/phalanges.html)
 
-R4 is still a fail, but mush less of a fail than before...
+R4 is still a fail, but much less of a fail than before...
 
 ***
 
@@ -31,7 +31,7 @@ The **'[work-in-hand](https://github.com/jaanga/gestification/tree/gh-pages/work
 
 If you do not have the Leap Motion device, but you want to see what the demos look like, try this file: http://jaanga.github.io/gestification/no-leap-view-only.html
 
-See also: http://jaanga.com
+See also: **http://jaanga.com**
 
 
 ###Copyright and License

@@ -1,5 +1,8 @@
 Phalanges
 =========
+_The phalanges is the Latin name we give to bones in your hand._
+
+
 
 Watch the gentle progress of each revision:
 
