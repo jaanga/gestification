@@ -1,7 +1,7 @@
 The apps in this folder are things that work - after a fashion - but which could use a lot more effort.
 
 
-**[Draw 3D](https://github.com/jaanga/gestification/tree/gh-pages/work-in-hand/draw-3d) **  
+[**Draw 3D**](https://github.com/jaanga/gestification/tree/gh-pages/work-in-hand/draw-3d)
 - Draw obejtcs in 3D - vector objects that cast shadows and have editable data.
 Ultimately these may well be the most impotant apps here.
 But, for now, just a rough start.

@@ -12,7 +12,7 @@ Live Demo #3: http://jaanga.github.io/gestification/projects/flying-leap-3d/barf
 
 Built for Nicolás Berríos of Iquique, Chile
 
-The proposal is to build an app for the Leap Motion device that allows you to 'fly' over [Iquique harbor](http://goo.gl/Tq4F59}. 
+The proposal is to build an app for the Leap Motion device that allows you to 'fly' over [Iquique harbor](http://goo.gl/Tq4F59). 
 But how to fly using just one hand? These demos are testing grounds for learning how to fly 
 - and, more importantly, for us to learn good ways of tehing people how to fly. 
 
