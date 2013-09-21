@@ -203,11 +203,11 @@
 					finger.position.copy( position );
 					
 					//finger.rotation.set( pointable.direction[0], 1 * pointable.direction[1], pointable.direction[2] );
-					direction = v( 30 * pointable.direction[0], -30 * ( pointable.direction[1]), 30 * pointable.direction[2] );  
+					direction = v( 20 * pointable.direction[0], -20 * ( pointable.direction[1]), 20 * pointable.direction[2] );  
 					position = position.add( direction );
 					finger.lookAt( position );
 					finger.scale.z = 0.5 * pointable.length;
-					finger.translateZ( 0.5 * pointable.length  );		
+					// finger.translateZ( 0.5 * pointable.length  );		
 					finger.visible = true;
 					
 					fingerBase = fingerBases[ i ];
