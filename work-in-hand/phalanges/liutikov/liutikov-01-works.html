@@ -1,0 +1,191 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>lutikov</title>
+</head>
+<body>
+
+<script src="http://js.leapmotion.com/0.2.0/leap.min.js"></script>
+<!--
+<script src=../../../git-repos/three.js/examples/js/Detector.js></script>
+<script src=../../../git-repos/three.js/build/three.min.js></script>
+<script src=../../../git-repos/three.js/examples/js/controls/TrackballControls.js></script>
+<script src=../../../git-repos/three.js/examples/js/libs/stats.min.js></script>
+-->
+<script src=http://mrdoob.github.com/three.js/build/three.min.js></script>
+<script src=http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js></script>
+<script src=http://mrdoob.github.com/three.js/examples/js/libs/stats.min.js></script>
+
+  <script>
+    var container, scene, renderer, camera, light, loader;
+    var WIDTH, HEIGHT, VIEW_ANGLE, ASPECT, NEAR, FAR;
+
+    WIDTH = window.innerWidth,
+    HEIGHT = window.innerHeight;
+
+    VIEW_ANGLE = 45,
+    ASPECT = WIDTH / HEIGHT,
+    NEAR = 1,
+    FAR = 10000;
+
+    scene = new THREE.Scene();
+
+    renderer = new THREE.WebGLRenderer({antialias: true});
+
+    renderer.setSize(WIDTH, HEIGHT);
+    renderer.shadowMapEnabled = true;
+    renderer.shadowMapSoft = true;
+    renderer.shadowMapType = THREE.PCFShadowMap;
+    renderer.shadowMapAutoUpdate = true;
+
+    document.body.appendChild(renderer.domElement);
+
+    camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
+
+    camera.position.set(30, 10, 0);
+    camera.lookAt(scene.position);
+    camera.lookAt(scene.position);
+    scene.add(camera);
+
+    light = new THREE.DirectionalLight(0xffffff);
+
+    light.position.set(0, 300, 0);
+    light.castShadow = true;
+    light.shadowCameraLeft = -60;
+    light.shadowCameraTop = -60;
+    light.shadowCameraRight = 60;
+    light.shadowCameraBottom = 60;
+    light.shadowCameraNear = 1;
+    light.shadowCameraFar = 1000;
+    light.shadowBias = -.0001
+    light.shadowMapWidth = light.shadowMapHeight = 1024;
+    light.shadowDarkness = .7;
+
+    scene.add(light);
+
+    var loader = new THREE.JSONLoader();
+
+    loader.load('hand_rig.js', function (geometry, materials) {
+      var hand, material;
+
+      hand = new THREE.SkinnedMesh(
+        geometry,
+        new THREE.MeshFaceMaterial(materials)
+      );
+
+      material = hand.material.materials;
+
+      for (var i = 0; i < materials.length; i++) {
+        var mat = materials[i];
+
+        mat.skinning = true;
+      }
+
+      hand.castShadow = true;
+      hand.receiveShadow = true;
+
+      scene.add(hand);
+
+      render();
+
+      Leap.loop(function (frame) {
+        animate(frame, hand);
+      });
+    });
+
+    function render() {
+      renderer.render(scene, camera);
+      requestAnimationFrame(render);
+    }
+
+    function animate (frame, handMesh) {
+      if (frame.hands.length > 0) {
+        var leapHand = frame.hands[0],
+            leapFingers = frame.pointables,
+            handObj, fingersObj;
+            
+        handObj = {
+          position: {
+            z: -leapHand.palmPosition[0]/4,
+            y: leapHand.palmPosition[1]/6-30,
+            x: -leapHand.palmPosition[2]/4+10
+          },
+          rotation: {
+            z: leapHand.palmNormal[2],
+            y: leapHand.palmNormal[0],
+            x: -Math.atan2(leapHand.palmNormal[0], leapHand.palmNormal[1]) + Math.PI
+          },
+          update: function() {
+            var VectorDir = new THREE.Vector3(leapHand.direction[0], -leapHand.direction[1]+.6, leapHand.direction[2]);
+    
+            handMesh.lookAt(VectorDir.add(handMesh.position));
+            handMesh.position = this.position;
+            handMesh.bones[1].rotation.set(this.rotation.x, this.rotation.y, this.rotation.z);
+          }
+        };
+    
+        fingersObj = {
+          update: function (boneNum, fingerNum, isThumb) {
+            var bone = handMesh.bones[boneNum],
+                phalanges = [handMesh.bones[boneNum+1], handMesh.bones[boneNum+2]],
+                finger = leapFingers[fingerNum],
+                dir = finger.direction;
+              
+            if (!!isThumb) {
+              phalanges = [handMesh.bones[boneNum+1]];
+            }
+    
+            for (var i = 0, length = dir.length; i < length; i++) {
+              if (dir[i] >= .1) {
+                dir[i] = .1;
+              }
+            }
+    
+            bone.rotation.set(0, -dir[0], -dir[1]);
+    
+            for (var i = 0, length = phalanges.length; i < length; i++) {
+              var phalange = phalanges[i];
+    
+              phalange.rotation.set(0, 0, -dir[1]);
+            }
+          },
+          fingers: {
+            pinky: function() {
+              fingersObj.update(3, 3);
+            },
+            ring: function() {
+              fingersObj.update(7, 1);
+            },
+            mid: function() {
+              fingersObj.update(11, 0);
+            },
+            index: function() {
+              fingersObj.update(15, 2);
+            },
+            thumb: function() {
+              fingersObj.update(19, 4, true);
+            }
+          },
+          updateAll: function() {
+            var fingers = this.fingers;
+    
+            for (var finger in fingers) {
+              fingers[finger]();
+            }
+          }
+        };
+              
+        handObj.update();
+    
+        if (leapFingers.length == 5) {
+          fingersObj.updateAll();
+        }
+      }
+    }
+
+
+</script>
+</body>
+</html>

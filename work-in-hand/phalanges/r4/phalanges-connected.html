@@ -48,7 +48,7 @@
 		scene = new THREE.Scene();
 
 		camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 3000 );
-		camera.position.set( 0, 250, -600 );
+		camera.position.set( 0, 250, 600 );
 		controls = new THREE.TrackballControls( camera, renderer.domElement );
 		controls.target.set( 0, 100, 0 );
 
@@ -86,9 +86,9 @@
 //		light.shadowCameraVisible = true;
 
 // Axes
-        scene.add( new THREE.ArrowHelper( v(1, 0, 0), v(0, 0, 0), 100, 0xcc0000) );
-        scene.add( new THREE.ArrowHelper( v(0, 1, 0), v(0, 0, 0), 100, 0x00cc00) );
-        scene.add( new THREE.ArrowHelper( v(0, 0, 1), v(0, 0, 0), 100, 0x0000cc) );
+        scene.add( new THREE.ArrowHelper( v(1, 0, 0), v(0, 0, 0), 10, 0xcc0000) );
+        scene.add( new THREE.ArrowHelper( v(0, 1, 0), v(0, 0, 0), 10, 0x00cc00) );
+        scene.add( new THREE.ArrowHelper( v(0, 0, 1), v(0, 0, 0), 10, 0x0000cc) );
 
 // Assets
 
@@ -101,7 +101,7 @@
 		mesh.receiveShadow = true;
 		scene.add( mesh );
 		
-		hand3D =  new THREE.Object3D();
+		// hand3D =  new THREE.Object3D();
 		//palm = new THREE.Object3D();
 		fingers = [];
 		fingerBases = [];
@@ -111,14 +111,25 @@
 		palm = new THREE.Mesh( geometry, material );
 		palm.castShadow = true;
 		palm.receiveShadow = true;
-		hand3D.add( palm );
+		scene.add( palm );
 		
 		//var fingerX = [ 70, 30, 10, -10, -30 ];
 		//var fingerZ = [ -0, 80, 80, 80, 80 ];
 		var tranX = [ 30, 20, -10, -40, -70 ];
 		var tranZ = [ -30, 30, 30, 30, 30 ];
 		material = new THREE.MeshNormalMaterial();
+		var fingerBase;
 		for (var i = 0; i < 5; i++) {
+			geometry = new THREE.CubeGeometry( 15, 15, 30 );
+			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 0, 15 ) );
+			fingerBase = new THREE.Mesh( geometry, material );
+			fingerBase.position.x = tranX[ i ];
+			fingerBase.position.z = tranZ[ i ];			
+			fingerBase.castShadow = true;
+			fingerBase.receiveShadow = true;			
+			fingerBases.push( fingerBase );
+			palm.add( fingerBase );		
+		
 			geometry = new THREE.CubeGeometry( 15, 15, 1);
 			mesh = new THREE.Mesh( geometry, material );
 			// mesh.pointableIndex = order[ i ];
@@ -127,20 +138,12 @@
 			mesh.castShadow = true;
 			mesh.receiveShadow = true;
 			fingers.push( mesh);
-			hand3D.add( mesh );
+			fingerBase.add( mesh );
 			
-			geometry = new THREE.CubeGeometry( 15, 15, 30 );
-			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 0, 15 ) );
-			mesh = new THREE.Mesh( geometry, material );
-			mesh.position.x = tranX[ i ];
-			mesh.position.z = tranZ[ i ];			
-			mesh.castShadow = true;
-			mesh.receiveShadow = true;			
-			fingerBases.push( mesh );
-			hand3D.add( mesh );
+
 		}	
-		hand3D.add( fingers );
-		scene.add( hand3D );
+		//  hand3D.add( fingers );
+		// scene.add( hand3D );
 	}
 
 	var pointablesX;
@@ -149,6 +152,7 @@
 	Leap.loop( function( frame ) {
 		fr = frame;
 		var hand, direction, len, finger, pointable;
+		var hand3D = palm;
 		if ( frame.hands.length > 0) {
 			hand = frame.hands[0];
 			hand3D.position.set( hand.stabilizedPalmPosition[0], hand.stabilizedPalmPosition[1], hand.stabilizedPalmPosition[2] );
@@ -199,15 +203,15 @@
 				if ( pointable && pointable.id === finger.pointableId ) {
 					position = pointable.stabilizedTipPosition;				
 					position = v( position[0], position[1], position[2] );	
-					position = hand3D.worldToLocal( position );	
+					// position = hand3D.worldToLocal( position );	
 					finger.position.copy( position );
 					
 					//finger.rotation.set( pointable.direction[0], 1 * pointable.direction[1], pointable.direction[2] );
-					direction = v( 30 * pointable.direction[0], -30 * ( pointable.direction[1]), 30 * pointable.direction[2] );  
+					direction = v( 1 * pointable.direction[0], 1 * ( pointable.direction[1]), 1 * pointable.direction[2] );  
 					position = position.add( direction );
 					finger.lookAt( position );
 					finger.scale.z = 0.5 * pointable.length;
-					finger.translateZ( 0.5 * pointable.length  );		
+					finger.translateZ( -0.5 * pointable.length  );		
 					finger.visible = true;
 					
 					fingerBase = fingerBases[ i ];

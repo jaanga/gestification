@@ -18,7 +18,7 @@ Very much a work in progress, but this code will be very useful to game design.
 Dimitry and my conclusions: there is not.
 
 [**Phalanges**](https://github.com/jaanga/gestification/tree/gh-pages/work-in-hand/phalanges)  
-- **The app of the moment** Can you create a realtime, 3D skin and bones character elements using a Leap Motion device.
+- **The app of the moment** Can you create a realtime, 3D skin and bones character elements using a Leap Motion device?
 Not yet, but perhaps soon...
 
 [**Save JSON**](https://github.com/jaanga/gestification/tree/gh-pages/work-in-hand/save-json)    
