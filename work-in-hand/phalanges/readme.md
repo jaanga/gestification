@@ -5,10 +5,9 @@ _The phalanges is the Latin name we give to bones in your hand._
 
 Watch the gentle progress of each revision:
 
-Demo R5: http://jaanga.github.io/gestification/work-in-hand/phalanges/r4/phalanges.html  
+Demo R5: http://jaanga.github.io/gestification/work-in-hand/phalanges/r5/phalanges.html  
 - Much better than r4. This release is not ready for skinning, but is much closer to a potential starting point.
 
- 
 Demo R4: http://jaanga.github.io/gestification/work-in-hand/phalanges/r4/phalanges.html  
 - Note that finger tips display at awkward inappropriate angles
 
