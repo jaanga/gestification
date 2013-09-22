@@ -56,7 +56,7 @@ The code should be able to operate seamlessly with code that reads and writes ge
 * Handles palm pitch and yaw appropriately 
 * The ten joints should move and position themselves in a realistic manner and remain connected so that a skin may function appropriately.
 * The fingers never cross and never change base and never change length
-* The bones should never leave 'trash' on the screen or become dijointed from the palm
+* The bones should never leave 'trash' on the screen or become disjointed from the palm
 * OK to require 'seeing' five fingers on a hand before recognition starts
 * After that first five finger view, Leap Motion pointables may come and go, but fingers should remain visible and in the appropriate position related to where they were last seen
 
@@ -69,7 +69,7 @@ See also: https://en.wikipedia.org/wiki/Phalanx_bone
 * r5 added
 * Hybrid solution: 
 	* Finger tips move independently from the palm and finger bases
-	* Finger bases and palm are children of hand3D. finger tips are their own obects
+	* Finger bases and palm are children of hand3D. finger tips are their own objects
 * Pitch and yaw are good. Roll works to about half way over.
 * When five fingers are visible, motions are good and there not much jumpiness
 * After five fingers have been seen:
