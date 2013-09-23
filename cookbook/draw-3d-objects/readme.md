@@ -1,7 +1,14 @@
 Draw 3D Objects
 ===============
 
-Live demo: http://jaanga.github.io/gestification/cookbook/draw-3d-objects/r1/draw-3d-objects.html
+Live demo R2:  http://jaanga.github.io/gestification/cookbook/draw-3d-objects/r2/draw-3d-objects.html   
+- Added save file. The app now can write out an HTML file that rebuilds whatever you created. Leap motion device not required. Can be shared with anybody.  
+
+See also this conversation with @dstir on the Leap Motion Forum:  
+https://forums.leapmotion.com/forum/general-discussion/apps-and-project-discussion/53293-simple-3d-sketch-app
+
+
+Live demo R1: http://jaanga.github.io/gestification/cookbook/draw-3d-objects/r1/draw-3d-objects.html  
 
 It's something like 3D printing in thin air.
 
@@ -25,6 +32,9 @@ Copyright &copy; 2013 Jaanga authors
 MIT License
 
 ###Change Log
+
+2013-09-22 ~ Theo
+* R2 added. Supports file save.
 
 2013-08-19 ~ Theo
 * Folder and file added
