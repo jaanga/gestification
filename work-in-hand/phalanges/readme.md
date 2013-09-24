@@ -5,6 +5,9 @@ _The phalanges is the Latin name we give to bones in your hand._
 
 Watch the gentle progress of each revision:
 
+Demo R6: http://jaanga.github.io/gestification/work-in-hand/phalanges/r6/phalanges.html  
+- A hybrid solution. The short finger tips display Leap Motion data. The long finger tips display calculated date. One way or another there's always a finger showing.
+
 Demo R5: http://jaanga.github.io/gestification/work-in-hand/phalanges/r5/phalanges.html  
 - Much better than r4. This release is not ready for skinning, but is much closer to a potential starting point.
 
