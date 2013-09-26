@@ -18,7 +18,7 @@
 
 <script>
 	var renderer, scene, camera, controls, stats;
-	var info, palm, palm2, fingers = [];
+	var info, palm1,  fingers1 = [], palm2, fingers2 = [];
 
 	init();
 	animate();
@@ -32,7 +32,9 @@
 
 		info = document.body.appendChild( document.createElement( 'div' ) );
 		info.style.cssText = 'margin 0; position: absolute; top: 0px; width: 100% ';
-		info.innerHTML = info.txt = '<h1>LM Pitch, Roll & Yaw</h1><p>Left Side: Three.js lookAt & rotateOnAxis ~ Right side: pure JavaScript</p>' +
+		info.innerHTML = info.txt = '<h1>LM Pitch, Roll & Yaw</h1>' +
+			'<p>Left side: Three.js lookAt & rotateOnAxis</p>' +
+			'<p>Right side: Leap Motion pitch, roll and yaw</p>' +
 			'' +
 		'';
 		
@@ -56,7 +58,7 @@
 //  Lights
  		light = new THREE.DirectionalLight( 0xffffff, 1 );
 		light.position.set( 0, 500, 0 );
-		scene.add( light );
+		
 		light.castShadow = true;
 		light.shadowMapWidth = 2048;
 		light.shadowMaHeight = 2048;
@@ -68,7 +70,8 @@
 
 		light.shadowCameraNear = 100;
 		light.shadowCameraFar = 600;
-light.shadowCameraVisible = true;
+//		light.shadowCameraVisible = true;
+		scene.add( light );
 
 // axes
         scene.add( new THREE.ArrowHelper( v(1, 0, 0), v(0, 0, 0), 100, 0xcc0000) );
@@ -76,93 +79,74 @@ light.shadowCameraVisible = true;
         scene.add( new THREE.ArrowHelper( v(0, 0, 1), v(0, 0, 0), 100, 0x0000cc) );
 
 // Assets
-		material = new THREE.MeshBasicMaterial( {color: Math.random() * 0xffffff } );
+		var texture = THREE.ImageUtils.loadTexture( "../../../textures/cel-shade-64.png" );
+		material = new THREE.MeshPhongMaterial( { ambient: Math.random() * 0xffffff, color: Math.random() * 0xffffff, map: texture, opacity: 0.8, side: THREE.DoubleSide, transparent: true } );
 		geometry = new THREE.CubeGeometry( 600, 10, 300 );
 		mesh = new THREE.Mesh( geometry, material );
-		// mesh.position.set( 0, 0, 0 );
+		mesh.position.set( 0, -20, 0 );
 		mesh.castShadow = true;
 		mesh.receiveShadow = true;
 		scene.add( mesh );
 		
-		mesh = mesh.clone();
-		mesh.material = new THREE.MeshBasicMaterial( { wireframe: true } );
-		scene.add( mesh );
-		
-		palm = new THREE.Object3D();
-		
 		geometry = new THREE.CubeGeometry( 100, 20, 80 );
 		material = new THREE.MeshNormalMaterial();
+		
 		mesh = new THREE.Mesh( geometry, material );
 		mesh.castShadow = true;
 		mesh.receiveShadow = true;
-		palm.add( mesh);
+		palm1 = new THREE.Object3D();
+		palm1.add( mesh);
+		scene.add( palm1 );
 		
-		geometry = new THREE.CubeGeometry( 20, 20, 20 );
-		material = new THREE.MeshNormalMaterial();
 		mesh = new THREE.Mesh( geometry, material );
-		mesh.position.set( 60, 0, 0 );
 		mesh.castShadow = true;
 		mesh.receiveShadow = true;
-		palm.add( mesh);
-		
-		scene.add( palm );
-		
-		geometry = new THREE.CubeGeometry( 100, 20, 80 );
-		palm2 = new THREE.Mesh( geometry, material );
-		palm2.castShadow = true;
-		palm2.receiveShadow = true;
+		palm2 = new THREE.Object3D();
+		palm2.add( mesh);
 		scene.add( palm2 );
 
 		geometry = new THREE.CubeGeometry( 16, 12, 20 );
-		material = new THREE.MeshNormalMaterial();
 		for (var j = 0; j < 5; j++) {
 			mesh = new THREE.Mesh( geometry, material );
 			mesh.castShadow = true;
 			mesh.receiveShadow = true;
+			fingers1.push( mesh );
 			scene.add( mesh );
-			fingers.push( mesh );
+			
+			mesh = new THREE.Mesh( geometry, material );
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			
+			fingers2.push( mesh );	
+			scene.add( mesh );
 		}	
 	}
 
 	var fr;
 	Leap.loop( function( frame ) {
 		fr = frame;
-		var hand, direction, roll, len, finger, pointable;
+		var hand, direction, roll, finger, pointable;
 		if ( frame.hands.length > 0) {
-			hand = frame.hands[0];
-			palm.position.set( -150 + hand.stabilizedPalmPosition[0], hand.stabilizedPalmPosition[1], hand.stabilizedPalmPosition[2] );
+			hand = frame.hands[0];		
+			palm1.position.set( -150 + hand.stabilizedPalmPosition[0], hand.stabilizedPalmPosition[1], hand.stabilizedPalmPosition[2] );
 			direction = v( hand.direction[0], hand.direction[1], hand.direction[2] );  // best so far
-			palm.lookAt( direction.add( palm.position ) );
+			palm1.lookAt( direction.add( palm1.position ) );
 			roll = Math.atan2( hand.palmNormal[0], hand.palmNormal[1] );
-			palm.rotation.z = roll;
-			palm.visible = true;
+			palm1.rotation.z = roll;
+			palm1.visible = true;
 		} else {
-			palm.visible = false;
+			palm1.visible = false;
 		}
 
 		if ( frame.hands.length > 0) {
-			hand = frame.hands[0];
-			palm2.position.set( 150 + hand.stabilizedPalmPosition[0], hand.stabilizedPalmPosition[1], hand.stabilizedPalmPosition[2] );
-			
-			var pitchAng = Math.atan2( hand.direction[1] , -hand.direction[2] );
-			palm2.rotation.x = pitchAng;
-
-			var rollAng = Math.atan2( hand.palmNormal[0], hand.palmNormal[1] );
-			// var rollAng = Math.atan2( hand.palmNormal[0], hand.palmNormal[1] );
-			
-			
-			var yawAng = Math.atan2( hand.direction[0], -hand.direction[1] );
-			palm2.rotation.y = yawAng;	
-			
-			palm2.rotation.z = rollAng;		
-			
+			palm2.position.set( 150 + hand.stabilizedPalmPosition[0], hand.stabilizedPalmPosition[1], hand.stabilizedPalmPosition[2] );	
+			palm2.rotation.set( hand.pitch(), -hand.yaw(), hand.roll() );
 			palm2.visible = true;
 			
 			info.innerHTML = info.txt + 
-				'rotate X: ' + (r2d * palm.rotation.x).toFixed(2) + ' rotate Z: ' + (r2d * palm.rotation.z).toFixed(2) + ' rotate Y: ' + (r2d * palm.rotation.y).toFixed(2)  +'<br>' +
-				'pitchAng: ' + (r2d * pitchAng).toFixed(2)  + ' rollAng: ' + (r2d * rollAng).toFixed(2)  + ' yawAng: ' + (r2d * yawAng).toFixed(2) + '<br>' +
+				'rotate X: ' + (r2d * palm2.rotation.x).toFixed(2) + ' rotate Z: ' + (r2d * palm2.rotation.z).toFixed(2) + ' rotate Y: ' + (r2d * palm2.rotation.y).toFixed(2)  +'<br>' +
+				// 'pitchAng: ' + (r2d * pitchAng).toFixed(2)  + ' rollAng: ' + (r2d * rollAng).toFixed(2)  + ' yawAng: ' + (r2d * yawAng).toFixed(2) + '<br>' +
 				// 'rotate X: ' + (r2d * ( pi + palm.rotation.x)).toFixed(2) + ' rotate Z: ' + (r2d * palm.rotation.z).toFixed(2) + ' rotate Y: ' + (r2d * ( palm.rotation.y + pi2) ).toFixed(2)  +'<br>' +
-			
 				'';
 		} else {
 			palm2.visible = false;
@@ -171,7 +155,20 @@ light.shadowCameraVisible = true;
 		len = frame.pointables.length
 		if ( len > 0) {
 			for (var i = 0; i < 5; i++) {
-				finger = fingers[i];
+			
+				finger = fingers1[i];
+				if ( i < len ) {
+					pointable = frame.pointables[i];
+					finger.position.set( -150 + pointable.stabilizedTipPosition[0], pointable.stabilizedTipPosition[1], pointable.stabilizedTipPosition[2] );
+					direction = v( pointable.direction[0], pointable.direction[1], pointable.direction[2]);  // best so far
+					finger.lookAt( direction.add( finger.position ) );
+					finger.scale.z = 0.05 * pointable.length;
+					finger.visible = true;
+				} else {
+					finger.visible = false;
+				}
+				
+				finger = fingers2[i];
 				if ( i < len ) {
 					pointable = frame.pointables[i];
 					finger.position.set( 150 + pointable.stabilizedTipPosition[0], pointable.stabilizedTipPosition[1], pointable.stabilizedTipPosition[2] );
@@ -180,7 +177,7 @@ light.shadowCameraVisible = true;
 					finger.scale.z = 0.05 * pointable.length;
 					finger.visible = true;
 				} else {
-					fingers[i].visible = false;
+					finger.visible = false;
 				}
 			}
 		}	
