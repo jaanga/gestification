@@ -7,6 +7,7 @@ Cookbook code is an example of programming code that identifies or demonstrates 
 * [Draw 3D Objects](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/draw-3d-objects) - 3D printing without a printer. Could be significant - one day.
 * [Gesture Tally](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/gesture-tally) - See the swipes. Response to LM forum question. Code example.
 * [jestPlay](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/jest-play) - Record and replay Leap Motion JSON data capture. Much effort here.
+* [Handy Videos](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/handy-videos) ~ Not your mother's video. Somewhat insane.
 * [Leap Distance vs Normal](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/leap-distance-vs-normal) - another pitch, roll and yaw issues demo
 * [Heavens to Murgatroyd](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/murgatroyd-heaven) - not an easy game. Early work.
 * [Pitch Roll and Yaw](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/pitch-roll-yaw) - pitch, roll and yaw issues demo. Code example.
