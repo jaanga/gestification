@@ -1,0 +1,244 @@
+﻿<!doctype html>
+<html lang=en>
+<head>
+<title>moving pictures moving</title>
+<meta charset=utf-8>
+</head>
+<body>
+<!--
+<script src = ../../../../../git-repos/three.js/examples/js/Detector.js ></script>
+<script src = ../../../../../git-repos/three.js/build/three.min.js ></script>
+<script src = ../../../../../git-repos/three.js/examples/js/controls/TrackballControls.js ></script>
+<script src = ../../../../../git-repos/three.js/examples/js/libs/stats.min.js ></script>
+-->
+<script src=http://mrdoob.github.com/three.js/examples/js/Detector.js ></script>
+<script src=http://mrdoob.github.com/three.js/build/three.min.js ></script>
+<script src=http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js ></script>
+<script src=http://mrdoob.github.com/three.js/examples/js/libs/stats.min.js ></script>
+
+<script src="http://js.leapmotion.com/0.2.1/leap.min.js"></script>
+<script>
+	var info, renderer, scene, camera, controls, stats;
+	var plane1, plane2;
+	var video1, video2;
+	var texture1, texture2;
+	var select1, select2;
+	
+	var thing = [];
+	thing[0] = function(x, y) { return 0.5 * sin( x * 0.07 + delta) * sin( y * 0.07 + delta)  ; };
+	thing[1] = function(x, y) { return 0.08 * sin( x * 0.25 + delta ) * sin( y * 0.25 ); };
+	thing[2] = function(x, y) { return 0.05 * sin( 0.2 * delta * Math.sqrt( x * x + y * y ) ); };
+	thing[3] = function(x, y) { return 0.25 * sin(0.1 * x + delta ) + 0.25 *  cos(0.1 * y) ; };
+	thing[4] = function(x, y) { var t = 0.2 * Math.sqrt( (x - 50) * (x - 50) + (y - 50) * (y - 50) ); return 1 * Math.sin( t + delta) / (t - delta); };
+	thing[5] = function(x, y) { return 0.005 *  ( ( x - 0.5 ) * (x - 0.5 + delta) + (y - 0.5) * (y - 0.5) ); };
+// http://www.math.uri.edu/~bkaskosz/flashmo/graph3d/		
+	thing[6] = function(x, y) { return 0.00005 * cos( (x-1)*(y-1) * delta ) * ( (x-1)*(x-1)-(y-1)*(y-1) ); };
+	thing[7] = function(x, y) { return 0.05 * sin( 4.0 * (x - 1.0) * (y - 1.0) + delta); };
+	thing[8] = function(x, y) { return 0.0005 * cos( Math.abs(x - 0.5) + Math.abs(y - 0.5) + delta) * ( Math.abs(x - 0.5)+Math.abs(y - 0.5) ); };
+	// thing[] = function(x, y) { return  };	
+	
+	
+	var delta = 0;
+	var equationId = 0;
+	var eq1, eq2;
+	var pi = Math.PI, pi2 = 2 * Math.PI, pi05 = 0.5 * Math.PI;
+	
+	init();
+	animate();
+
+	function init() {
+		var css, light, geometry, material, mesh;
+
+		css = document.body.appendChild( document.createElement('style') );
+		css.innerHTML = 'body { font: 600 12pt monospace; margin: 0; overflow: hidden; text-align: center; }';
+
+		info = document.body.appendChild( document.createElement( 'div' ) );
+		info.style.cssText = 'position: absolute; width: 100%; ';
+		info.innerHTML = info.txt = '<h1>moving pictures moving</h1>' +
+			'Use your mouse to pan, zoom and rotate.<br>' +
+			'<a href="http://three.js.org" target="_blank">Three.js</a> - ' +
+			'<a href="http://www.khronos.org/webgl/" target="_blank">WebGL</a> - ' +
+			'<a href="http://jaanga.github.io" target="_blank">Jaanga</a><br>' +
+		'';
+		
+		var arr = [ 'movie.mp4','shrinkage.mp4','small.mp4','experience.ogg','homemovie.ogv','lipsync.ogv','pentagon.ogg','sintel.ogv','trailer_400p.ogg','video_test.ogv' ];
+		
+		info.innerHTML += 'Object 1: ';
+		select1 = info.appendChild( document.createElement( 'select' ) );
+		select1.onchange = function() {setVideo( this.value, video1 ); };
+		for (var option, i = 0; i < arr.length; i++) {
+			option = select1.appendChild( document.createElement( 'option' ) ) ;
+			option.innerText = arr[i];
+		}
+
+		selectEq1 = info.appendChild( document.createElement( 'select' ) );
+		selectEq1.onchange = function() { equationId = this.selectedIndex; };
+		for (var option, i = 0; i < thing.length; i++) {
+			option = selectEq1.appendChild( document.createElement( 'option' ) ) ;
+			option.innerText = thing[i];
+		}		
+		
+		
+		// info.innerHTML += '<br>Object 2: ';
+		var more = info.appendChild( document.createElement( 'div' ) );
+		more.innerHTML += '<br>Object 2: ';
+		select2 = more.appendChild( document.createElement( 'select' ) );
+		select2.onchange = function() {setVideo( this.value, video2 ); };
+		for (var option, i = 0; i < arr.length; i++) {
+			option = select2.appendChild( document.createElement( 'option' ) ) ;
+			option.innerText = arr[i];
+		}		
+		
+		selectEq2 = more.appendChild( document.createElement( 'select' ) );
+		selectEq2.onchange = function() { equationId = this.selectedIndex; };
+		for (var option, i = 0; i < thing.length; i++) {
+			option = selectEq2.appendChild( document.createElement( 'option' ) ) ;
+			option.innerText = thing[i];
+		}		
+		
+		stats = new Stats();
+		stats.domElement.style.cssText = 'position: absolute; top: 0px; zIndex: 100; ';
+		document.body.appendChild( stats.domElement );		
+
+		renderer = new THREE.WebGLRenderer( { antialias: true }  );
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		document.body.appendChild( renderer.domElement );
+		scene = new THREE.Scene();
+
+		camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 1000 );
+		camera.position.set( 0, 100, -150 );
+		controls = new THREE.TrackballControls( camera, renderer.domElement );
+		controls.target.set( 0, 100, 0);
+
+// Axes
+		function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }
+
+        scene.add( new THREE.ArrowHelper( v(1, 0, 0), v(0, 0, 0), 30, 0xcc0000) );
+        scene.add( new THREE.ArrowHelper( v(0, 1, 0), v(0, 0, 0), 30, 0x00cc00) );
+        scene.add( new THREE.ArrowHelper( v(0, 0, 1), v(0, 0, 0), 30, 0x0000cc) );
+
+// Assets
+		video1 = document.body.appendChild( document.createElement( 'video' ) );
+		
+		texture1 = new THREE.Texture( video1 );
+		texture1.minFilter = THREE.LinearFilter;
+		texture1.magFilter = THREE.LinearFilter;
+		texture1.format = THREE.RGBFormat;
+		texture1.generateMipmaps = false;
+		
+		material = new THREE.MeshBasicMaterial( { map: texture1, opacity: 0.5, overdraw: true, side: THREE.DoubleSide, transparent: true } );
+		geometry = new THREE.PlaneGeometry( 1, 1, 100, 100  );
+		//geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -0.5 * Math.PI ) );
+		plane1 = new THREE.Mesh( geometry, material );
+		plane1.position.set( 0, 800, 0 );
+		plane1.rotation.x = -pi05;
+		plane1.scale.set( 200, 200, 200 );
+		scene.add( plane1 );
+		
+		var num = parseInt( Math.floor(Math.random() * arr.length) );
+		setVideo( arr[ num ], video1 );
+		select1.selectedIndex = num;
+console.log( select1.selectedIndex, num );		
+
+		num = parseInt( Math.floor(Math.random() * thing.length) );
+		num = 0;
+		eq1 = num;
+		selectEq1.selectedIndex = num;	
+
+		video2 = document.body.appendChild( document.createElement( 'video' ) );
+		
+		texture2 = new THREE.Texture( video2 );
+		texture2.minFilter = THREE.LinearFilter;
+		texture2.magFilter = THREE.LinearFilter;
+		texture2.format = THREE.RGBFormat;
+		texture2.generateMipmaps = false;
+		
+		material = new THREE.MeshBasicMaterial( { map: texture2, opacity: 0.5, overdraw: true, side: THREE.DoubleSide, transparent: true } );
+		geometry = new THREE.PlaneGeometry( 1, 1, 100, 100 );
+		// geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -0.5 * Math.PI ) );
+		plane2 = new THREE.Mesh( geometry, material );
+		plane2.position.set( 0, -800, 0 );
+		plane2.rotation.x = -pi05;
+		plane2.scale.set( 200, 200, 200 );
+		scene.add( plane2 );
+		
+		num = parseInt( Math.floor(Math.random() * arr.length) );
+		setVideo( arr[ num ], video2 );
+		select2.selectedIndex = num;
+		
+		num = parseInt( Math.floor(Math.random() * thing.length) );
+		num = 1;
+		eq2 = num;
+		selectEq2.selectedIndex = num;		
+		
+	}
+	
+	function setVideo( video, object ) {
+console.log( video );
+		object.src = "../../../cookbook/textures/" + video ;
+		object.autoplay = true;
+		object.loop = true;
+		object.style.display = 'none';
+	}
+
+	function animate() {
+		requestAnimationFrame( animate );
+		controls.update();
+		stats.update();
+		renderer.render( scene, camera );
+		setGeometry( plane1, eq1);
+		if ( video1.readyState === video1.HAVE_ENOUGH_DATA && texture1 ) { 
+			texture1.needsUpdate = true;
+		}	
+		setGeometry( plane2, eq2 );
+		if ( video2.readyState === video2.HAVE_ENOUGH_DATA && texture2 ) { 
+			texture2.needsUpdate = true;
+		}		
+	}
+	
+	function cos(a){return Math.cos(a);} 
+	function sin(a){return Math.sin(a);}
+	
+	function setGeometry( object, equaId ) {
+	
+		var i = 0;
+		var v = object.geometry.vertices
+		delta += 0.01;
+		for ( var x = 0; x <= 100; x++) {
+			for ( var y = 0; y <= 100; y++) {				
+				v[i].z = thing[ equaId ]( x, y );
+				i++;
+			}
+		}
+		object.geometry.verticesNeedUpdate = true;  
+	}
+
+	Leap.loop( function( frame ) {
+		var hand, direction, len, finger, pointable;
+		if ( frame.hands.length > 0) {
+			hand = frame.hands[0];
+			plane1.position.set( hand.stabilizedPalmPosition[0], hand.stabilizedPalmPosition[1], hand.stabilizedPalmPosition[2] + 200 );
+			direction = v( hand.direction[0], hand.direction[1], hand.direction[2] );  // best so far
+			plane1.lookAt( direction.add( plane1.position ) );
+			roll = Math.atan2( hand.palmNormal[0], hand.palmNormal[1] );
+			plane1.rotation.z = roll;
+			
+			if ( frame.hands[1] ) {
+				hand = frame.hands[1];
+				plane2.position.set( hand.stabilizedPalmPosition[0], hand.stabilizedPalmPosition[1], hand.stabilizedPalmPosition[2] + 200);
+				direction = v( hand.direction[0], hand.direction[1], hand.direction[2] );  // best so far
+				plane2.lookAt( direction.add( plane2.position ) );
+				roll = Math.atan2( hand.palmNormal[0], hand.palmNormal[1] );
+				plane2.rotation.z = roll;
+			}
+			//palm.visible = true;
+		} else {
+			//palm.visible = false;
+		}
+
+	});
+
+	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }	
+</script>
+</body>
+</html>

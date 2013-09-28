@@ -10,10 +10,10 @@ Cookbook code is an example of programming code that identifies or demonstrates 
 * [Leap Distance vs Normal](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/leap-distance-vs-normal) - another pitch, roll and yaw issues demo
 * [Heavens to Murgatroyd](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/murgatroyd-heaven) - not an easy game. Early work.
 * [Pitch Roll and Yaw](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/pitch-roll-yaw) - pitch, roll and yaw issues demo. Code example.
-* [Pointing or Not](http://jaanga.github.io/gestification/cookbook/pointing-or-not/r1/pointing-or-not.html) - Are you pointing your finger? code example.
-* [Show of Hands](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/show-of-hands) - Use one hand to display seven hands. the prettiest app?
-* [Touchly](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/touchly) ~ A bubble-pooping-like game. Fun
-* [youGest](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/yougest) - the ultimate Leap Motion data explorer. Much effort here.
+* [Pointing or Not](http://jaanga.github.io/gestification/cookbook/pointing-or-not/r1/pointing-or-not.html) - Are you pointing your finger? Code example.
+* [Show of Hands](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/show-of-hands) - Use one hand to display seven hands. The prettiest app?
+* [Touchly](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/touchly) ~ A bubble-pooping-like game. Fun.
+* [youGest](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/yougest) - The ultimate Leap Motion data explorer. Much effort here.
 
 ###Changelog
 

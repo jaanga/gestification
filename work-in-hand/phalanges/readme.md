@@ -1,6 +1,6 @@
 Phalanges
 =========
-_The phalanges is the Latin name we give to bones in your hand._
+_The phalanges is the Latin name given to the bones in your hand._
 
 
 Watch the gentle progress of each revision:
@@ -23,6 +23,7 @@ Demo R2: http://jaanga.github.io/gestification/work-in-hand/phalanges/r2/phalang
 Demo R1: http://jaanga.github.io/gestification/work-in-hand/phalanges/r1/phalanges.html  
 - Note that finger bases cross each other and tips connect to inappropriate bases
 
+_Note: R7 is a work in progress and curreently mostly broken._  
 
 ### Related Work
 Roman Liutikov is doing some excellent work as described here:
@@ -66,6 +67,9 @@ The code should be able to operate seamlessly with code that reads and writes ge
 See also: https://en.wikipedia.org/wiki/Phalanx_bone
 
 ### Change Log
+
+2013-09-24 ~ Theo
+* R6 added - progress being made
 
 2013-09-22 ~ Theo
 * r5 added

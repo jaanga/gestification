@@ -8,6 +8,7 @@ Live Demo #2: http://jaanga.github.io/gestification/projects/flying-leap-3d/cast
 - A test of loading an OBJ file into Thrree.js. Note the castle - which is the static OBJ file - also refreshes its colors with each reload. 
 
 Live Demo #3: http://jaanga.github.io/gestification/projects/flying-leap-3d/barfolina-pavillion/r1/barfolina-pavillion.html
+- Worth a visit
 - The entire pavilion - except for the sculpture - is created by procedures. This is the modern way of designing - which we are calling 'archieCode'.
 
 Built for Nicolás Berríos of Iquique, Chile

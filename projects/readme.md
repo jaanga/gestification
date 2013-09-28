@@ -5,6 +5,7 @@ Work of a more complex nature.
 
 
 [Flying Leap 3D](https://github.com/jaanga/gestification/tree/gh-pages/projects/flying-leap-3d)
+- Worth a visit
 - The proposal is to build an app for the Leap Motion device that allows you to 'fly' over various landscapes
 
 
