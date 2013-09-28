@@ -1,7 +1,7 @@
 Handy Videos
 ============
 
-https://github.com/jaanga/gestification/tree/gh-pages/cookbook/handy-videos.htnl
+http://jaanga.github.io/gestification/cookbook/handy-videos/video-select.html
 
 *** Change Log
 
