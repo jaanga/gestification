@@ -1,7 +1,9 @@
-jestPlay - Save & Read Leap Motion JSON Files
+jestPlay BVH and jestPlay JSON- Record and Replay Leap Motion Device Data Files
 =============================================
 
-Demo: http://jaanga.github.io/gestification/cookbook/jest-play/r1/jest-play.html
+BVH demo: http://jaanga.github.io/gestification/cookbook/jest-play/bvh/r1/jest-play.html
+
+JSON demo: http://jaanga.github.io/gestification/cookbook/jest-play/json/r1/jest-play.html
 
 Usage:
 1. Wave a hand and at least one finger over the Leap Motion device to start recording.
@@ -14,25 +16,25 @@ You may have to re;load the webpage between replaying and recording sessions.
 Pressing the spacebar pauses all operations. Pressing the 'x' key clears the JSON data text area.
 
 ###Description
-The jestPlay app enables you to record your hand movements by saving data from the [Leap Motion](http://leapmotion.com) 
-device to your computer as JSON files. Once saved, you can open these files and watch a full 3D replay of the movements.
+The jestPlay BVH and jestPlay JSON apps enable you to record your hand movements by saving data from the [Leap Motion](http://leapmotion.com) 
+device to your computer either as BVH or as JSON files. Once saved, you can open these files and watch a full 3D replay of the movements.
 
-The app is a 'cookbook' style app. It is not a fully-featured or even a finished app. 
-It does, however, provide you with a simple working example in under two hundred lines of code 
-that you can use to start developing your own code.
+The apps are 'cookbook' style apps. They are not fully-featured or even finished apps. 
+Both do, however, provide you with a simple working FOSS example in a few hundred lines of code. 
+Code that you can use to start developing your own code.
 
-The app provides full access to your operating systems file save and file open dialog boxes 
+The apps provide full access to your operating systems file save and file open dialog boxes 
 - which are features not normally found in JavaScript as they were recently introduced in HTML 5.
 
-Based on the [Three.js](http://threejs.org) library, the app allows you to zoom, pan and and rotate the views of the replays
+Based on the [Three.js](http://threejs.org) library, the apps allows you to zoom, pan and and rotate the views of the replays
  - so you can see them from another person's point of view.
 
-This app supersedes '[save-json](https://github.com/jaanga/gestification/tree/gh-pages/work-in-hand/save-json)'.
+The JSON app supersedes '[save-json](https://github.com/jaanga/gestification/tree/gh-pages/work-in-hand/save-json)'.
 
 ###Road Map
 * Support for more than one hand
 * More detailed hands and fingers
-* Exporting the data in smaller, more efficient, industry-standard [BVH][http://en.wikipedia.org/wiki/Biovision_Hierarchy] format filea
+* Exporting the data in smaller, more efficient, industry-standard [BVH][http://en.wikipedia.org/wiki/Biovision_Hierarchy] format filea << 2013-09-29 done
 
 ###Issues
 * Hand and fingers flashing on replay << 2013-09-03 fixed
@@ -44,6 +46,10 @@ This app supersedes '[save-json](https://github.com/jaanga/gestification/tree/gh
 
 
 ###Change Log
+
+2013-09-29 ~ Theo
+* Readme reorganixed to cover both BVH and JSON apps
+
 
 2013-09-03 - Theo
 * Text added to readme
