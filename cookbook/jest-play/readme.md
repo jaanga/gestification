@@ -1,9 +1,9 @@
-jestPlay BVH and jestPlay JSON<br>- Record and Replay Leap Motion Device Data Files
+jestPlay BVH and jestPlay JSON<br>- Record and Replay Leap Device Data Files
 ===================================================================================
 
 BVH demo: http://jaanga.github.io/gestification/cookbook/jest-play/bvh/r1/jest-play.html
 
-JSON demo: http://jaanga.github.io/gestification/cookbook/jest-play/json/r1/jest-play.html
+JSON demo: http://jaanga.github.io/gestification/cookbook/jest-play/json/r1/jest-play.html  
 JSON demo replay only: http://jaanga.github.io/gestification/cookbook/jest-play/json/r1/jest-replay.html
 
 Usage:  
