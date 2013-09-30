@@ -1,16 +1,17 @@
-jestPlay BVH and jestPlay JSON- Record and Replay Leap Motion Device Data Files
+jestPlay BVH and jestPlay JSON  
+- Record and Replay Leap Motion Device Data Files
 =============================================
 
 BVH demo: http://jaanga.github.io/gestification/cookbook/jest-play/bvh/r1/jest-play.html
 
 JSON demo: http://jaanga.github.io/gestification/cookbook/jest-play/json/r1/jest-play.html
 
-Usage:
-1. Wave a hand and at least one finger over the Leap Motion device to start recording.
-2. Close or remove all hands to finish recording.
-3. Click on the 'Save File' button to save the recording to your computer.
-4. Click on the 'Choose File' to open a previously recorded file.
-5. Click the 'Replay' button to viewin 3D the motions you recorded.
+Usage:  
+1. Wave a hand and at least one finger over the Leap Motion device to start recording.  
+2. Close or remove all hands to finish recording.  
+3. Click on the 'Save File' button to save the recording to your computer.  
+4. Click on the 'Choose File' to open a previously recorded file.  
+5. Click the 'Replay' button to viewin 3D the motions you recorded.  
 
 You may have to re;load the webpage between replaying and recording sessions. 
 Pressing the spacebar pauses all operations. Pressing the 'x' key clears the JSON data text area.
