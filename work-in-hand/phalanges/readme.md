@@ -2,8 +2,14 @@ Phalanges
 =========
 _The phalanges is the Latin name given to the bones in your hand._
 
+Please do read the road map / goals further down.
 
 Watch the gentle progress of each revision:
+
+Demo R7: http://jaanga.github.io/gestification/work-in-hand/phalanges/r7/phalanges.html  
+- Finallay, a solution that doesn't suck much. If you are lucky, you might be able to approximate an OK sign. 
+Generally you should be able to see your virtual right hand move around the screen with little lag, not have fingers disappear if some of the fingers are oclude or clenched.
+Support for one right hand only. Support for moderate pitch, roll and yaw only. 
 
 Demo R6: http://jaanga.github.io/gestification/work-in-hand/phalanges/r6/phalanges.html  
 - A hybrid solution. The short finger tips display Leap Motion data. The long finger tips display calculated date. One way or another there's always a finger showing.
@@ -23,7 +29,7 @@ Demo R2: http://jaanga.github.io/gestification/work-in-hand/phalanges/r2/phalang
 Demo R1: http://jaanga.github.io/gestification/work-in-hand/phalanges/r1/phalanges.html  
 - Note that finger bases cross each other and tips connect to inappropriate bases
 
-_Note: R7 is a work in progress and curreently mostly broken._  
+_Note: R7 is a work in progress and currently mostly broken._  
 
 ### Related Work
 Roman Liutikov is doing some excellent work as described here:
@@ -46,6 +52,10 @@ https://github.com/jaanga/gestification/tree/gh-pages/work-in-hand/phalanges/liu
 ###Road map / Goals
 The idea is to create the procedures required to display, correctly and in real-time, a user-manipulated 3D skin and bones setup.
 
+The demo app should provide sample or generic FOSS JavaScript code that may later be used to create complete apps that will:
+* record, save and replay Leap data in BVH format
+* generate realtime visualizations of human-like hands or claws or other appendages with full skins and flexible surfaces
+
 The bones are the armature which positions and angles the whole
 
 The skin could be a human-hand-like mesh, robot appendage or creature claw.
@@ -58,15 +68,21 @@ The code should be able to operate seamlessly with code that reads and writes ge
 * Handles rolling of palms from down to fully up both clockwise and counter-clockwise
 * Handles palm pitch and yaw appropriately 
 * The ten joints should move and position themselves in a realistic manner and remain connected so that a skin may function appropriately.
-* The fingers never cross and never change base and never change length
+* The fingers never cross inappropriately
+* Finger tips never connect to the incorrect finger base
+* Finger tips never change length
 * The bones should never leave 'trash' on the screen or become disjointed from the palm
-* OK to require 'seeing' five fingers on a hand before recognition starts
-* After that first five finger view, Leap Motion pointables may come and go, but fingers should remain visible and in the appropriate position related to where they were last seen
+* It is acceptable to require 'seeing' five fingers on a hand before recognition starts
+* After that first five finger view, Leap device pointables data may start and stop incoming, but fingers should remain visible and in the appropriate position related to where they were last seen
 
 
 See also: https://en.wikipedia.org/wiki/Phalanx_bone
 
 ### Change Log
+
+2013-09-29 ~ Theo
+* R7 added
+* This readme updated
 
 2013-09-24 ~ Theo
 * R6 added - progress being made

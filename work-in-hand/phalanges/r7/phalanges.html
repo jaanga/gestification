@@ -6,37 +6,34 @@
 </head>
 <body>
 <script src="http://js.leapmotion.com/0.2.1/leap.min.js"></script>
-<!--
-<script src=../../../git-repos/three.js/examples/js/Detector.js></script>
-<script src=../../../git-repos/three.js/build/three.min.js></script>
-<script src=../../../git-repos/three.js/examples/js/controls/TrackballControls.js></script>
-<script src=../../../git-repos/three.js/examples/js/libs/stats.min.js></script>
--->
 <script src=http://mrdoob.github.com/three.js/build/three.min.js></script>
 <script src=http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js></script>
 <script src=http://mrdoob.github.com/three.js/examples/js/libs/stats.min.js></script>
-
 <script>
 	var renderer, scene, camera, controls, stats;
-	var info, hand3D, palm, fingers, fingerBases = [], fingerTips = [];
-	var fr;
-	// var order = [ 4, 2, 0, 1, 3 ];
-	// var idOrder;
-	
+	var leapHand3D, leapHand3DDirection, leapHand3DNormal;
+	var pointableTips = [], pointableMids = [], pointableEnds = [], pointableTipDirArrows = [];
+
+	var hand3D, palm, fingerTips = [], fingerBases = [];
+	var info, fr;
+	var pi = Math.PI, pi2 = 2 * Math.PI, pi05 = 0.5 * Math.PI;	
+
 	init();
 	animate();
 
 	function init() {
 		var css, light, geometry, material, mesh;
 		
+		
 		css = document.body.appendChild( document.createElement('style') );
-		css.innerHTML = 'body { font: 600 12pt monospace; margin: 0; overflow: hidden; text-align: center; }';
+		css.innerHTML = 'body { font: 400 12pt monospace; margin: 0; overflow: hidden; text-align: center; }';
 
 		info = document.body.appendChild( document.createElement( 'div' ) );
-		info.style.cssText = 'position: absolute; width: 100%; ';
+		info.style.cssText = 'position: absolute; left: 0;  margin: auto; right: 0; width: 50%; ';
 		info.innerHTML = info.txt = '<h1>phalanges r7</h1>' +
-			'<p>Show one hand and five fingers to start ' +
-			' ~ <a href="https://github.com/jaanga/gestification/tree/gh-pages/work-in-hand/phalanges">source code</a></p>' +
+			'<p>Show one hand and five fingers to start ~ ' +
+			'<a href=# onclick=toggleInfo() ><large>&#x24D8;</large></a> ~ ' +
+			'<a href="https://github.com/jaanga/gestification/tree/gh-pages/work-in-hand/phalanges">source code</a> \</p>' +
 		'';
 		
 // Three.js Basics
@@ -58,7 +55,6 @@
 
 //  Lights
 		light = new THREE.AmbientLight( 0x333333);
-		// light.color.setHSL( 0.1, 0.5, 0.3 );
 		scene.add( light );
 		
  		light = new THREE.DirectionalLight( 0xffffff, 1 );
@@ -78,101 +74,147 @@
 //		light.shadowCameraVisible = true;
 
 // Axes
-        scene.add( new THREE.ArrowHelper( v(1, 0, 0), v(0, 0, 0), 100, 0xcc0000) );
-        scene.add( new THREE.ArrowHelper( v(0, 1, 0), v(0, 0, 0), 100, 0x00cc00) );
-        scene.add( new THREE.ArrowHelper( v(0, 0, 1), v(0, 0, 0), 100, 0x0000cc) );
+        scene.add( new THREE.ArrowHelper( v(1, 0, 0), v(0, 0, 0), 20, 0xcc0000) );
+        scene.add( new THREE.ArrowHelper( v(0, 1, 0), v(0, 0, 0), 20, 0x00cc00) );
+        scene.add( new THREE.ArrowHelper( v(0, 0, 1), v(0, 0, 0), 20, 0x0000cc) );
 
 // Assets
 
 // Ground plane
-		material = new THREE.MeshBasicMaterial( {color: Math.random() * 0xffffff } );
+		material = new THREE.MeshBasicMaterial( { color: 0x999999 });
 		geometry = new THREE.CubeGeometry( 600, 10, 300 );
 		mesh = new THREE.Mesh( geometry, material );
-		mesh.position.set( 0, -20, 0 );
+		mesh.position.set( 0, -30, 0 );
 		mesh.castShadow = true;
 		mesh.receiveShadow = true;
 		scene.add( mesh );
 		
+		geometry = new THREE.CubeGeometry( 8, 8, 8 );
+		material = new THREE.MeshBasicMaterial( { color: 0xcc0000 });
+		leapHand3D = new THREE.Mesh( geometry, material );
+		scene.add( leapHand3D );
+
+		vector = v( 1, 1, 1 );
+		leapHand3DDirection = new THREE.ArrowHelper( vector.clone().normalize(), v( 0, 0, 0), 50, 0x0000cc );
+		scene.add( leapHand3DDirection );		
+
+		leapHand3DNormal = new THREE.ArrowHelper( vector.clone().normalize(), v( 0, 0, 0), 50, 0x00cc00 );
+		scene.add( leapHand3DNormal );		
+
 		hand3D =  new THREE.Object3D();
-		fingers = [];
-		fingerBases = [];
+		scene.add( hand3D );
 		
-		
-		geometry = new THREE.CubeGeometry( 100, 20, 85 );
-		geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 20, 0, 50 ) );
-		material = new THREE.MeshNormalMaterial();
+		shape = new THREE.Shape( [ v2(-37, -25), v2(-15, -25), v2(-15, -15), v2( 13, -15), v2(13, -20), v2( 35, -20),  v2( 35, -38), v2( 53, -38), v2( 53, -100), v2( -33, -100) ] );
+		geometry = shape.extrude( { amount: 10, bevelEnabled: false} );	
+		geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -pi05 ) );
+		geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 0, 0 ) );
+		material = new THREE.MeshBasicMaterial( { color: 0xcccccc, opacity: 0.5, side: THREE.DoubleSide, transparent: true } );
 		palm = new THREE.Mesh( geometry, material );
 		palm.castShadow = true;
 		palm.receiveShadow = true;
 		hand3D.add( palm );
-		
-		//var fingerX = [ 70, 30, 10, -10, -30 ];
-		//var fingerZ = [ -0, 80, 80, 80, 80 ];
-		//var tranX = [ 38, 20, -10, -40, -65 ];
-		//var tranZ = [ -30, 30, 34, 32, 25 ];
 
-		var tranX = [ -38, -20, 10, 40, 65 ];
-		var tranZ = [ 50, -20, -40, -40, -10 ];		
-		
-		var lenZ = [ 25, 30, 38, 33, 20 ];
-		
-		material = new THREE.MeshNormalMaterial();
-		var fingerbase;
+		var tranX = [ -45, -30, 0, 30, 50 ];
+		var tranZ = [ 50, -1, -15, -11, 20];		
+		var lenZ = [ 30, 30, 38, 35, 20 ];
+			
 		for (var i = 0; i < 5; i++) {
-			geometry = new THREE.CubeGeometry( 15, 15, 45);
+			geometry = new THREE.CubeGeometry( 8, 8, 8 );
+			material = new THREE.MeshNormalMaterial( );
 			mesh = new THREE.Mesh( geometry, material );
-			mesh.castShadow = true;
-			mesh.receiveShadow = true;
-			fingers.push( mesh);
+			pointableTips.push( mesh);
 			scene.add( mesh );
 			
-			geometry = new THREE.CubeGeometry( 15, 15, lenZ[ i ] );
-			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 0, 0 ) );
-			fingerbase = new THREE.Mesh( geometry, material );
-			fingerbase.position.x = tranX[ i ];
-			fingerbase.position.z = tranZ[ i ];			
-			fingerbase.castShadow = true;
-			fingerbase.receiveShadow = true;			
-			fingerBases.push( fingerbase );
-			hand3D.add( fingerbase );
-			
-			geometry = new THREE.CubeGeometry( 15, 15, 2 * lenZ[ i ] );
-			// geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 0, 15 ) );
 			mesh = new THREE.Mesh( geometry, material );
-			// mesh.position.x = tranX[ i ];
-			mesh.position.z = Math.abs( 2 * tranZ[ i ] );			
+			pointableEnds.push( mesh);
+			scene.add( mesh );
+			
+			mesh = new THREE.ArrowHelper( vector.clone().normalize(), v( 0, 0, 0), 50, 0x0000cc );
+			pointableTipDirArrows.push( mesh )
+			scene.add( mesh );				
+
+			geometry = new THREE.CubeGeometry( 15, 15, lenZ[ i ] );
+			material = new THREE.MeshBasicMaterial( { color: 0xcccccc, opacity: 0.7, side: THREE.DoubleSide, transparent: true } );
+			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 0, 0 ) );
+			mesh = new THREE.Mesh( geometry, material );
+			mesh.position.x = tranX[ i ];
+			mesh.position.z = tranZ[ i ];	
 			mesh.castShadow = true;
 			mesh.receiveShadow = true;			
+			fingerBases.push( mesh );
+			hand3D.add( mesh );
+				
+			geometry = new THREE.CubeGeometry( 15, 15, lenZ[ i ] );
+			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 0, 20 ) );
+			mesh = new THREE.Mesh( geometry, material );
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;							
 			fingerTips.push( mesh );
-			fingerbase.add( mesh );			
-			
+			hand3D.add( mesh );			
 		}	
-		scene.add( hand3D );
+	}
+	
+	function toggleInfo() {
+		info.innerHTML = info.txt +
+			'<div onclick=info.innerHTML=info.txt style=background-color:#ccc;opacity:0.7;padding:10px;text-align:left; >' +
+			'Use your mouse to pan, zoom and rotate the display.<br><br>' +
+			'<b>Objective</b>: provide sample or generic FOSS JavaScript code that may later be used to create complete apps that will:' +
+			'<ul><li>record, save and replay Leap data in BVH format' +
+			'<li>generate realtime visualizations of human-like hands or claws or other appendages with full skins and flexible surfaces</li></ul>' +
+			'<b>Items of color</b>: 3D display of the numeric data output sent from the Leap device. ' +
+			'Items are visible only while there is incoming Leap data.<br><br>' +
+			'Colors: hand position - red, direction - blue, normal - green. Finger tips and joint positions - multi-color, direction - blue.<br><br>' +
+			'<b>Gray items</b>: 3D display of an imaginary hand and fingers whose positions and rotations are derived from the Leap data. ' +
+			'These items do not disappear. If there is no Leap data, last known positions of fingers are updated to retain the same position relative to the current position of the hand.<br><br>' +  
+			'<small>credits: <a href="http://threejs.org" target="_blank">three.js</a> - ' +
+			'<a href="http://leapmotion.com" target="_blank">leap motion</a> - ' +
+			'<a href="http://khronos.org/webgl/" target="_blank">webgl</a> - ' +
+			'<a href="http://jaanga.github.io" target="_blank">jaanga</a><br>' +	
+			'copyright &copy; 2013 jaanga authors ~ mit license</small<br>' + 			
+			'<br><br><i>Click anywhere in this message to hide...</i>' +
+		'</div>';
 	}
 
-	var pointablesX;
-	var pointablesXsortedClone;
-	
 	Leap.loop( function( frame ) {
 		fr = frame;
-		var hand, direction, len, finger, pointable;
+		var leapHand, len;
 		if ( frame.hands.length > 0) {
-			hand = frame.hands[0];
-			hand3D.position.set( hand.stabilizedPalmPosition[0], hand.stabilizedPalmPosition[1], hand.stabilizedPalmPosition[2] );
-			//direction = v( hand.direction[0], hand.direction[1], hand.direction[2] );  // best so far
-			//hand3D.lookAt( direction.add( hand3D.position ) );
-			//roll = Math.atan2( hand.palmNormal[0], hand.palmNormal[1] );
-			//hand3D.rotation.z = roll;
-			hand3D.rotation.set( hand.pitch(), -hand.yaw(), hand.roll() );
-			palm.visible = true;
+			var  direction;
+			leapHand = frame.hands[0];
+			
+			leapHand3D.position.set( leapHand.stabilizedPalmPosition[0], leapHand.stabilizedPalmPosition[1], leapHand.stabilizedPalmPosition[2] );
+			leapHand3D.rotation.set( leapHand.pitch(), -leapHand.yaw(), leapHand.roll() );
+			
+			direction = v( leapHand.direction[0], leapHand.direction[1], leapHand.direction[2] );
+			leapHand3DDirection.position.set( leapHand.stabilizedPalmPosition[0], leapHand.stabilizedPalmPosition[1], leapHand.stabilizedPalmPosition[2] );
+			leapHand3DDirection.setDirection( direction );
+			
+			direction = v( leapHand.palmNormal[0], leapHand.palmNormal[1], leapHand.palmNormal[2] );
+			leapHand3DNormal.position.set( leapHand.stabilizedPalmPosition[0], leapHand.stabilizedPalmPosition[1], leapHand.stabilizedPalmPosition[2] );
+			leapHand3DNormal.setDirection( direction );			
+			
+			hand3D.position.set( leapHand.stabilizedPalmPosition[0], leapHand.stabilizedPalmPosition[1], leapHand.stabilizedPalmPosition[2] );
+			hand3D.rotation.set( leapHand.pitch(), -leapHand.yaw(), leapHand.roll() );
+			
+			leapHand3D.visible = true;
+			leapHand3DDirection.children[0].visible = leapHand3DDirection.children[1].visible = true;
+			leapHand3DNormal.children[0].visible = leapHand3DNormal.children[1].visible = true;			
 		} else {
-			palm.visible = false;
+			leapHand3D.visible = false;
+			leapHand3DDirection.children[0].visible = leapHand3DDirection.children[1].visible = false;
+			leapHand3DNormal.children[0].visible = leapHand3DNormal.children[1].visible = false;
+			hand3D.position.set( 0, 100, 0 );
+			hand3D.rotation.set( pi05, 0, 0 )
 		}
 
 		len = frame.pointables.length
-		if ( len > 0 && hand ) {
+		
+		if ( len > 0 && leapHand ) {
 			hand3D.hasFingers = true;
+
 			if ( len > 4 ) {
+				var pointablesX;
+				var pointablesXsortedClone;			
 				hand3D.hasFiveIds = true;
 				hand3D.positionPrevious = hand3D.position.clone();
 				pointablesX = [];
@@ -180,81 +222,66 @@
 					pointablesX.push( frame.pointables[i].stabilizedTipPosition[0] );
 				}
 				pointablesXsortedClone = pointablesX.slice(0);
-				pointablesXsortedClone.sort( function( a, b ) { return a - b; } );
-			
+				pointablesXsortedClone.sort( function( a, b ) { return a - b; } );		
 				for (var i = 0; i < len; i++) {
 					index = pointablesX.indexOf( pointablesXsortedClone[ i ] );
 					pointable = frame.pointables[ index ];
-					fingers[ i ].pointableId = pointable.id;
-					fingers[ i ].pointableIndex = index;					
+					fingerTips[ i ].pointableId = pointable.id;
+					fingerTips[ i ].pointableIndex = index;		
+					pointableTips[i].visible = true;
+					pointableEnds[i].visible = true;
+					pointableTipDirArrows[i].visible = true;
 				}
 			}	
-		} else if ( hand3D.hasFingers ) {
-			for (var i = 0; i < 5; i++) {
-				fingers[i].visible = false;
-				// fingerBases[i].visible = false;
-			}
+		} else if ( hand3D.hasFingers ) {		
 			hand3D.hasFingers = false;
 			hand3D.hasFiveIds = false;
 			return;
-		}	
-	
+		} 
+
 		if ( hand3D.hasFiveIds ) {
-			var index, position, positionV3;
-			var fingerBase, fingerTip
-			var tmp, delta = hand3D.position.clone();
-			delta = delta.sub( hand3D.positionPrevious );
-			
+			var fingerTip, pointableTip, position, direction, index;
 			for (var i = 0; i < 5; i++) {
-				finger = fingers[ i ];
 				fingerTip = fingerTips[ i ];
-				pointable = frame.pointables[ finger.pointableIndex ];
-				if ( pointable && pointable.id === finger.pointableId ) {
+				index = fingerTip.pointableIndex;
+				pointable = frame.pointables[ index  ];
+				
+				if ( pointable && pointable.id === fingerTip.pointableId ) {
+				
+					position = v( pointable.stabilizedTipPosition[0], pointable.stabilizedTipPosition[1], pointable.stabilizedTipPosition[2] );
+					direction = v( pointable.direction[0], pointable.direction[1], pointable.direction[2]); 
+					pointableTip = pointableTips[ index ];
+					pointableTip.position.copy( position );
+					pointableTip.lookAt( direction.clone().add( pointableTip.position.clone() ) );
 					
-					finger.position.set( pointable.stabilizedTipPosition[0], pointable.stabilizedTipPosition[1], pointable.stabilizedTipPosition[2] );
-					direction = v( pointable.direction[0], pointable.direction[1], pointable.direction[2]);  // best so far
-					// finger.rotation.set( pointable.direction[0], pointable.direction[1], pointable.direction[2] ); 
-					finger.lookAt( direction.add( finger.position ) );
-					// finger.scale.z = 0.6 * pointable.length;
-					// finger.translateZ( -0.3 * pointable.length  );		
-					finger.visible = true;
-					finger.tmp = finger.position.clone();
+					pointableEnds[ index ].position.copy( position );
+					pointableEnds[ index ].lookAt( direction.clone().add( pointableTip.position.clone() ) );
+					pointableEnds[ index ].translateZ( - pointable.length  );
 					
-					fingerBase = fingerBases[ i ];
-					fingerBase.lookAt( hand3D.worldToLocal( finger.position.clone() ) );
-					// fingerBase.visible = true;
+					pointableTipDirArrows[ index ].position.copy( position );
+					pointableTipDirArrows[ index ].setDirection( direction );
 					
-					var position = fingerTip.position.clone();
-					position = position.add( direction );
-					fingerTip.lookAt( position );
-					fingerTip.visible = true;
+					fingerBases[i].lookAt( hand3D.worldToLocal( pointableEnds[ index ].position.clone() ) );
 					
-					// fingerTip.position.copy( fingerTip.worldToLocal( position ) );
-					// fingerTip.scale.z = 0.6 * pointable.length;
-					// fingerTip.translateZ( -0.3 * pointable.length  );						
-					// fingerBase.lookAt( hand3D.worldToLocal( finger.position.clone() ) );
-					// fingerBase.visible = true;	
-
-
-					if ( i === 1 ) {
-						var pos = fingerTip.position.clone();
-						pos = fingerTip.localToWorld( pos )
-						info.innerHTML = info.txt + 
-						'finger ' + i + ' dist: ' + pos.distanceTo( finger.position  ).toFixed(1) +
+					fingerTip.position.copy( hand3D.worldToLocal( position ) );
+					fingerTip.lookAt( hand3D.worldToLocal( pointableEnds[ index ].position.clone() ) );
 					
-						'';
-					}
-
-					
-					
+					pointableTips[ index ].visible = true;
+					pointableEnds[ index ].visible = true;
+					pointableTipDirArrows[ index ].children[0].visible = pointableTipDirArrows[i].children[1].visible = true;
 				} else {
-					finger.visible = false;
-					fingerTip.visible = true;
-					tmp = finger.tmp.clone();
-					// finger.position.copy( tmp.add( delta ) );
+					pointableTips[ index ].visible = false;
+					pointableEnds[ index ].visible = false;
+					pointableTipDirArrows[ index ].children[0].visible = pointableTipDirArrows[i].children[1].visible = false;				
 				}
-			}
-		}
+			}	
+		} else {
+			for (var i = 0; i < 5; i++) {
+				pointableTips[i].visible = false;
+				pointableEnds[i].visible = false;
+				pointableTipDirArrows[i].children[0].visible = pointableTipDirArrows[i].children[1].visible = false;
+			}		
+		}	
 	});
 
 	function animate() {
@@ -264,8 +291,8 @@
 		stats.update();
 	}
 
-	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }
-	var pi = Math.PI, pi2 = 0.5 * Math.PI;
+	function v(x,y,z){ return new THREE.Vector3(x,y,z); } 
+	function v2( x, y ){ return new THREE.Vector2( x, y ); }
 </script>
 </body>
 </html>
