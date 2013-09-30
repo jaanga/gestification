@@ -2,13 +2,13 @@ Phalanges
 =========
 _The phalanges is the Latin name given to the bones in your hand._
 
-Please do read the road map / goals further down.
+Please do read the 'Road Map / Goals' section further down.
 
-Watch the gentle progress of each revision:
+And watch the gentle progress of each new revision:
 
 Demo R7: http://jaanga.github.io/gestification/work-in-hand/phalanges/r7/phalanges.html  
-- Finallay, a solution that doesn't suck much. If you are lucky, you might be able to approximate an OK sign. 
-Generally you should be able to see your virtual right hand move around the screen with little lag, not have fingers disappear if some of the fingers are oclude or clenched.
+- Finally, a solution that doesn't suck much. If you are lucky, you might be able to approximate an OK sign. 
+Generally you should be able to see your virtual right hand move around the screen with little lag, not have fingers disappear if some of the fingers are occlude or clenched.
 Support for one right hand only. Support for moderate pitch, roll and yaw only. 
 
 Demo R6: http://jaanga.github.io/gestification/work-in-hand/phalanges/r6/phalanges.html  
@@ -49,7 +49,7 @@ With more information and background here:
 https://github.com/jaanga/gestification/tree/gh-pages/work-in-hand/phalanges/liutikov
 
  
-###Road map / Goals
+###Road Map / Goals
 The idea is to create the procedures required to display, correctly and in real-time, a user-manipulated 3D skin and bones setup.
 
 The demo app should provide sample or generic FOSS JavaScript code that may later be used to create complete apps that will:
@@ -80,9 +80,14 @@ See also: https://en.wikipedia.org/wiki/Phalanx_bone
 
 ### Change Log
 
+2013-09-30 ~ Theo
+* R7 info screen updated
+* R7 code cleanup
+* read-me updated
+
 2013-09-29 ~ Theo
 * R7 added
-* This readme updated
+* This read-me updated
 
 2013-09-24 ~ Theo
 * R6 added - progress being made
