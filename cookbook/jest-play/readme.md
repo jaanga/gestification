@@ -4,6 +4,7 @@ jestPlay BVH and jestPlay JSON<br>- Record and Replay Leap Motion Device Data Fi
 BVH demo: http://jaanga.github.io/gestification/cookbook/jest-play/bvh/r1/jest-play.html
 
 JSON demo: http://jaanga.github.io/gestification/cookbook/jest-play/json/r1/jest-play.html
+JSON demo replay only: http://jaanga.github.io/gestification/cookbook/jest-play/json/r1/jest-replay.html
 
 Usage:  
 1. Wave a hand and at least one finger over the Leap Motion device to start recording.  
@@ -17,7 +18,7 @@ Pressing the spacebar pauses all operations. Pressing the 'x' key clears the JSO
 
 ###Description
 The jestPlay BVH and jestPlay JSON apps enable you to record your hand movements by saving data from the [Leap Motion](http://leapmotion.com) 
-device to your computer either as BVH or as JSON files. Once saved, you can open these files and watch a full 3D replay of the movements.
+device to your computer either as [BVH](http://en.wikipedia.org/wiki/Biovision_Hierarchy) or as [JSON](http://en.wikipedia.org/wiki/JSON) files. Once saved, you can open these files and watch a full 3D replay of the movements.
 
 The apps are 'cookbook' style apps. They are not fully-featured or even finished apps. 
 Both do, however, provide you with a simple working FOSS example in a few hundred lines of code. 

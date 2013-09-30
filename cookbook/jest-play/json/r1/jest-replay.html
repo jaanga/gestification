@@ -1,17 +1,15 @@
 <!doctype html>
 <html lang=en>
 <head>
-<title>just replay</title>
+<title>jestReplay JSON</title>
 <meta charset=utf-8>
 </head>
 <body>
-
-<script src=http://js.leapmotion.com/0.2.0/leap.min.js ></script>
-
-<script src=http://mrdoob.github.com/three.js/examples/js/Detector.js></script>
-<script src=http://mrdoob.github.com/three.js/build/three.min.js></script>
-<script src=http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js></script>
-<script src=http://mrdoob.github.com/three.js/examples/js/libs/stats.min.js></script>
+<script src = http://js.leapmotion.com/0.2.0/leap.min.js ></script>
+<script src = http://mrdoob.github.com/three.js/examples/js/Detector.js ></script>
+<script src = http://mrdoob.github.com/three.js/build/three.min.js ></script>
+<script src = http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js ></script>
+<script src = http://mrdoob.github.com/three.js/examples/js/libs/stats.min.js ></script>
 <!--
 <script src=../FileSaver.min.js >   // see https://github.com/eligrey/FileSaver.js/   </script> 
 -->
@@ -22,19 +20,22 @@
 	var reader = new FileReader();
 	var textarea;
 	var data, palm, fingers = [];
+	var info;
 	
 	init();
 	animate();
 
 	function init() {
-		var css, menu, light, geometry, material, mesh;
+		var css, light, geometry, material, mesh;
 		
 		css = document.body.appendChild( document.createElement('style') );
 		css.innerHTML = 'body { font: 600 12pt monospace; overflow: hidden; }' +
+			'a {text-decoration: none;}' + 
 			'input, button { font: 600 12pt monospace; }';		
 	
-		menu = document.body.appendChild( document.createElement( 'div' ) );
-		menu.innerHTML = '<h1 style="display: inline;">just replay</h1> Replay Leap Motion data: ' +
+		info = document.body.appendChild( document.createElement( 'div' ) );
+		info.innerHTML = info.txt = '<h1 style="display: inline;">justReplay ~ ' +
+			'<a href=# onclick=toggleInfo() ><large>&#x24D8;</large></a> </h1>' +
 			//' 1. Show one hand and fingers to trigger recording.  ' +
 			//'Spacebar: pause. \'x\': clear.<br>' +
 			//'2. <button onclick=saveFile() >Save File</button> - ' +
@@ -48,7 +49,7 @@
 		
 		textarea = document.body.appendChild( document.createElement( 'textarea' ) );
 		textarea.style.cssText = 'height: ' + (window.innerHeight - 125) + 'px; width: ' +  0.49 * window.innerWidth + 'px; ';
-		textarea.placeholder = 'data will appear here when you move a hand over the device here...';	
+		textarea.placeholder = 'Leap device JSON data will appear here once you have loaded a file...';	
 		
 		stats = new Stats();
 		stats.domElement.style.cssText = 'position: absolute; right: 0; top: 0px; zIndex: 100; ';
@@ -91,6 +92,24 @@
 			fingers.push( mesh );
 		}
 	}	
+
+	function toggleInfo() {
+		info.innerHTML = info.txt +
+			'<div onclick=info.innerHTML=info.txt ' +
+			'style=background-color:#ccc;left:0;opacity:0.85;margin:auto;padding:15px;position:absolute;right:0;text-align:left;width:50%; >' +
+			'jestReplay JSON enables you to replay Leap device JSON data.<br><br>' +	
+			'At any time, you can use your pointing device to pan, zoom and rotate the Leap display on the right.<br><br>' +
+			'At any time you can press the \'Choose File\' button to select a file that is on your computer to replay. ' +
+			'Once the selected file is loaded, press \'Replay\' to see the action.<br><br>' +
+			'<a href="https://github.com/jaanga/gestification/tree/gh-pages/cookbook/jest-play" target="_blank">Source code.</a><br>' +
+			'<small>credits: <a href="http://threejs.org" target="_blank">three.js</a> - ' +
+			'<a href="http://leapmotion.com" target="_blank">leap motion</a> - ' +
+			'<a href="http://khronos.org/webgl/" target="_blank">webgl</a> - ' +
+			'<a href="http://jaanga.github.io" target="_blank">jaanga</a><br>' +	
+			'copyright &copy; 2013 jaanga authors ~ mit license</small<br>' + 	
+			'<br><br><i>Click anywhere in this message to hide...</i>' +
+		'</div>';
+	}
 	
 	function readFile(that){
 		if ( that.files && that.files[0]){
