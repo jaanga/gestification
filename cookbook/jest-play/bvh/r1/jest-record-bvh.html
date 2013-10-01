@@ -1,18 +1,20 @@
 <!doctype html>
 <html lang=en>
 <head>
-<title>jestPlay Record BVH ~ Jaanga</title>
+<title>jestRecord BVH ~ record Leap data</title>
 <meta charset=utf-8>
 </head>
 <body>
-<script src=http://js.leapmotion.com/0.2.0/leap.min.js ></script>
-<script src=http://mrdoob.github.com/three.js/examples/js/Detector.js></script>
+<script src=http://js.leapmotion.com/0.2.1/leap.min.js ></script>
 <script src=http://mrdoob.github.com/three.js/build/three.min.js></script>
 <script src=http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js></script>
 <script src=http://mrdoob.github.com/three.js/examples/js/libs/stats.min.js></script>
 <script src=../../FileSaver.min.js >   // see https://github.com/eligrey/FileSaver.js/   </script> 
 <script src=bvh-header.js ></script> 
 <script>
+// copyright (c) 2013 jaanga authors ~ mit license
+
+	var info
 	var renderer, scene, camera, controls, stats;
 	var clock = new THREE.Clock();
 	clock.previousTime = 1000000;	
@@ -21,23 +23,29 @@
 	var frames = 0;
 	var pausedFrame = null;
 	var latestFrame = null;
+	var pi = Math.PI, pi2 = 0.5 * Math.PI;
+	var d2r = pi / 180, r2d = 180 / pi;  // degress / radians	
 
 	init();
 	animate();
 
 	function init() {
-		var css, menu, light, geometry, material, mesh;
+		var css, light, geometry, material, mesh;
 		
 		css = document.body.appendChild( document.createElement('style') );
 		css.innerHTML = 'body { font: 600 12pt monospace; overflow: hidden; }' +
+			'h1 a {text-decoration: none;}' + 		
 			'input, button { font: 600 12pt monospace; }';		
 	
-		menu = document.body.appendChild( document.createElement( 'div' ) );
-		menu.innerHTML = '<h1 style="display: inline;">jestPlay Record BVH </h1> save Leap Motion data: ' +
-			' 1. Show one hand and fingers to trigger recording.  ' +
-			'Spacebar: pause. \'x\': clear. ' +
-			'2. <button onclick=saveFile() >Save File</button> - ' +
-			'<a href="https://github.com/jaanga/gestification/tree/gh-pages/cookbook/jest-play" target="_blank">Source Code</a> ' ;
+		info = document.body.appendChild( document.createElement( 'div' ) );
+		info.innerHTML = info.txt =  '<h1 style="display: inline;">jestRecord BVH ~ ' +
+			'<a href=# onclick=toggleInfo() ><large>&#x24D8;</large></a> </h1>' +
+			'Show one hand and fingers to trigger recording. ' +
+			'Press spacebar to pause updates.<br>' +
+			'<button onclick=textarea.value=""; >Clear Data</button> - ' +
+			'<button onclick=saveFile() >Save Data to File</button>' +
+
+		'' ;
 		
 		textareaOutput = document.body.appendChild( document.createElement( 'textarea' ) );
 		textareaOutput.style.cssText = 'display: block; font-size:small; width: ' +  0.98 * window.innerWidth + 'px; ';
@@ -89,6 +97,23 @@
 			fingers.push( mesh );
 		}
 	}	
+
+	function toggleInfo() {
+		info.innerHTML = info.txt +
+			'<div onclick=info.innerHTML=info.txt ' +
+			'style=background-color:#ccc;left:0;opacity:0.85;margin:auto;padding:15px;position:absolute;right:0;text-align:left;width:50%; >' +
+			'jestRecord BVH enables you to record Leap device data to a BVH file.<br><br>' +	
+			'At any time, you can use your pointing device to pan, zoom and rotate the Leap display in the right panel.<br><br>' +
+			'Once data appears in the left panel, you may clear the data or save the data to a file. <br><br>' + 
+			'<a href="https://github.com/jaanga/gestification/tree/gh-pages/cookbook/jest-play" target="_blank">Source code.</a><br>' +
+			'<small>credits: <a href="http://threejs.org" target="_blank">three.js</a> - ' +
+			'<a href="http://leapmotion.com" target="_blank">leap motion</a> - ' +
+			'<a href="http://khronos.org/webgl/" target="_blank">webgl</a> - ' +
+			'<a href="http://jaanga.github.io" target="_blank">jaanga</a><br>' +	
+			'copyright &copy; 2013 jaanga authors ~ mit license</small<br>' + 	
+			'<br><br><i>Click anywhere in this message to hide...</i>' +
+		'</div>';
+	}
 	
 	window.onkeypress = function(e) {
 // you pressed the spacebar	
@@ -115,13 +140,7 @@
 		var blob = new Blob( [ txt ] , {type: "text/plain;charset=utf-8"} );
 		saveAs(blob, 'leapmotion.bvh');
 	}	
-	
-	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }
-	
-	var pi = Math.PI, pi2 = 0.5 * Math.PI;
-	var d2r = pi / 180, r2d = 180 / pi;  // degress / radians	
-	
-	
+		
 	Leap.loop( function( frame ) {
 			var status;
 			latestFrame = frame;
@@ -187,7 +206,9 @@
 		controls.update();
 		renderer.render( scene, camera );
 		stats.update();		
-	}		
+	}	
+
+	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }	
 </script>
 </body>
 </html>

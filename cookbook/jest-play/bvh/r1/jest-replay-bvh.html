@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang=en>
 <head>
-<title>jestPlay Read BVH - Jaanga</title>
+<title>jestReplay BVH ~ replay Leap data</title>
 <meta charset=utf-8>
 </head>
 <body>
@@ -10,16 +10,17 @@
 <script src='http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js'></script>
 <script src='http://mrdoob.github.com/three.js/examples/js/libs/stats.min.js'></script>
 <script>
-// copyright (c) 2013 Jaanga authors ~ MIT License
+// copyright (c) 2013 jaanga authors ~ mit license
 
 // Thank you, Saqoosha ~ http://saqoo.sh/a/
-
 	var renderer, scene, camera, controls, stats;
 	var reader = new FileReader();
 	var textarea;
 	var xmlhttp;
 	var Bvh = {};
 	requestFile( '../../bvh-samples/lm-hands-thumb.bvh' );
+	var pi = Math.PI, pi2 = 0.5 * Math.PI;
+	var d2r = pi / 180, r2d = 180 / pi;		
 	
 	init();
 
@@ -28,17 +29,20 @@
 
 		css = document.body.appendChild( document.createElement('style') );
 		css.innerHTML = 'body { font: 600 12pt monospace; overflow: hidden; }' +
+			'h1 a {text-decoration: none;}' + 		
 			'input { font: 600 12pt monospace; }';
 
 		Bvh.info = document.body.appendChild( document.createElement( 'div' ) );
 		
-		Bvh.info.innerHTML = '<h1>jestPlay Read BVH - Leap Motion files</h1>' +
+		Bvh.info.innerHTML = Bvh.info.txt = '<h1 style="display: inline;">jestReplay BVH - ' +
+			'<a href=# onclick=toggleInfo() ><large>&#x24D8;</large></a> </h1><br>' +		
 			'Select sample: <select id=selBvh onchange=requestFile("../../bvh-samples/"+Bvh.files[this.selectedIndex]) ></select> ' +
 			'or <input type=file onchange=readText(this) /> <input type="checkbox" id="play" checked>Play - ' +
-			'<button type=button onclick=Bvh.play.checked=false;Bvh.animate(0); >First frame</button> - ' +
-			'<button type=button onclick=Bvh.play.checked=false;Bvh.animate(1); >Second Frame frame</button> - ' +
-			'<a href="https://github.com/jaanga/gestification/tree/gh-pages/cookbook/jest-play" target="_blank">Source Code</a> ' + 
-			'' ;
+			'<button type=button onclick=Bvh.play.checked=false;Bvh.cnt=0;Bvh.animate(0); >First frame</button>-' +
+			'<button type=button onclick=Bvh.play.checked=false;Bvh.animate(Bvh.cnt); >Next Frame</button> ' +
+			'<button type=button onclick="Bvh.play.checked=false;Bvh.animate(Bvh.cnt -= 2);" >Previous Frame</button> - ' +
+			'<scan id=status></scan>' +
+			'' ;		
 
 		Bvh.files = [ 'lm-hands-thumb.bvh', 'leapmotion.bvh' ];
 		
@@ -49,18 +53,18 @@
 
 		}
 		Bvh.play = document.getElementById('play');
+		Bvh.status = document.getElementById('status');
 		selBvh.selectedIndex = 1;			
 
 		textarea = document.body.appendChild( document.createElement( 'textarea' ) );
 		textarea.style.cssText = 'height: ' + (window.innerHeight - 150) + 'px; width: ' +  0.45 * window.innerWidth + 'px; ';
 		textarea.value = 'text here...';
 
+		scene = new THREE.Scene();
 		renderer = new THREE.WebGLRenderer( { antialias: true }  );
 		renderer.setSize( 0.5 * window.innerWidth, window.innerHeight - 150 );
-
 		document.body.appendChild( renderer.domElement );
-		scene = new THREE.Scene();
-
+		
 		camera = new THREE.PerspectiveCamera( 40, (0.45 * window.innerWidth) / (window.innerHeight - 150) , 1, 5000 );
 		camera.position.set( 0, 500, 500 );
 		controls = new THREE.TrackballControls( camera, renderer.domElement );
@@ -69,24 +73,43 @@
 		stats.domElement.style.cssText = 'position: absolute; right: 0; top: 0px; zIndex: 100; ';
 		document.body.appendChild( stats.domElement );
 
-		geometry = new THREE.AxisHelper( 80 );
-		scene.add( geometry );
+// Axes
+        scene.add( new THREE.ArrowHelper( v(1, 0, 0), v(0, 0, 0), 20, 0xcc0000) );
+        scene.add( new THREE.ArrowHelper( v(0, 1, 0), v(0, 0, 0), 20, 0x00cc00) );
+        scene.add( new THREE.ArrowHelper( v(0, 0, 1), v(0, 0, 0), 20, 0x0000cc) );
 
-		geometry = new THREE.PlaneGeometry( 600, 600, 1, 1 );
-		geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
-		material = new THREE.MeshBasicMaterial( {color: Math.random() * 0xffffff, side: THREE.DoubleSide } );
+// Ground plane
+		material = new THREE.MeshBasicMaterial( { color: 0x999999 });
+		geometry = new THREE.CubeGeometry( 600, 10, 300 );
 		mesh = new THREE.Mesh( geometry, material );
-		mesh.position.set( 0, 0, 0 );
+		mesh.position.set( 0, -30, 0 );
+		mesh.castShadow = true;
+		mesh.receiveShadow = true;
 		scene.add( mesh );
 	}
+	
+	function toggleInfo() {
+		Bvh.help = Bvh.info.appendChild( document.createElement( 'div' ) );
+		Bvh.help.innerHTML = '<div onclick=Bvh.help.style.display=\'none\'; ' +
+			'style=background-color:#ccc;left:0;opacity:0.85;margin:auto;padding:15px;position:absolute;right:0;text-align:left;width:50%; >' +
+			'jestReplay BVH enables you to replay Leap device BVH data.<br><br>' +	
+			'At any time, you can use your pointing device to pan, zoom and rotate the Leap display on the right.<br><br>' +
+			'To replay a file, either select a sample file (saved on the GitHub server) or press the \'Choose File\' button to select a file that is in your computer drive. ' +
+			'Once the selected file is loaded and visible in the left panel, check \'Play\' to see the action.<br><br>' +
+			'<a href="https://github.com/jaanga/gestification/tree/gh-pages/cookbook/jest-play" target="_blank">Source code.</a><br>' +
+			'<small>credits: <a href="http://threejs.org" target="_blank">three.js</a> - ' +
+			'<a href="http://leapmotion.com" target="_blank">leap motion</a> - ' +
+			'<a href="http://khronos.org/webgl/" target="_blank">webgl</a> - ' +
+			'<a href="http://jaanga.github.io" target="_blank">jaanga</a><br>' +	
+			'copyright &copy; 2013 jaanga authors ~ mit license</small<br>' + 	
+			'<br><br><i>Click anywhere in this message to hide...</i>' +
+		'</div>';
+	}	
 
 	function readText( that ){
 		if ( that.files && that.files[0] ){
 			var reader = new FileReader();
 			reader.onload = function (event) {
-				if ( scene.children.length > 1 ) {
-					scene.remove( scene.children[2] );
-				}
 				var data = event.target.result;
 				textarea.value = data;
 				Bvh.parseData( data );
@@ -106,9 +129,6 @@
 
 	function callbackFile() {
 		if ( xmlhttp.readyState == 4  ) {
-			if ( scene.children.length > 1 ) {
-				scene.remove( scene.children[2] );
-			}
 			var data = xmlhttp.responseText;
 			textarea.value = data;
 			Bvh.parseData ( data );
@@ -125,6 +145,9 @@
 		while (!done) {
 			switch (_this.data.shift()) {
 			case 'ROOT':
+				if (  _this.root) {
+					scene.remove(_this.root);
+				}	
 				_this.root = _this.parseNode(_this.data);
 				scene.add(_this.root);
 				break;
@@ -133,23 +156,27 @@
 				_this.numFrames = parseInt( _this.data.shift() );
 				_this.data.shift();
 				_this.data.shift();
-				_this.secsPerFrame = parseFloat(_this.data.shift());
+				_this.secsPerFrame = 0.25 * parseFloat(_this.data.shift());
 				done = true;
 			}
 		}
 		_this.root.material = new THREE.MeshBasicMaterial({ color: 0xff0000});
 		_this.startTime = Date.now();
+		_this.cnt = 0;
 		animate();
     }
 
     Bvh.animate = function( frame ) {
-		var ch, frame, n, torad, ref;
+		var ch, n, torad, ref;
 		n = frame % this.numFrames * this.channels.length;
+	
 		if ( Bvh.play.checked && n === 0 ) { 
 			n = this.channels.length; 
 			console.log( 'n', n );   
-		} 			
-		// torad = Math.PI / 180;
+			Bvh.cnt = 0;
+		} 		
+		Bvh.status.innerHTML = 'Frame: ' + Bvh.cnt++;  	
+
 		ref = this.channels;
 		for ( var i = 0, len = ref.length; i < len; i++) {
 			ch = ref[ i ];
@@ -305,10 +332,9 @@ console.log( node.name );
 			var frame = ( (Date.now() - Bvh.startTime ) / Bvh.secsPerFrame / 1000) | 0; 
 			Bvh.animate( frame ); 
 		}
-	}
-	
-	var pi = Math.PI, pi2 = 0.5 * Math.PI;
-	var d2r = pi / 180, r2d = 180 / pi;  // degress / radians		
+	}	
+
+	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }	
 </script>
 </body>
 </html>

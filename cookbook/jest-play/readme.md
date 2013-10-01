@@ -1,10 +1,16 @@
-jestPlay BVH and jestPlay JSON<br>- Record and Replay Leap Device Data Files
+jestPlay<br>- A Suite of Apps to<br>Record and Replay Leap Device Data Files
 ===================================================================================
 
-BVH demo: http://jaanga.github.io/gestification/cookbook/jest-play/bvh/r1/jest-play.html
+BVH record & replay demo: http://jaanga.github.io/gestification/cookbook/jest-play/bvh/r1/jest-record-bvh.html  
+- Requires Leap device  
+BVH replay only demo: http://jaanga.github.io/gestification/cookbook/jest-play/bvh/r1/jest-replay-bvh.html  
+- No Leap device is needed to replay files  
 
-JSON demo: http://jaanga.github.io/gestification/cookbook/jest-play/json/r1/jest-play.html  
-JSON demo replay only: http://jaanga.github.io/gestification/cookbook/jest-play/json/r1/jest-replay.html
+JSON record & replay demo: http://jaanga.github.io/gestification/cookbook/jest-play/json/r1/jest-record-json.html  
+- Requires Leap device  
+JSON replay only demo replay only: http://jaanga.github.io/gestification/cookbook/jest-play/json/r1/jest-replay-json.html  
+- No Leap device is needed to replay files  
+
 
 Usage:  
 1. Wave a hand and at least one finger over the Leap Motion device to start recording.  
@@ -48,9 +54,13 @@ The JSON app supersedes '[save-json](https://github.com/jaanga/gestification/tre
 
 ###Change Log
 
+2013-09-30 ~ Theo
+* jestPlay JSON code cleanup
+* Renaming the files to jestRecord *** an jestReplay ***
+
+
 2013-09-29 ~ Theo
 * Readme reorganixed to cover both BVH and JSON apps
-
 
 2013-09-03 - Theo
 * Text added to readme

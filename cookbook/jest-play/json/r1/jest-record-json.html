@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang=en>
 <head>
-<title>jestPlay JSON ~ save & replay Leap data</title>
+<title>jestRecord JSON ~ record & replay Leap data</title>
 <meta charset=utf-8>
 </head>
 <body>
@@ -12,6 +12,8 @@
 <script src=http://mrdoob.github.com/three.js/examples/js/libs/stats.min.js></script>
 <script src=../../FileSaver.min.js >   // see https://github.com/eligrey/FileSaver.js/   </script> 
 <script>
+// copyright (c) 2013 jaanga authors ~ mit license
+
 	var info;
 	var renderer, scene, camera, controls, stats;
 	var clock = new THREE.Clock();
@@ -30,17 +32,21 @@
 		
 		css = document.body.appendChild( document.createElement('style') );
 		css.innerHTML = 'body { font: 600 12pt monospace; overflow: hidden; }' +
-			'a {text-decoration: none;}' + 
+			'h1 a {text-decoration: none;}' + 
 			'input, button { font: 600 12pt monospace; }';		
 	
 		info = document.body.appendChild( document.createElement( 'div' ) );
-		info.innerHTML = info.txt = '<h1 style="display: inline;">jestPlay JSON ~ ' +
+		info.innerHTML = info.txt = '<h1 style="display: inline;">jestRecord JSON ~ ' +
 			'<a href=# onclick=toggleInfo() ><large>&#x24D8;</large></a> </h1>' +
 			'Show one hand and fingers to trigger recording. ' +
-			'Press spacebar to pause. Press \'x\' to clear.<br>' +
-			'<button onclick=saveFile() >Save File</button> - ' +
-			'<input type=file onchange="readFile(this)"  > ' +
-			'<button onclick="dataReplay();" >Replay</button>';
+			'Press spacebar to pause updates.<br>' +
+	
+			'Read data: <input type=file onchange="readFile(this)"  > ' +		
+			
+			'<button onclick="dataReplay();" >Replay data</button>' +
+			'<button onclick=textarea.value=""; >Clear data</button> - ' +
+			'<button onclick=saveFile() >Save Data to File</button>' +
+		'';
 		
 		textareaOutput = document.body.appendChild( document.createElement( 'textarea' ) );
 		textareaOutput.style.cssText = 'display: block; font-size:small; width: ' +  0.98 * window.innerWidth + 'px; ';
@@ -49,7 +55,7 @@
 		
 		textarea = document.body.appendChild( document.createElement( 'textarea' ) );
 		textarea.style.cssText = 'height: ' + (window.innerHeight - 120) + 'px; width: ' +  0.49 * window.innerWidth + 'px; ';
-		textarea.placeholder = 'Data will appear here as you pass a hand over the Leap device...';	
+		textarea.placeholder = 'Data will appear here after you pass a hand over the Leap device...';	
 
 		stats = new Stats();
 		stats.domElement.style.cssText = 'position: absolute; right: 0; top: 0px; zIndex: 100; ';
@@ -97,10 +103,10 @@
 		info.innerHTML = info.txt +
 			'<div onclick=info.innerHTML=info.txt ' +
 			'style=background-color:#ccc;left:0;opacity:0.85;margin:auto;padding:15px;position:absolute;right:0;text-align:left;width:50%; >' +
-			'jestPlay JSON enables you to record and replay Leap device data.<br><br>' +	
-			'At any time, you can use your pointing device to pan, zoom and rotate the Leap display on the right.<br><br>' +
-			'Once data appears in the left panel, you can press the \'Save File\' button. <br><br>' + 
-			'At any time you can press the \'Choose File\' button to select a file that is on your computer to replay. ' +
+			'jestRecord JSON enables you to record and replay Leap device data.<br><br>' +	
+			'At any time, you can use your pointing device to pan, zoom and rotate the Leap display in the right panel.<br><br>' +
+			'Once data appears in the left panel, you may replay the data, clear the data or save the data to a file. <br><br>' + 
+			'To replay a data file previously saved on your computer, press the \'Choose File\' button to select a file. ' +
 			'Once the selected file is loaded, press \'Replay\' to see the action.<br><br>' +
 			'<a href="https://github.com/jaanga/gestification/tree/gh-pages/cookbook/jest-play" target="_blank">Source code.</a><br>' +
 			'<small>credits: <a href="http://threejs.org" target="_blank">three.js</a> - ' +
@@ -148,16 +154,16 @@
 	Leap.loop( function( frame ) {
 		if ( clock.previousTime === 1000000 ) {
 			latestFrame = frame;
-			var status = 'No motion detected - bytes recorded: ';
+			var status = 'No motion currently detected - bytes recorded: ';
 			if ( !pausedFrame && frame.hands.length > 0 && frame.pointables.length > 0 ) {
 				status = '*** Recording *** bytes recorded: ';
 				tmpText += JSON.stringify( frame.data ) + ',\n\n';			
 			}else {
-				if ( pausedFrame ) status =++ '### Paused ### ';
+				if ( pausedFrame ) status = '### Paused ### ';
 				textarea.value += tmpText;
 				tmpText  = '';
 			}
-			textareaOutput.value = status + textarea.value.length + ' - Latest frame: ' + JSON.stringify( (pausedFrame || latestFrame).data ) + '';			
+			textareaOutput.value = status + textarea.value.length + ' - Latest Leap frame: ' + JSON.stringify( (pausedFrame || latestFrame).data ) + '';			
 			playLoop( frame );	
 		}
 	});	
@@ -202,7 +208,15 @@
 	
 	function dataReplay() {	  
 		textareaOutput.value = 'replay... ';
-		data = JSON.parse( textarea.value );
+		var firstChr = textarea.value.substr( 0, 1 );
+		if ( firstChr === '[' ) {
+			data = JSON.parse( textarea.value );
+		} else {
+			var tmp = '[' + textarea.value.substr(0, textarea.value.length - 3) + ']' ;
+			data = JSON.parse( tmp );
+			
+		}
+		
 		data.replay = true;
 		data.index = 0;
 

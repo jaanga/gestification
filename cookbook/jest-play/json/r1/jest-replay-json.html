@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang=en>
 <head>
-<title>jestReplay JSON</title>
+<title>jestReplay JSON ~ replay Leap data</title>
 <meta charset=utf-8>
 </head>
 <body>
@@ -10,9 +10,6 @@
 <script src = http://mrdoob.github.com/three.js/build/three.min.js ></script>
 <script src = http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js ></script>
 <script src = http://mrdoob.github.com/three.js/examples/js/libs/stats.min.js ></script>
-<!--
-<script src=../FileSaver.min.js >   // see https://github.com/eligrey/FileSaver.js/   </script> 
--->
 <script>
 	var renderer, scene, camera, controls, stats;
 	var clock = new THREE.Clock();
@@ -20,7 +17,7 @@
 	var reader = new FileReader();
 	var textarea;
 	var data, palm, fingers = [];
-	var info;
+	var info, help, play;
 	
 	init();
 	animate();
@@ -30,22 +27,32 @@
 		
 		css = document.body.appendChild( document.createElement('style') );
 		css.innerHTML = 'body { font: 600 12pt monospace; overflow: hidden; }' +
-			'a {text-decoration: none;}' + 
+			'h1 a {text-decoration: none;}' + 
 			'input, button { font: 600 12pt monospace; }';		
 	
+		arr = [ 'select file','leapmotion-01.json', 'leapmotion-02.json', 'leapmotion-03.json' ];
 		info = document.body.appendChild( document.createElement( 'div' ) );
-		info.innerHTML = info.txt = '<h1 style="display: inline;">justReplay ~ ' +
+		info.innerHTML = info.txt = '<h1 style="display: inline;">justReplay JSON ~ ' +
 			'<a href=# onclick=toggleInfo() ><large>&#x24D8;</large></a> </h1>' +
-			//' 1. Show one hand and fingers to trigger recording.  ' +
-			//'Spacebar: pause. \'x\': clear.<br>' +
-			//'2. <button onclick=saveFile() >Save File</button> - ' +
+			'Replay pre-recorded Leap device JSON data.<br>' +
+			'Select sample: <select id=selItem onchange=requestFile("../../json-samples/"+this.value); ></select> - or: ' +
 			'<input type=file onchange="readFile(this)"> ' +
-			'<button onclick="dataReplay();" >Replay</button>';
+			'<input type=checkbox onclick=dataReplay(); id=play >Play - ' +
+			'<button type=button onclick="play.checked=false;dataReplay();data.index=0;var frame = new Leap.Frame(data[0]);playLoop(frame);" >First frame</button> - ' +
+			'<button type=button onclick="play.checked=false;if (++data.index >= data.length) data.index = 0;var frame = new Leap.Frame(data[data.index]);playLoop(frame);" >Next frame</button> - ' +
+			'<button type=button onclick="play.checked=false;if (--data.index < 0) data.index = data.length-1; var frame = new Leap.Frame(data[data.index]);playLoop(frame);" >Previous frame</button>' +
+		'';
 		
-		//textareaOutput = document.body.appendChild( document.createElement( 'textarea' ) );
-		//textareaOutput.style.cssText = 'display: block; font-size:small; width: ' +  0.98 * window.innerWidth + 'px; ';
-		//textareaOutput.rows =  2;
-		//textareaOutput.value = '';
+		var select = document.getElementById('selItem');		
+		for (var option, i = 0; i < arr.length; i++) {
+			option = document.createElement( 'option' );
+			option.innerText = arr[i];
+			select.appendChild( option );
+
+		}
+		select.selectedIndex = 0;	
+		info.txt = info.innerHTML;
+		play = document.getElementById('play');
 		
 		textarea = document.body.appendChild( document.createElement( 'textarea' ) );
 		textarea.style.cssText = 'height: ' + (window.innerHeight - 125) + 'px; width: ' +  0.49 * window.innerWidth + 'px; ';
@@ -94,13 +101,13 @@
 	}	
 
 	function toggleInfo() {
-		info.innerHTML = info.txt +
-			'<div onclick=info.innerHTML=info.txt ' +
+		help = info.appendChild( document.createElement( 'div' ) );
+		help.innerHTML = '<div onclick=help.style.display=\'none\'; ' +
 			'style=background-color:#ccc;left:0;opacity:0.85;margin:auto;padding:15px;position:absolute;right:0;text-align:left;width:50%; >' +
 			'jestReplay JSON enables you to replay Leap device JSON data.<br><br>' +	
 			'At any time, you can use your pointing device to pan, zoom and rotate the Leap display on the right.<br><br>' +
-			'At any time you can press the \'Choose File\' button to select a file that is on your computer to replay. ' +
-			'Once the selected file is loaded, press \'Replay\' to see the action.<br><br>' +
+			'To replay a file, either select a sample file (saved on the GitHub server) or press the \'Choose File\' button to select a file that is in your computer drive. ' +
+			'Once the selected file is loaded and visible in the left panel, check \'Play\' to see the action.<br><br>' +
 			'<a href="https://github.com/jaanga/gestification/tree/gh-pages/cookbook/jest-play" target="_blank">Source code.</a><br>' +
 			'<small>credits: <a href="http://threejs.org" target="_blank">three.js</a> - ' +
 			'<a href="http://leapmotion.com" target="_blank">leap motion</a> - ' +
@@ -108,8 +115,27 @@
 			'<a href="http://jaanga.github.io" target="_blank">jaanga</a><br>' +	
 			'copyright &copy; 2013 jaanga authors ~ mit license</small<br>' + 	
 			'<br><br><i>Click anywhere in this message to hide...</i>' +
+			'<br><br><i>Then - because there\'s a bug - reload the page!</i>' +
 		'</div>';
 	}
+	
+	function requestFile( fname ) {
+		dataPlay = false;
+		xmlhttp = new XMLHttpRequest();
+		xmlhttp.open( 'GET', fname, true );
+		xmlhttp.onreadystatechange = callbackFile;
+		xmlhttp.send( null );
+		callbackCount = 0;
+	}
+
+	function callbackFile() {
+		if ( xmlhttp.readyState == 4  ) {
+			var data = xmlhttp.responseText;
+			textarea.value = data;
+		} else {
+// console.log('waiting...');
+		}
+	}	
 	
 	function readFile(that){
 		if ( that.files && that.files[0]){
@@ -159,13 +185,16 @@
 		}		
 	}
 
-	function dataReplay() {	  
+	function dataReplay() {
+		if ( !textarea.value ) { alert('Please first load a file.'); play.checked = false; return; }
 		data = JSON.parse( textarea.value );
 		data.replay = true;
 		data.index = 0;
 
 		var duration = data[ data.length - 1 ].timestamp - data[0].timestamp;
+	
 		clock.step = 0.000001 * duration / data.length;
+console.log( duration / data.length, clock.step );			
 		clock.previousTime = 0;	
 	};
 	
@@ -174,7 +203,7 @@
 		controls.update();
 		renderer.render( scene, camera );
 		stats.update();		
-		if ( clock.getElapsedTime() - clock.previousTime > clock.step ) {
+		if ( play.checked && clock.getElapsedTime() - clock.previousTime > clock.step ) {
 			var frame = new Leap.Frame( data[ data.index ] );
 			playLoop(frame);
 			if ( ++data.index >= data.length ) data.index = 0;
