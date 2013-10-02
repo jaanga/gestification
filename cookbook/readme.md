@@ -9,7 +9,7 @@ Cookbook code is an example of programming code that identifies or demonstrates 
 * [Handy Videos](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/handy-videos) ~ Not your mother's video. Somewhat insane.
 * [jestPlay](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/jest-play) - Record and replay Leap Motion JSON and BVH data capture. 
 Much effort here - but not quite ready for prime time.
-* [Leap Distance vs Normal](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/leap-distance-vs-normal) - another pitch, roll and yaw issues demo
+* [Leap Distance vs Normal](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/leap-distance-vs-normal) - another pitch, roll and yaw issues demo. Code example.
 * [Phalanges](./phalanges) - Now at R7. Base code for showing hand and fingers even when data is not available from the Leap device. Much effort here.
 * [Murgatroyd Heaven](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/murgatroyd-heaven) - not an easy game. Early work.
 * [Pitch Roll and Yaw](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/pitch-roll-yaw) - pitch, roll and yaw issues demo. Code example.
@@ -20,7 +20,7 @@ Much effort here - but not quite ready for prime time.
 
 ###Change log
 
-2013-10-01 ~ The
+2013-10-01 ~ Theo
 * Added Boilerplate and Phalanges
 * Updated Read Me
 
