@@ -9,76 +9,76 @@ ROOT rForeArm
 		CHANNELS 3 Zrotation Yrotation Xrotation
 		JOINT rThumb1
 		{
-			OFFSET 15 0 5
+			OFFSET 15 0 -5
 			CHANNELS 3 Zrotation Yrotation Xrotation
 			JOINT rThumb2
 			{
-				OFFSET 5 0 7.5
+				OFFSET 0 0 10
 				CHANNELS 3 Zrotation Yrotation Xrotation
 				JOINT rThumb3
 				{
-					OFFSET 0 0 7
+					OFFSET 0 0 10
 					CHANNELS 3 Zrotation Yrotation Xrotation
 					End Site
 					{
-						OFFSET 0 0 3
+						OFFSET 0 0 10
 					}
 				}
 			}
 		}
 		JOINT rIndex1
 		{
-			OFFSET  9.5 0 22
+			OFFSET  10 0 22
 			CHANNELS 3 Zrotation Yrotation Xrotation
 			JOINT rIndex2
 			{
-				OFFSET  0.5 0 11.0
+				OFFSET  0 0 11
 				CHANNELS 3 Zrotation Yrotation Xrotation
 				JOINT rIndex3
 				{
-					OFFSET -0.6 0 7.0
+					OFFSET 0 0 7
 					CHANNELS 3 Zrotation Yrotation Xrotation
 					End Site
 					{
-						OFFSET 0 0 5.0
+						OFFSET 0 0 10
 					}
 				}
 			}
 		}
 		JOINT rMid1
 		{
-			OFFSET 2.2 0 24
+			OFFSET 2 0 24
 			CHANNELS 3 Zrotation Yrotation Xrotation
 			JOINT rMid2
 			{
-				OFFSET 0 0 11.66
+				OFFSET 0 0 12
 				CHANNELS 3 Zrotation Yrotation Xrotation
 				JOINT rMid3
 				{
-					OFFSET 0 0.18 5.50
+					OFFSET 0 0.18 6
 					CHANNELS 3 Zrotation Yrotation Xrotation
 					End Site
 					{
-						OFFSET 0.63 0 5.0
+						OFFSET 0 0 10
 					}
 				}
 			}
 		}
 		JOINT rRing1
 		{
-			OFFSET -5.1 0 24
+			OFFSET -5 0 24
 			CHANNELS 3 Zrotation Yrotation Xrotation
 			JOINT rRing2
 			{
-				OFFSET 0.7 0 9.8
+				OFFSET 0 0 10
 				CHANNELS 3 Zrotation Yrotation Xrotation
 				JOINT rRing3
 				{
-					OFFSET 0.8 0 4.2
+					OFFSET 0 0 4
 					CHANNELS 3 Zrotation Yrotation Xrotation
 					End Site
 					{
-						OFFSET 0 0 5.0
+						OFFSET 0 0 10
 					}
 				}
 			}
@@ -89,15 +89,15 @@ ROOT rForeArm
 			CHANNELS 3 Zrotation Yrotation Xrotation
 			JOINT rPinky2
 			{
-				OFFSET 1 0 7.5
+				OFFSET 0 0 8
 				CHANNELS 3 Zrotation Yrotation Xrotation
 				JOINT rPinky3
 				{
-					OFFSET 1 0 3.5
+					OFFSET 0 0 4
 					CHANNELS 3 Zrotation Yrotation Xrotation
 					End Site
 					{
-						OFFSET 1 0 5.0
+						OFFSET 0 0 10
 					}
 				}
 			}

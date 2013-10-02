@@ -1,103 +1,103 @@
 HIERARCHY
 ROOT rForeArm
 {
-	OFFSET 0 50 0 
+	OFFSET 0 0 0 
 	CHANNELS 6 Xposition Yposition Zposition Zrotation Yrotation Xrotation
 	JOINT rHand
 	{
-		OFFSET 0 0 15
+		OFFSET 0 0 30
 		CHANNELS 3 Zrotation Yrotation Xrotation
 		JOINT rThumb1
 		{
-			OFFSET 15 0 5
+			OFFSET 30 0 -10
 			CHANNELS 3 Zrotation Yrotation Xrotation
 			JOINT rThumb2
 			{
-				OFFSET 5 0 7.5
+				OFFSET 0 0 20
 				CHANNELS 3 Zrotation Yrotation Xrotation
 				JOINT rThumb3
 				{
-					OFFSET 0 0 7
+					OFFSET 0 0 25
 					CHANNELS 3 Zrotation Yrotation Xrotation
 					End Site
 					{
-						OFFSET 0 0 3
+						OFFSET 0 0 10
 					}
 				}
 			}
 		}
 		JOINT rIndex1
 		{
-			OFFSET  9.5 0 22
+			OFFSET  20 0 44
 			CHANNELS 3 Zrotation Yrotation Xrotation
 			JOINT rIndex2
 			{
-				OFFSET  0.5 0 11.0
+				OFFSET  0 0 22
 				CHANNELS 3 Zrotation Yrotation Xrotation
 				JOINT rIndex3
 				{
-					OFFSET -0.6 0 7.0
+					OFFSET 0 0 14
 					CHANNELS 3 Zrotation Yrotation Xrotation
 					End Site
 					{
-						OFFSET 0 0 5.0
+						OFFSET 0 0 10
 					}
 				}
 			}
 		}
 		JOINT rMid1
 		{
-			OFFSET 2.2 0 24
+			OFFSET 4 0 48
 			CHANNELS 3 Zrotation Yrotation Xrotation
 			JOINT rMid2
 			{
-				OFFSET 0 0 11.66
+				OFFSET 0 0 24
 				CHANNELS 3 Zrotation Yrotation Xrotation
 				JOINT rMid3
 				{
-					OFFSET 0 0.18 5.50
+					OFFSET 0 0 12
 					CHANNELS 3 Zrotation Yrotation Xrotation
 					End Site
 					{
-						OFFSET 0.63 0 5.0
+						OFFSET 0 0 10
 					}
 				}
 			}
 		}
 		JOINT rRing1
 		{
-			OFFSET -5.1 0 24
+			OFFSET -10 0 48
 			CHANNELS 3 Zrotation Yrotation Xrotation
 			JOINT rRing2
 			{
-				OFFSET 0.7 0 9.8
+				OFFSET 0 0 20
 				CHANNELS 3 Zrotation Yrotation Xrotation
 				JOINT rRing3
 				{
-					OFFSET 0.8 0 4.2
+					OFFSET 0 0 8
 					CHANNELS 3 Zrotation Yrotation Xrotation
 					End Site
 					{
-						OFFSET 0 0 5.0
+						OFFSET 0 0 10
 					}
 				}
 			}
 		}
 		JOINT rPinky1
 		{
-			OFFSET -11 0 21
+			OFFSET -22 0 41
 			CHANNELS 3 Zrotation Yrotation Xrotation
 			JOINT rPinky2
 			{
-				OFFSET 1 0 7.5
+				OFFSET 0 0 16
 				CHANNELS 3 Zrotation Yrotation Xrotation
 				JOINT rPinky3
 				{
-					OFFSET 1 0 3.5
+					OFFSET 0 0 7
 					CHANNELS 3 Zrotation Yrotation Xrotation
 					End Site
 					{
-						OFFSET 1 0 5.0
+						OFFSET 0 0 10
 					}
 				}
 			}

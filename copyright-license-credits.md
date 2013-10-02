@@ -1,6 +1,6 @@
 Copyright, License and Credits
 ========
-###jestPlay
+###All Jaanga works
 Copyright &copy; 2013 jaanga authors
 
 The MIT License
@@ -45,9 +45,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
-###'Leap.js', 'Leap Motion Recorder' and 'Leap Motion Replayer'
-The code for the app is derived from Kai Chang's 'Leap Motion Recorder' and 'Leap Motion Replayer' in the js.leapmotion repository on GitHub:
-http://js.leapmotion.com/examples
+###Leap.js
+http://js.leapmotion.com/
 
 Copyright (c) 2013, Leap Motion, Inc.
 All rights reserved.

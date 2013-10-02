@@ -1,7 +1,7 @@
 The apps in this folder are things that work - after a fashion - but which could use a lot more effort.
 
 [**Phalanges**](https://github.com/jaanga/gestification/tree/gh-pages/work-in-hand/phalanges)  
-- **The app of the moment** 
+- This location deprecated. Please see (https://github.com/jaanga/gestification/tree/gh-pages/cookbook/phalanges)  
 - Is it posible to create a realtime, 3D skin and bones character elements using a Leap Motion device? Not yet, but perhaps soon...
 
 

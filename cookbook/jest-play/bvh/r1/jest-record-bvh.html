@@ -5,62 +5,61 @@
 <meta charset=utf-8>
 </head>
 <body>
-<script src=http://js.leapmotion.com/0.2.1/leap.min.js ></script>
-<script src=http://mrdoob.github.com/three.js/build/three.min.js></script>
-<script src=http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js></script>
-<script src=http://mrdoob.github.com/three.js/examples/js/libs/stats.min.js></script>
-<script src=../../FileSaver.min.js >   // see https://github.com/eligrey/FileSaver.js/   </script> 
-<script src=bvh-header.js ></script> 
+<script src =http://js.leapmotion.com/0.2.1/leap.min.js ></script>
+<script src =http://mrdoob.github.com/three.js/build/three.min.js ></script>
+<script src =http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js> </script>
+<script src =http://mrdoob.github.com/three.js/examples/js/libs/stats.min.js ></script>
+<script src =../../FileSaver.min.js >   // see https://github.com/eligrey/FileSaver.js/   </script>
+<script src=bvh-header.js ></script>
 <script>
 // copyright (c) 2013 jaanga authors ~ mit license
 
-	var info
-	var renderer, scene, camera, controls, stats;
+	var irenderer, scene, camera, controls, stats;
 	var clock = new THREE.Clock();
-	clock.previousTime = 1000000;	
-	var outputDiv, textarea, tmpText = '';
+	clock.previousTime = 1000000;
+	var info, textareaStatus, textarea, tmpText = '';
 	var data, palm, fingers = [];
 	var frames = 0;
 	var pausedFrame = null;
 	var latestFrame = null;
 	var pi = Math.PI, pi2 = 0.5 * Math.PI;
-	var d2r = pi / 180, r2d = 180 / pi;  // degress / radians	
+	var d2r = pi / 180, r2d = 180 / pi;
 
 	init();
 	animate();
 
 	function init() {
 		var css, light, geometry, material, mesh;
-		
+
 		css = document.body.appendChild( document.createElement('style') );
 		css.innerHTML = 'body { font: 600 12pt monospace; overflow: hidden; }' +
-			'h1 a {text-decoration: none;}' + 		
-			'input, button { font: 600 12pt monospace; }';		
-	
+			'h1 a {text-decoration: none;}' +
+			'input, button { font: 600 12pt monospace; }';
+
 		info = document.body.appendChild( document.createElement( 'div' ) );
 		info.innerHTML = info.txt =  '<h1 style="display: inline;">jestRecord BVH ~ ' +
 			'<a href=# onclick=toggleInfo() ><large>&#x24D8;</large></a> </h1>' +
 			'Show one hand and fingers to trigger recording. ' +
 			'Press spacebar to pause updates.<br>' +
-			'<button onclick=textarea.value=""; >Clear Data</button> - ' +
+			'<button onclick=frames=0;textarea.value=""; >Clear Data</button> - ' +
 			'<button onclick=saveFile() >Save Data to File</button>' +
 
 		'' ;
-		
-		textareaOutput = document.body.appendChild( document.createElement( 'textarea' ) );
-		textareaOutput.style.cssText = 'display: block; font-size:small; width: ' +  0.98 * window.innerWidth + 'px; ';
-		textareaOutput.rows =  2;
-		textareaOutput.value = '';
-		
+
+		textareaStatus = document.body.appendChild( document.createElement( 'textarea' ) );
+		textareaStatus.style.cssText = 'display: block; font-size:small; width: ' +  0.98 * window.innerWidth + 'px; ';
+		textareaStatus.rows =  2;
+		textareaStatus.value = '';
+
 		textarea = document.body.appendChild( document.createElement( 'textarea' ) );
 		textarea.style.cssText = 'height: ' + (window.innerHeight - 120) + 'px; width: ' +  0.49 * window.innerWidth + 'px; ';
-		textarea.placeholder = 'Data will appear here when you move a hand over the Leap /motion device...';	
+		textarea.placeholder = 'Data will appear here when you move a hand over the Leap /motion device...';
 
 		stats = new Stats();
 		stats.domElement.style.cssText = 'position: absolute; right: 0; top: 0px; zIndex: 100; ';
-		document.body.appendChild( stats.domElement ); 		
+		document.body.appendChild( stats.domElement );
 
-		renderer = new THREE.WebGLRenderer( { antialias: true }  );	
+		renderer = new THREE.WebGLRenderer( { antialias: true }  );
 		renderer.setSize( 0.49 * window.innerWidth, window.innerHeight - 120 );
 		renderer.domElement.style.cssText = 'outline: 1px solid #000;';
 		document.body.appendChild( renderer.domElement );
@@ -96,56 +95,58 @@
 			scene.add( mesh );
 			fingers.push( mesh );
 		}
-	}	
+	}
 
 	function toggleInfo() {
 		info.innerHTML = info.txt +
 			'<div onclick=info.innerHTML=info.txt ' +
 			'style=background-color:#ccc;left:0;opacity:0.85;margin:auto;padding:15px;position:absolute;right:0;text-align:left;width:50%; >' +
-			'jestRecord BVH enables you to record Leap device data to a BVH file.<br><br>' +	
+			'jestRecord BVH enables you to record Leap device data to a BVH file.<br><br>' +
 			'At any time, you can use your pointing device to pan, zoom and rotate the Leap display in the right panel.<br><br>' +
-			'Once data appears in the left panel, you may clear the data or save the data to a file. <br><br>' + 
+			'Once data appears in the left panel, you may clear the data or save the data to a file. <br><br>' +
+			'This app is best used in conjunction with <a href="./jest-replay-bvh.html" target="_blank">jestReplay BVH</a><br><br>' +
 			'<a href="https://github.com/jaanga/gestification/tree/gh-pages/cookbook/jest-play" target="_blank">Source code.</a><br>' +
 			'<small>credits: <a href="http://threejs.org" target="_blank">three.js</a> - ' +
 			'<a href="http://leapmotion.com" target="_blank">leap motion</a> - ' +
 			'<a href="http://khronos.org/webgl/" target="_blank">webgl</a> - ' +
-			'<a href="http://jaanga.github.io" target="_blank">jaanga</a><br>' +	
-			'copyright &copy; 2013 jaanga authors ~ mit license</small<br>' + 	
+			'<a href="http://jaanga.github.io" target="_blank">jaanga</a><br>' +
+			'copyright &copy; 2013 jaanga authors ~ mit license</small<br>' +
 			'<br><br><i>Click anywhere in this message to hide...</i>' +
 		'</div>';
 	}
-	
+
 	window.onkeypress = function(e) {
-// you pressed the spacebar	
-		if (e.charCode == 32) { 
+// you pressed the spacebar
+		if (e.charCode == 32) {
 			if (pausedFrame == null) {
 				pausedFrame = latestFrame;
 			} else {
 				pausedFrame = null;
 			}
-			textareaOutput.value = 'Paused - ' + textareaOutput.value 
+			textareaStatus.value = 'Paused - ' + textareaStatus.value
 		}
-// you pressed the letter x		
+// you pressed the letter x
 		if ( e.charCode == 120 ) {
+			frames = 0;
 			textarea.value = '';
-		}		
-	};	
+		}
+	};
 
-	function saveFile() { 
-		var txt = bvhHeader; 
+	function saveFile() {
+		var txt = bvhHeader;
 		txt += 'Frames: ' + frames + '\n';
 		txt += 'Frame Time: 0.0333\n';
 		txt += '0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 \n'
 		txt += textarea.value.substr( 0, textarea.value.length - 2 );
 		var blob = new Blob( [ txt ] , {type: "text/plain;charset=utf-8"} );
 		saveAs(blob, 'leapmotion.bvh');
-	}	
-		
+	}
+
 	Leap.loop( function( frame ) {
 			var status;
 			latestFrame = frame;
 			status = 'No motion detected - bytes recorded: ';
-			var txt = playLoop( frame );	
+			var txt = playLoop( frame );
 			if ( !pausedFrame && frame.hands.length > 0 && frame.pointables.length > 0 ) {
 				status = '*** Recording *** bytes recorded: ';
 				tmpText += txt;
@@ -154,10 +155,10 @@
 				textarea.value += tmpText;
 				tmpText  = '';
 			}
-		textareaOutput.value = status + textarea.value.length + ' - Latest frame: ' + txt;	
-	});	
-		
-	function playLoop( frame ) {	
+		textareaStatus.value = status + textarea.value.length + ' - Latest frame: ' + txt;
+	});
+
+	function playLoop( frame ) {
 		var hand, direction, len, finger, pointable;
 		var txt;
 		if ( frame.hands.length > 0  &&  frame.pointables.length > 4) {
@@ -171,23 +172,24 @@
 			txt = palm.position.x.toFixed(2) + ' ' + palm.position.y.toFixed(2) + ' ' + palm.position.z.toFixed(2) + ' ' +
 				(r2d * palm.rotation.z).toFixed(2) + ' ' + ( r2d * palm.rotation.y).toFixed(2) + ' ' + ( r2d * palm.rotation.x).toFixed(2) + ' ';
 			txt += '0 0 0 ';
+			var meaningOfLife = [ 4, 2, 0, 1, 3 ];
 			for (var i = 0; i < 5; i++) {
 				finger = fingers[i];
-				pointable = frame.pointables[i];
+				pointable = frame.pointables[ meaningOfLife[i] ];
 				finger.position.set( pointable.stabilizedTipPosition[0], pointable.stabilizedTipPosition[1], pointable.stabilizedTipPosition[2] );
 				direction = v( pointable.direction[0], pointable.direction[1], pointable.direction[2]);  // best so far
 				finger.lookAt( direction.add( finger.position ) );
 				finger.scale.z = 0.05 * pointable.length;
 				finger.visible = true;
-				//txt += ' 0 0 0 0 0 0 0 0 0 ' + (r2d * pointable.direction[2]).toFixed(2) + ' ' + (r2d * pointable.direction[1]).toFixed(2) + ' ' + 
+				//txt += ' 0 0 0 0 0 0 0 0 0 ' + (r2d * pointable.direction[2]).toFixed(2) + ' ' + (r2d * pointable.direction[1]).toFixed(2) + ' ' +
 				//(r2d * pointable.direction[0]).toFixed(2) + ' ';
 				// txt += ' 0 0 0 ' ;
 				txt += (r2d * pointable.direction[2]).toFixed(2) + ' ' + (r2d * pointable.direction[1]).toFixed(2) + ' ' + (r2d * pointable.direction[0]).toFixed(2);
 				txt += ' ' + (r2d * pointable.direction[2]).toFixed(2) + ' ' + (r2d * pointable.direction[1]).toFixed(2) + ' ' + (r2d * pointable.direction[0]).toFixed(2);
 				txt += ' 0 0 0 ' ;
-				
-				//'0 0 0 0 0 0 0 0 0 ' + (r2d * pointable.direction[2]).toFixed(2) + ' ' + (r2d * pointable.direction[1]).toFixed(2) + ' ' + 
-				// (r2d * pointable.direction[0]).toFixed(2) + ' ';					
+
+				//'0 0 0 0 0 0 0 0 0 ' + (r2d * pointable.direction[2]).toFixed(2) + ' ' + (r2d * pointable.direction[1]).toFixed(2) + ' ' +
+				// (r2d * pointable.direction[0]).toFixed(2) + ' ';
 			}
 			txt += '\n';
 			frames++;
@@ -205,10 +207,10 @@
 		requestAnimationFrame( animate );
 		controls.update();
 		renderer.render( scene, camera );
-		stats.update();		
-	}	
+		stats.update();
+	}
 
-	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }	
+	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }
 </script>
 </body>
 </html>

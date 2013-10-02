@@ -5,23 +5,23 @@
 <meta charset=utf-8>
 </head>
 <body>
-<script src='http://mrdoob.github.com/three.js/examples/js/Detector.js'></script>
-<script src='http://mrdoob.github.com/three.js/build/three.min.js'></script>
-<script src='http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js'></script>
-<script src='http://mrdoob.github.com/three.js/examples/js/libs/stats.min.js'></script>
+<script src = http://mrdoob.github.com/three.js/examples/js/Detector.js ></script>
+<script src = http://mrdoob.github.com/three.js/build/three.min.js ></script>
+<script src = http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js ></script>
+<script src = http://mrdoob.github.com/three.js/examples/js/libs/stats.min.js ></script>
 <script>
 // copyright (c) 2013 jaanga authors ~ mit license
-
 // Thank you, Saqoosha ~ http://saqoo.sh/a/
+
 	var renderer, scene, camera, controls, stats;
 	var reader = new FileReader();
 	var textarea;
 	var xmlhttp;
 	var Bvh = {};
-	requestFile( '../../bvh-samples/lm-hands-thumb.bvh' );
-	var pi = Math.PI, pi2 = 0.5 * Math.PI;
-	var d2r = pi / 180, r2d = 180 / pi;		
 	
+	var pi = Math.PI, pi05 = 0.5 * Math.PI;
+	var d2r = pi / 180, r2d = 180 / pi;
+
 	init();
 
 	function init() {
@@ -29,23 +29,24 @@
 
 		css = document.body.appendChild( document.createElement('style') );
 		css.innerHTML = 'body { font: 600 12pt monospace; overflow: hidden; }' +
-			'h1 a {text-decoration: none;}' + 		
+			'h1 a {text-decoration: none;}' +
 			'input { font: 600 12pt monospace; }';
 
 		Bvh.info = document.body.appendChild( document.createElement( 'div' ) );
-		
+
 		Bvh.info.innerHTML = Bvh.info.txt = '<h1 style="display: inline;">jestReplay BVH - ' +
-			'<a href=# onclick=toggleInfo() ><large>&#x24D8;</large></a> </h1><br>' +		
+			'<a href=# onclick=toggleInfo() ><large>&#x24D8;</large></a> </h1><br>' +
 			'Select sample: <select id=selBvh onchange=requestFile("../../bvh-samples/"+Bvh.files[this.selectedIndex]) ></select> ' +
 			'or <input type=file onchange=readText(this) /> <input type="checkbox" id="play" checked>Play - ' +
-			'<button type=button onclick=Bvh.play.checked=false;Bvh.cnt=0;Bvh.animate(0); >First frame</button>-' +
-			'<button type=button onclick=Bvh.play.checked=false;Bvh.animate(Bvh.cnt); >Next Frame</button> ' +
-			'<button type=button onclick="Bvh.play.checked=false;Bvh.animate(Bvh.cnt -= 2);" >Previous Frame</button> - ' +
+			'<button type=button onclick=Bvh.play.checked=false;Bvh.frame=0;Bvh.animate(0); >First frame</button>-' +
+			'<button type=button onclick=Bvh.play.checked=false;Bvh.animate(++Bvh.frame); >Next Frame</button> ' +
+			'<button type=button onclick="Bvh.play.checked=false;Bvh.animate(--Bvh.frame);" >Previous Frame</button> - ' +
 			'<scan id=status></scan>' +
-			'' ;		
+			'' ;
 
-		Bvh.files = [ 'lm-hands-thumb.bvh', 'leapmotion.bvh' ];
-		
+		Bvh.files = [ 'hello-world.bvh','leapmotion.bvh', 'leapmotion-01.bvh', 'lm-hands-thumb.bvh', 'thumbelina.bvh', 'offsets-try.bvh'];
+
+
 		for (var len = Bvh.files.length, option, i = 0; i < len; i++) {
 			option = document.createElement( 'option' );
 			option.innerText = Bvh.files[i];
@@ -54,7 +55,7 @@
 		}
 		Bvh.play = document.getElementById('play');
 		Bvh.status = document.getElementById('status');
-		selBvh.selectedIndex = 1;			
+		selBvh.selectedIndex = 0;
 
 		textarea = document.body.appendChild( document.createElement( 'textarea' ) );
 		textarea.style.cssText = 'height: ' + (window.innerHeight - 150) + 'px; width: ' +  0.45 * window.innerWidth + 'px; ';
@@ -64,7 +65,7 @@
 		renderer = new THREE.WebGLRenderer( { antialias: true }  );
 		renderer.setSize( 0.5 * window.innerWidth, window.innerHeight - 150 );
 		document.body.appendChild( renderer.domElement );
-		
+
 		camera = new THREE.PerspectiveCamera( 40, (0.45 * window.innerWidth) / (window.innerHeight - 150) , 1, 5000 );
 		camera.position.set( 0, 500, 500 );
 		controls = new THREE.TrackballControls( camera, renderer.domElement );
@@ -86,13 +87,15 @@
 		mesh.castShadow = true;
 		mesh.receiveShadow = true;
 		scene.add( mesh );
+		
+		requestFile( '../../bvh-samples/hello-world.bvh' );
 	}
-	
+
 	function toggleInfo() {
 		Bvh.help = Bvh.info.appendChild( document.createElement( 'div' ) );
 		Bvh.help.innerHTML = '<div onclick=Bvh.help.style.display=\'none\'; ' +
 			'style=background-color:#ccc;left:0;opacity:0.85;margin:auto;padding:15px;position:absolute;right:0;text-align:left;width:50%; >' +
-			'jestReplay BVH enables you to replay Leap device BVH data.<br><br>' +	
+			'jestReplay BVH enables you to replay Leap device BVH data.<br><br>' +
 			'At any time, you can use your pointing device to pan, zoom and rotate the Leap display on the right.<br><br>' +
 			'To replay a file, either select a sample file (saved on the GitHub server) or press the \'Choose File\' button to select a file that is in your computer drive. ' +
 			'Once the selected file is loaded and visible in the left panel, check \'Play\' to see the action.<br><br>' +
@@ -100,11 +103,11 @@
 			'<small>credits: <a href="http://threejs.org" target="_blank">three.js</a> - ' +
 			'<a href="http://leapmotion.com" target="_blank">leap motion</a> - ' +
 			'<a href="http://khronos.org/webgl/" target="_blank">webgl</a> - ' +
-			'<a href="http://jaanga.github.io" target="_blank">jaanga</a><br>' +	
-			'copyright &copy; 2013 jaanga authors ~ mit license</small<br>' + 	
+			'<a href="http://jaanga.github.io" target="_blank">jaanga</a><br>' +
+			'copyright &copy; 2013 jaanga authors ~ mit license</small<br>' +
 			'<br><br><i>Click anywhere in this message to hide...</i>' +
 		'</div>';
-	}	
+	}
 
 	function readText( that ){
 		if ( that.files && that.files[0] ){
@@ -147,9 +150,13 @@
 			case 'ROOT':
 				if (  _this.root) {
 					scene.remove(_this.root);
-				}	
+				}
 				_this.root = _this.parseNode(_this.data);
 				scene.add(_this.root);
+				//_this.root.geometry = new THREE.CylnderGeometry( 10, 10, 10 );
+			//node = new THREE.Mesh(geometry, material);	
+				_this.root.scale.z = 2;
+				_this.root.material = new THREE.MeshBasicMaterial({ color: 0xff0000});
 				break;
 			case 'MOTION':
 				_this.data.shift();
@@ -160,22 +167,19 @@
 				done = true;
 			}
 		}
-		_this.root.material = new THREE.MeshBasicMaterial({ color: 0xff0000});
 		_this.startTime = Date.now();
-		_this.cnt = 0;
+		// _this.cnt = 0;
 		animate();
     }
 
     Bvh.animate = function( frame ) {
 		var ch, n, torad, ref;
 		n = frame % this.numFrames * this.channels.length;
-	
-		if ( Bvh.play.checked && n === 0 ) { 
-			n = this.channels.length; 
-			console.log( 'n', n );   
-			Bvh.cnt = 0;
-		} 		
-		Bvh.status.innerHTML = 'Frame: ' + Bvh.cnt++;  	
+		this.status.innerHTML = 'Frame: ' + (  n / this.channels.length );
+		if ( this.play.checked && n === 0 ) {
+			n = this.channels.length;
+			console.log( 'n', n );
+		}
 
 		ref = this.channels;
 		for ( var i = 0, len = ref.length; i < len; i++) {
@@ -201,100 +205,103 @@
 			}
 			n++;
 		}
-	};	
-	
+	};
+
     Bvh.parseNode = function( data) {
 		var name, done, geometry, i, material, n, node, t;
 		name = data.shift();
-		
+		//node = buildIt( name );
+	
 		if ( name === 'Site' ) {
 			geometry = new THREE.SphereGeometry( 3 );
 			material = new THREE.MeshNormalMaterial();
-			node = new THREE.Mesh(geometry, material);	
-		
+			node = new THREE.Mesh(geometry, material);
+
 		} else if ( name === 'rHand' || name === 'rHand' ) {
 			geometry = new THREE.CubeGeometry( 30, 5, 20 );
 			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 0, 0 ) );
 			material = new THREE.MeshNormalMaterial();
-			node = new THREE.Mesh(geometry, material);	
-			
-/*				
+			node = new THREE.Mesh(geometry, material);
+
+/*
 		} else if ( name === 'Neck' ) {
 			geometry = new THREE.CubeGeometry( 10, 10, 10 );
 			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 4, 0 ) );
 			material = new THREE.MeshNormalMaterial();
-			node = new THREE.Mesh(geometry, material);	
-			
+			node = new THREE.Mesh(geometry, material);
+
 		} else if ( name === 'LeftCollar' ) {
 			geometry = new THREE.CubeGeometry( 30, 10, 10 );
 			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( -10, 0, 0 ) );
 			material = new THREE.MeshNormalMaterial();
-			node = new THREE.Mesh(geometry, material);				
+			node = new THREE.Mesh(geometry, material);
 		} else if ( name === 'RightCollar' ) {
 			geometry = new THREE.CubeGeometry( 30, 10, 10 );
 			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 10, 0, 0 ) );
 			material = new THREE.MeshNormalMaterial();
-			node = new THREE.Mesh(geometry, material);	
-			
+			node = new THREE.Mesh(geometry, material);
+
 		} else if ( name === 'LeftShoulder' ||  name === 'LeftElbow' ) {
 			geometry = new THREE.CubeGeometry( 35, 8, 8 );
 			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 20, 0, 0 ) );
 			material = new THREE.MeshNormalMaterial();
-			node = new THREE.Mesh(geometry, material);		
+			node = new THREE.Mesh(geometry, material);
 		} else if ( name === 'RightShoulder' || name === 'RightElbow' ) {
 			geometry = new THREE.CubeGeometry( 35, 8, 8 );
 			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( -20, 0, 0 ) );
 			material = new THREE.MeshNormalMaterial();
-			node = new THREE.Mesh(geometry, material);	
-			
+			node = new THREE.Mesh(geometry, material);
+
 		} else if ( name === 'LeftWrist' ) {
 			geometry = new THREE.CubeGeometry( 15, 12, 5 );
 			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 20, 0, 0 ) );
 			material = new THREE.MeshNormalMaterial();
-			node = new THREE.Mesh(geometry, material);		
+			node = new THREE.Mesh(geometry, material);
 		} else if ( name === 'RightWrist' ) {
 			geometry = new THREE.CubeGeometry( 15, 12, 5 );
 			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( -20, 0, 0 ) );
 			material = new THREE.MeshNormalMaterial();
-			node = new THREE.Mesh(geometry, material);				
-			
+			node = new THREE.Mesh(geometry, material);
+
 		} else if ( name === 'Chest' || name === 'Chest2' || name === 'Chest3' || name === 'Chest4' ) {
 			geometry = new THREE.CubeGeometry( 30, 10, 10 );
 			material = new THREE.MeshNormalMaterial();
-			node = new THREE.Mesh(geometry, material);				
-			
+			node = new THREE.Mesh(geometry, material);
+
 		} else if ( name === 'RightHip' ||  name === 'LeftHip') {
 			geometry = new THREE.CubeGeometry( 10, 50, 10 );
 			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, -18, 0 ) );
 			material = new THREE.MeshNormalMaterial();
-			node = new THREE.Mesh(geometry, material);				
+			node = new THREE.Mesh(geometry, material);
 
 		} else if ( name === 'LeftKnee' || name === 'RightKnee' ) {
 			geometry = new THREE.CubeGeometry( 10, 45, 10 );
 			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, -25, 0 ) );
 			material = new THREE.MeshNormalMaterial();
-			node = new THREE.Mesh(geometry, material);		
-			
-			
+			node = new THREE.Mesh(geometry, material);
+
+
 		} else if ( name === 'LeftAnkle' || name === 'RightAnkle' ) {
 			geometry = new THREE.CubeGeometry( 8, 8, 8 );
 			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 0, 0 ) );
 			material = new THREE.MeshNormalMaterial();
-			node = new THREE.Mesh(geometry, material);	
+			node = new THREE.Mesh(geometry, material);
 		} else if ( name === 'LeftToe' || name === 'RightToe' ) {
 			geometry = new THREE.CubeGeometry( 10, 5, 20 );
 			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 0, -10 ) );
 			material = new THREE.MeshNormalMaterial();
-			node = new THREE.Mesh(geometry, material);	
-*/				
-		} else {	
-	
+			node = new THREE.Mesh(geometry, material);
+*/
+
+		} else {
+
 			geometry = new THREE.CubeGeometry( 3, 3, 3 );
 			material = new THREE.MeshNormalMaterial();
 			node = new THREE.Mesh(geometry, material);
 		}
+		
 		node.name = name; // data.shift();
-console.log( node.name );		
+console.log( node.name );
 		// node.rotation.order = 'ZYX';
 		done = false;
 		while ( !done ) {
@@ -321,20 +328,154 @@ console.log( node.name );
 			}
 		}
 		return node;
-    };	
+    };
 
+	function buildIt(name) {
+		if ( name === 'ROOT' ) {
+			geometry = new THREE.CylnderGeometry( 10, 10, 10 );
+			material = new THREE.MeshNormalMaterial();
+			node = new THREE.Mesh(geometry, material);	
+			node.scale.z = 2;
+	
+		} else if ( name === 'Site' ) {
+			geometry = new THREE.SphereGeometry( 3 );
+			material = new THREE.MeshNormalMaterial();
+			node = new THREE.Mesh(geometry, material);
+
+		} else if ( name === 'rHand' || name === 'rHand' ) {
+			geometry = new THREE.CubeGeometry( 60, 8, 40 );
+			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 0, 0 ) );
+			material = new THREE.MeshNormalMaterial();
+			node = new THREE.Mesh(geometry, material);
+			
+		} else if ( name === 'rThumb1' ) {
+			geometry = new THREE.CylinderGeometry( 8, 8, 30 );
+			geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -pi05 ) );
+			// geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 0, 0 ) );
+			material = new THREE.MeshNormalMaterial();
+			node = new THREE.Mesh(geometry, material);		
+
+		} else if ( name === 'rThumb2' || name === 'rThumb3' ) {
+			geometry = new THREE.CylinderGeometry( 8, 8, 20 );
+			geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -pi05 ) );
+			// geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 0, 0 ) );
+			material = new THREE.MeshNormalMaterial();
+			node = new THREE.Mesh(geometry, material);		
+
+		} else if ( name === 'rIndex1' || name === 'rIndex2' || name === 'rIndex3' ) {
+			geometry = new THREE.CylinderGeometry( 8, 8, 20 );
+			geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -pi05 ) );
+			material = new THREE.MeshNormalMaterial();
+			node = new THREE.Mesh(geometry, material);				
+
+		} else if ( name === 'rMid1' || name === 'rMid2' || name === 'rMid3' ) {
+			geometry = new THREE.CylinderGeometry( 8, 8, 20 );
+			geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -pi05 ) );
+			material = new THREE.MeshNormalMaterial();
+			node = new THREE.Mesh(geometry, material);	
+			
+		} else if ( name === 'rRing1' || name === 'rRing2' || name === 'rRing' ) {
+			geometry = new THREE.CylinderGeometry( 8, 8, 20 );
+			geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -pi05 ) );
+			material = new THREE.MeshNormalMaterial();
+			node = new THREE.Mesh(geometry, material);		
+
+		} else if ( name === 'rPinky1' || name === 'rPinky2' || name === 'rPinky3' ) {
+			geometry = new THREE.CylinderGeometry( 6, 6, 15 );
+			geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -pi05 ) );
+			material = new THREE.MeshNormalMaterial();
+			node = new THREE.Mesh(geometry, material);				
+/*
+		} else if ( name === 'Neck' ) {
+			geometry = new THREE.CubeGeometry( 10, 10, 10 );
+			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 4, 0 ) );
+			material = new THREE.MeshNormalMaterial();
+			node = new THREE.Mesh(geometry, material);
+
+		} else if ( name === 'LeftCollar' ) {
+			geometry = new THREE.CubeGeometry( 30, 10, 10 );
+			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( -10, 0, 0 ) );
+			material = new THREE.MeshNormalMaterial();
+			node = new THREE.Mesh(geometry, material);
+		} else if ( name === 'RightCollar' ) {
+			geometry = new THREE.CubeGeometry( 30, 10, 10 );
+			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 10, 0, 0 ) );
+			material = new THREE.MeshNormalMaterial();
+			node = new THREE.Mesh(geometry, material);
+
+		} else if ( name === 'LeftShoulder' ||  name === 'LeftElbow' ) {
+			geometry = new THREE.CubeGeometry( 35, 8, 8 );
+			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 20, 0, 0 ) );
+			material = new THREE.MeshNormalMaterial();
+			node = new THREE.Mesh(geometry, material);
+		} else if ( name === 'RightShoulder' || name === 'RightElbow' ) {
+			geometry = new THREE.CubeGeometry( 35, 8, 8 );
+			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( -20, 0, 0 ) );
+			material = new THREE.MeshNormalMaterial();
+			node = new THREE.Mesh(geometry, material);
+
+		} else if ( name === 'LeftWrist' ) {
+			geometry = new THREE.CubeGeometry( 15, 12, 5 );
+			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 20, 0, 0 ) );
+			material = new THREE.MeshNormalMaterial();
+			node = new THREE.Mesh(geometry, material);
+		} else if ( name === 'RightWrist' ) {
+			geometry = new THREE.CubeGeometry( 15, 12, 5 );
+			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( -20, 0, 0 ) );
+			material = new THREE.MeshNormalMaterial();
+			node = new THREE.Mesh(geometry, material);
+
+		} else if ( name === 'Chest' || name === 'Chest2' || name === 'Chest3' || name === 'Chest4' ) {
+			geometry = new THREE.CubeGeometry( 30, 10, 10 );
+			material = new THREE.MeshNormalMaterial();
+			node = new THREE.Mesh(geometry, material);
+
+		} else if ( name === 'RightHip' ||  name === 'LeftHip') {
+			geometry = new THREE.CubeGeometry( 10, 50, 10 );
+			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, -18, 0 ) );
+			material = new THREE.MeshNormalMaterial();
+			node = new THREE.Mesh(geometry, material);
+
+		} else if ( name === 'LeftKnee' || name === 'RightKnee' ) {
+			geometry = new THREE.CubeGeometry( 10, 45, 10 );
+			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, -25, 0 ) );
+			material = new THREE.MeshNormalMaterial();
+			node = new THREE.Mesh(geometry, material);
+
+
+		} else if ( name === 'LeftAnkle' || name === 'RightAnkle' ) {
+			geometry = new THREE.CubeGeometry( 8, 8, 8 );
+			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 0, 0 ) );
+			material = new THREE.MeshNormalMaterial();
+			node = new THREE.Mesh(geometry, material);
+		} else if ( name === 'LeftToe' || name === 'RightToe' ) {
+			geometry = new THREE.CubeGeometry( 10, 5, 20 );
+			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 0, -10 ) );
+			material = new THREE.MeshNormalMaterial();
+			node = new THREE.Mesh(geometry, material);
+*/
+
+		} else {
+
+			geometry = new THREE.CubeGeometry( 3, 3, 3 );
+			material = new THREE.MeshNormalMaterial();
+			node = new THREE.Mesh(geometry, material);
+		}
+		return node;
+	}
+		
 	function animate() {
 		requestAnimationFrame( animate );
 		controls.update();
 		renderer.render( scene, camera );
 		stats.update();
-		if ( Bvh.play.checked ) { 
-			var frame = ( (Date.now() - Bvh.startTime ) / Bvh.secsPerFrame / 1000) | 0; 
-			Bvh.animate( frame ); 
+		if ( Bvh.play.checked ) {
+			Bvh.frame = ( (Date.now() - Bvh.startTime ) / Bvh.secsPerFrame / 1000) | 0;
+			Bvh.animate( Bvh.frame );
 		}
-	}	
+	}
 
-	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }	
+	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }
 </script>
 </body>
 </html>

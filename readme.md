@@ -7,11 +7,11 @@ Live demos that work in your browser: http://jaanga.github.io/gestification/
 
 ####Featured Apps####
 
-Release 4 of the project to build a working, usable skin and bones framework for the Leap Motion device.
+Release 7 of the project to build a working, usable skin and bones framework for the Leap Motion device.
 
-[Phalanges](http://jaanga.github.io/gestification/work-in-hand/phalanges/r4/phalanges.html)
+[Phalanges](http://jaanga.github.io/gestification/cookbook/phalanges/r7/phalanges.html)
 
-R4 is still a fail, but much less of a fail than before...
+R7 is the first revision that is not that bad.
 
 ***
 
@@ -37,9 +37,12 @@ See also: **http://jaanga.com**
 ###Copyright and License
 Copyright &copy; 2013 Jaanga authors
 
-MIT License
+See [Copyright, License and Credits](https://github.com/jaanga/gestification/blob/gh-pages/copyright-license-credits.md)
 
 ###Change Log
+
+2013-10-01 ~ Theo
+* Readme updates
 
 2013-09-19 ~ Theo
 * Updated this readme
