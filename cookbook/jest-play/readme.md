@@ -4,16 +4,20 @@ jestPlay<br>- A Suite of Apps to<br>Record and Replay Leap Device Data Files
 Currently jestPlay is a suite of four apps - described as follows:
 
 
-jestRecord BVH ~ record Leap data and save to BVH ~ demo: http://jaanga.github.io/gestification/cookbook/jest-play/bvh/r1/jest-record-bvh.html  
+jestRecord BVH ~ record Leap data and save to BVH  
+- demo: http://jaanga.github.io/gestification/cookbook/jest-play/bvh/r1/jest-record-bvh.html  
 - Requires Leap device  
 
-jestReplay BVH  ~ replay BVH data from file ~ demo: http://jaanga.github.io/gestification/cookbook/jest-play/bvh/r1/jest-replay-bvh.html  
+jestReplay BVH  ~ replay BVH data from file  
+- demo: http://jaanga.github.io/gestification/cookbook/jest-play/bvh/r1/jest-replay-bvh.html  
 - No Leap device is needed to replay files  
 
-jestRecord JSON ~ record & replay Leap data to and from JSON files ~ demo: http://jaanga.github.io/gestification/cookbook/jest-play/json/r1/jest-record-json.html  
+jestRecord JSON ~ record & replay Leap data to and from JSON files   
+- demo: http://jaanga.github.io/gestification/cookbook/jest-play/json/r1/jest-record-json.html  
 - Requires Leap device  
 
-jestReplay JSON ~ replay JSON data from file ~ demo: http://jaanga.github.io/gestification/cookbook/jest-play/json/r1/jest-replay-json.html  
+jestReplay JSON ~ replay JSON data from file  
+- demo: http://jaanga.github.io/gestification/cookbook/jest-play/json/r1/jest-replay-json.html  
 - No Leap device is needed to replay files  
 
 
