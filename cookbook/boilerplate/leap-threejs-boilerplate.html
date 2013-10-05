@@ -132,7 +132,7 @@
 			//direction = v( hand.direction[0], hand.direction[1], hand.direction[2] );  // best so far
 			//palm.lookAt( direction.add( palm.position ) );
 			//roll = Math.atan2( hand.palmNormal[0], hand.palmNormal[1] );
-			//palm.rotation.z = roll;
+			//palm.rotation.z = -hand.roll() ;
 			palm.rotation.set( hand.pitch(), -hand.yaw(), hand.roll() );
 			palm.visible = true;
 		} else {

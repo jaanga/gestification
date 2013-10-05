@@ -22,8 +22,7 @@
 	var pi = Math.PI, pi05 = 0.5 * Math.PI;
 	var d2r = pi / 180, r2d = 180 / pi;
 
-
-	
+	init();
 
 	function init() {
 		var css, geometry, material, mesh;
@@ -39,7 +38,6 @@
 			'<a href=# onclick=toggleInfo() ><large>&#x24D8;</large></a> </h1><br>' +
 			'Select sample: <select id=selBvh onchange=requestFile("../../bvh-samples/"+Bvh.files[this.selectedIndex]) ></select> ' +
 			'or <input type=file onchange=readText(this) /> ' +
-			'Select appendage: <select id=selAppendages onchange=Bvh.buildIt=eval(this.value);Bvh.parseData(textarea.value); ></select> ' +
 			'<input type="checkbox" id="play" checked>Play - ' +
 			'<input type="checkbox" id="random" >Random - ' +
 			'<button type=button onclick=Bvh.play.checked=false;Bvh.frame=0;Bvh.animate(0); >First frame</button>-' +
@@ -50,21 +48,13 @@
 
 		Bvh.files = [ 'Select file','clenching.bvh','fingers-ok.bvh','gesture-circle.bvh','gesture-pointing.bvh','gesture-swiping.bvh','handiness.bvh','hello-world.bvh',
 			'indexical.bvh','middling.bvh','thumbelina.bvh'];
+
 		for (var len = Bvh.files.length, option, i = 0; i < len; i++) {
 			option = document.createElement( 'option' );
 			option.innerText = Bvh.files[i];
 			selBvh.appendChild( option );
 
-		}			
-		Bvh.appendages = [ 'Bvh.basic', 'Bvh.knuckleSpheres','Bvh.cubiphile' ];	
-
-		for (var len = Bvh.appendages.length, option, i = 0; i < len; i++) {
-			option = document.createElement( 'option' );
-			option.innerText = Bvh.appendages[i];
-			selAppendages.appendChild( option );
-
-		}	
-		
+		}
 		Bvh.selBvh = document.getElementById('selBvh');
 		Bvh.random = document.getElementById('random');
 		Bvh.play = document.getElementById('play');
@@ -113,17 +103,8 @@
         scene.add( new THREE.ArrowHelper( v(0, 1, 0), v(0, 0, 0), 20, 0x00cc00) );
         scene.add( new THREE.ArrowHelper( v(0, 0, 1), v(0, 0, 0), 20, 0x0000cc) );
 
-		material = new THREE.MeshNormalMaterial( { color: 0x999999, opacity: 0.5, side: THREE.DoubleSide, transparent: true  });
-		geometry = new THREE.SphereGeometry( 1200 );
-		mesh = new THREE.Mesh( geometry, material );
-		//mesh.position.set( 0, -30, 30 );
-		//mesh.castShadow = true;
-		//mesh.receiveShadow = true;
-		scene.add( mesh );		
 // Ground plane
-
-
-		material = new THREE.MeshBasicMaterial( { color: 0x999999, opacity: 0.5, side: THREE.DoubleSide, transparent: true  });
+		material = new THREE.MeshBasicMaterial( { color: 0x999999 });
 		geometry = new THREE.CubeGeometry( 600, 10, 300 );
 		mesh = new THREE.Mesh( geometry, material );
 		mesh.position.set( 0, -30, 30 );
@@ -131,9 +112,6 @@
 		mesh.receiveShadow = true;
 		scene.add( mesh );
 
-		// Bvh.buildIt  = Bvh.basic;
-		Bvh.buildIt  = Bvh.cubiphile
-		//this.buildIt  = Bvh.knuckleSpheres;
 		// requestFile( '../../bvh-samples/test.bvh' );
 
 		// var index = Math.round( Bvh.files.length * Math.random() );
@@ -161,7 +139,6 @@
 		'</div>';
 	}
 
-	
 	function readText( that ){
 		if ( that.files && that.files[0] ){
 			var reader = new FileReader();
@@ -224,8 +201,9 @@
     Bvh.parseNode = function( data) {
 		var name, done, geometry, i, material, n, node, t;
 		name = data.shift();
-
-		node = this.buildIt( name );
+		//buildIt  = Bvh.basic;
+		buildIt  = Bvh.knuckleSpheres;
+		node = buildIt( name );
 		node.name = name; // data.shift();
 // console.log( node.name);
 		// node.rotation.order = 'ZYX';
@@ -255,62 +233,6 @@
 		}
 		return node;
     };
-
-    Bvh.animate = function( frame ) {
-		var ch, n, ref, frameId;
-		n = frame % this.numFrames * this.channels.length;
-		frameId =  n / this.channels.length;
-		this.status.innerHTML = 'Number Frames: ' + this.numFrames + ' Secs/frame: ' + this.secsPerFrame +
-			' Frame: ' + frameId + ' frames played: ' + frame + ' replays: ' + (frame / this.numFrames).toFixed(0) ;
-		if ( this.play.checked && n === 0 ) {
-			n +=54;
-			if ( frame / this.numFrames > 1 && Bvh.random.checked ) {
-				var index = 1 + Math.floor( (Bvh.files.length - 1) * Math.random() );
-				Bvh.selBvh.selectedIndex = index;
-				requestFile( '../../bvh-samples/' + Bvh.files[index] );
-				return;
-			}
-		}
-
-		ref = this.channels;
-		for ( var i = 0, len = ref.length; i < len; i++) {
-			ch = ref[ i ];
-			switch ( ch.prop ) {
-				case 'Xrotation':
-					ch.node.rotation.x = ( parseFloat(this.data[n]) ) * d2r;
-					break;
-				case 'Yrotation':
-					ch.node.rotation.y = ( parseFloat(this.data[n]) ) * d2r;
-					break;
-				case 'Zrotation':
-					ch.node.rotation.z = ( parseFloat(this.data[n]) ) * d2r;
-					break;
-				case 'Xposition':
-					ch.node.position.x = ch.node.offset.x + parseFloat( this.data[n]);
-					break;
-				case 'Yposition':
-					ch.node.position.y = ch.node.offset.y + parseFloat( this.data[n] );
-					break;
-				case 'Zposition':
-					ch.node.position.z = ch.node.offset.z + parseFloat( this.data[n] );
-			}
-			n++;
-		}
-	};
-
-	function animate() {
-		requestAnimationFrame( animate );
-		controls.update();
-		renderer.render( scene, camera );
-		stats.update();
-		if ( Bvh.play.checked ) {
-			Bvh.frame = ( (Date.now() - Bvh.startTime ) / Bvh.secsPerFrame / 1000) | 0;
-			Bvh.animate( Bvh.frame );
-		}
-	}
-
-	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }
-	function v2( x, y ){ return new THREE.Vector2( x, y ); }
 
 	Bvh.basic = function ( name ) {
 		material = new THREE.MeshNormalMaterial( { opacity: 0.5, side: THREE.DoubleSide, transparent: true } );
@@ -386,27 +308,24 @@
 			obj.add( mesh);
 
 		} else if ( name === 'rHand' ) {
+/*
+			//geometry = new THREE.CubeGeometry( 80, 20, 80 );
+			shape = new THREE.Shape( [ v2(-37, -25), v2(-15, -25), v2(-15, -15), v2( 13, -15), v2(13, -20), v2( 35, -20),  v2( 35, -38), v2( 53, -38), v2( 53, -100), v2( -33, -100) ] );
+			geometry = shape.extrude( { amount: 20, bevelEnabled: false} );
+			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 50, -10 ) );
+			geometry.applyMatrix( new THREE.Matrix4().makeRotationX( pi05 ) );
+			mesh = new THREE.Mesh(geometry, material);
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			obj.add( mesh);
+*/
 			geometry = new THREE.SphereGeometry( 30, 10, 10 );
-			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( -10, 0, 0 ) );
 			mesh = new THREE.Mesh(geometry, material);
 			mesh.castShadow = true;
 			mesh.receiveShadow = true;
 			obj.add( mesh);
 
-			geometry = new THREE.SphereGeometry( 25, 10, 10 );
-			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 20, 0, 0) );
-			mesh = new THREE.Mesh(geometry, material);
-			mesh.castShadow = true;
-			mesh.receiveShadow = true;
-			obj.add( mesh);
-			
-			geometry = new THREE.SphereGeometry( 20, 10, 10 );
-			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 10, -10, -10) );
-			mesh = new THREE.Mesh(geometry, material);
-			mesh.castShadow = true;
-			mesh.receiveShadow = true;
-			obj.add( mesh);			
-			
+
 		} else if ( name === 'rThumb1' ) {
 			geometry = new THREE.SphereGeometry( 15, 10, 10 );
 			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 0, 20 ) );
@@ -416,7 +335,7 @@
 			obj.add( mesh);
 
 			geometry = new THREE.SphereGeometry( 15, 10, 10 );
-			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 0, -10 ) );
+			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 0, -20 ) );
 			mesh = new THREE.Mesh(geometry, material);
 			mesh.castShadow = true;
 			mesh.receiveShadow = true;	
@@ -477,6 +396,7 @@
 			mesh.receiveShadow = true;
 			obj.add( mesh);
 
+
 			geometry = new THREE.CylinderGeometry( 8, 8, 50 );
 			geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -pi05 ) );
 			mesh = new THREE.Mesh(geometry, material);
@@ -485,31 +405,15 @@
 			obj.add( mesh);
 
 		} else if ( name === 'rMid1' ) {
-			geometry = new THREE.SphereGeometry( 15, 10, 10 );
-			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 0, 32 ) );
-			mesh = new THREE.Mesh(geometry, material);
-			mesh.castShadow = true;
-			mesh.receiveShadow = true;
-			obj.add( mesh);
-
-			geometry = new THREE.SphereGeometry( 15, 10, 10 );
-			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 0, -20 ) );
-			mesh = new THREE.Mesh(geometry, material);
-			mesh.castShadow = true;
-			mesh.receiveShadow = true;
-			obj.add( mesh);		
-		
-			geometry = new THREE.CylinderGeometry( 8, 8, 50);
+			geometry = new THREE.CylinderGeometry( 8, 8, 35 );
 			geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -pi05 ) );
 			mesh = new THREE.Mesh(geometry, material);
 			mesh.castShadow = true;
 			mesh.receiveShadow = true;
 			obj.add( mesh);
-			
-		} else if ( name === 'rMid2' ) {	
 
-		} else if ( name === 'rMid3' ) {
-			geometry = new THREE.CylinderGeometry( 8, 8, 60 );
+		} else if ( name === 'rMid2' || name === 'rMid3' ) {
+			geometry = new THREE.CylinderGeometry( 8, 8, 30 );
 			geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -pi05 ) );
 			mesh = new THREE.Mesh(geometry, material);
 			mesh.castShadow = true;
@@ -517,29 +421,14 @@
 			obj.add( mesh);
 
 		} else if ( name === 'rRing1' ) {
-			geometry = new THREE.SphereGeometry( 15, 10, 10 );
-			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 0, 32 ) );
-			mesh = new THREE.Mesh(geometry, material);
-			mesh.castShadow = true;
-			mesh.receiveShadow = true;
-			obj.add( mesh);
-
-			geometry = new THREE.SphereGeometry( 15, 10, 10 );
-			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 0, -20 ) );
-			mesh = new THREE.Mesh(geometry, material);
-			mesh.castShadow = true;
-			mesh.receiveShadow = true;
-			obj.add( mesh);	
-			
 			geometry = new THREE.CylinderGeometry( 8, 8, 35 );
 			geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -pi05 ) );
 			mesh = new THREE.Mesh(geometry, material);
 			mesh.castShadow = true;
 			mesh.receiveShadow = true;
 			obj.add( mesh);
-		} else if ( name === 'rRing2' ) {	
 
-		} else if ( name === 'rRing3' ) {
+		} else if ( name === 'rRing2' || name === 'rRing3' ) {
 			geometry = new THREE.CylinderGeometry( 8, 8, 30 );
 			geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -pi05 ) );
 			mesh = new THREE.Mesh(geometry, material);
@@ -548,29 +437,14 @@
 			obj.add( mesh);
 
 		} else if ( name === 'rPinky1' ) {
-			geometry = new THREE.SphereGeometry( 15, 10, 10 );
-			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 0, 32 ) );
-			mesh = new THREE.Mesh(geometry, material);
-			mesh.castShadow = true;
-			mesh.receiveShadow = true;
-			obj.add( mesh);
-
-			geometry = new THREE.SphereGeometry( 15, 10, 10 );
-			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 0, -20 ) );
-			mesh = new THREE.Mesh(geometry, material);
-			mesh.castShadow = true;
-			mesh.receiveShadow = true;
-			obj.add( mesh);	
-			
-			geometry = new THREE.CylinderGeometry( 6, 6, 40 );
+			geometry = new THREE.CylinderGeometry( 6, 6, 25 );
 			geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -pi05 ) );
 			mesh = new THREE.Mesh(geometry, material);
 			mesh.castShadow = true;
 			mesh.receiveShadow = true;
 			obj.add( mesh);
-		} else if ( name === 'rPinky2' ) {
-			
-		} else if ( name === 'rPinky3' ) {
+
+		} else if ( name === 'rPinky2' || name === 'rPinky3' ) {
 			geometry = new THREE.CylinderGeometry( 6, 6, 25 );
 			geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -pi05 ) );
 			mesh = new THREE.Mesh(geometry, material);
@@ -579,203 +453,89 @@
 			obj.add( mesh);
 
 		} else { // must be root
-			geometry = new THREE.CylinderGeometry( 8, 5, 160 );
-			geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -pi05 ) );
+			geometry = new THREE.CubeGeometry( 8, 8, 150 );
 			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( -15, 5, -100 ) );
 			mesh = new THREE.Mesh(geometry, material);
 			mesh.castShadow = true;
 			mesh.receiveShadow = true;
 			obj.add( mesh);
 			
-			geometry = new THREE.CylinderGeometry( 8, 5, 160 );
-			geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -pi05 ) );
-			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 25, 5, -100 ) );
+			geometry = new THREE.CubeGeometry( 8, 8, 150 );
+			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 15, 5, -100 ) );
 			mesh = new THREE.Mesh(geometry, material);
 			mesh.castShadow = true;
 			mesh.receiveShadow = true;
 			obj.add( mesh);			
 
-			geometry = new THREE.CylinderGeometry( 5, 8, 160 );
-			geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -pi05 ) );
-			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 5, -15, -100 ) );
+			geometry = new THREE.CubeGeometry( 8, 8, 150 );
+			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, -15, -100 ) );
 			mesh = new THREE.Mesh(geometry, material);
 			mesh.castShadow = true;
 			mesh.receiveShadow = true;
-			obj.add( mesh);	
-			
-			geometry = new THREE.CylinderGeometry( 5, 8, 160 );
-			geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -pi05 ) );
-			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( -5, 15, -100 ) );
-			mesh = new THREE.Mesh(geometry, material);
-			mesh.castShadow = true;
-			mesh.receiveShadow = true;
-			obj.add( mesh);					
+			obj.add( mesh);				
 		}
+		//node = new THREE.Mesh(geometry, material);
+		//node.castShadow = true;
+		//node.receiveShadow = true;
 		return obj;
 	};
 
-	Bvh.cubiphile = function ( name ) {
-		obj = new THREE.Object3D();
-		material = new THREE.MeshNormalMaterial( { opacity: 0.5, side: THREE.DoubleSide, transparent: true } );
-		if ( name === 'Site' ) {
-			for (var i = 0; i < 10; i++) {
-				geometry = new THREE.CubeGeometry( 10, 5, 10);
-				geometry.applyMatrix( new THREE.Matrix4().makeTranslation( Math.random() * 10  - 5,  Math.random() * 8, Math.random() * 8 + 20) );
-				mesh = new THREE.Mesh(geometry, material);
-				mesh.castShadow = true;
-				obj.add( mesh);	
+    Bvh.animate = function( frame ) {
+		var ch, n, ref, frameId;
+		n = frame % this.numFrames * this.channels.length;
+		frameId =  n / this.channels.length;
+		this.status.innerHTML = 'Number Frames: ' + this.numFrames + ' Secs/frame: ' + this.secsPerFrame +
+			' Frame: ' + frameId + ' frames played: ' + frame + ' replays: ' + (frame / this.numFrames).toFixed(0) ;
+		if ( this.play.checked && n === 0 ) {
+			n +=54;
+			if ( frame / this.numFrames > 1 && Bvh.random.checked ) {
+				var index = 1 + Math.floor( (Bvh.files.length - 1) * Math.random() );
+				Bvh.selBvh.selectedIndex = index;
+				requestFile( '../../bvh-samples/' + Bvh.files[index] );
+				return;
 			}
-
-		} else if ( name === 'rHand' ) {
-/*		
-			//geometry = new THREE.CubeGeometry( 80, 20, 80 );
-			shape = new THREE.Shape( [ v2(-37, -25), v2(-15, -25), v2(-15, -15), v2( 13, -15), v2(13, -20), v2( 35, -20),  v2( 35, -38), v2( 53, -38), v2( 53, -100), v2( -33, -100) ] );
-			geometry = shape.extrude( { amount: 20, bevelEnabled: false} );
-			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 50, -10 ) );
-			geometry.applyMatrix( new THREE.Matrix4().makeRotationX( pi05 ) );
-*/
-			for (var i = 0; i < 100; i++) {
-				geometry = new THREE.CubeGeometry( 20, 5, 20);
-				geometry.applyMatrix( new THREE.Matrix4().makeTranslation( Math.random() * 100 - 50,  Math.random() * 20, Math.random() * 80 - 40) );
-				mesh = new THREE.Mesh(geometry, material);
-				mesh.castShadow = true;
-				obj.add( mesh);	
-			}
-
-		} else if ( name === 'rThumb1' ) {
-			//geometry = new THREE.CylinderGeometry( 8, 8, 25 );
-			// geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -pi05 ) );
-			for (var i = 0; i < 20; i++) {
-				geometry = new THREE.CubeGeometry( 20, 5, 20);
-				geometry.applyMatrix( new THREE.Matrix4().makeTranslation( Math.random() * 20 - 10,  Math.random() * 20, Math.random() * 40 - 20) );
-				mesh = new THREE.Mesh(geometry, material);
-				mesh.castShadow = true;
-				obj.add( mesh);	
-			}			
-			
-
-		} else if ( name === 'rThumb2' || name === 'rThumb3' ) {
-			//geometry = new THREE.CylinderGeometry( 8, 8, 25 );
-			//geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -pi05 ) );
-			
-			for (var i = 0; i < 50; i++) {
-				geometry = new THREE.CubeGeometry( 20, 5, 20);
-				geometry.applyMatrix( new THREE.Matrix4().makeTranslation( Math.random() * 20 - 10,  Math.random() * 20, Math.random() * 30 - 15) );
-				mesh = new THREE.Mesh(geometry, material);
-				mesh.castShadow = true;
-				obj.add( mesh);	
-			}
-			
-		} else if ( name === 'rIndex1'  ) {
-			//geometry = new THREE.CylinderGeometry( 8, 8, 40 );
-			//geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -pi05 ) );
-			
-			for (var i = 0; i < 50; i++) {
-				geometry = new THREE.CubeGeometry( 20, 5, 20);
-				geometry.applyMatrix( new THREE.Matrix4().makeTranslation( Math.random() * 20 - 10,  Math.random() * 20, Math.random() * 40 - 20) );
-				mesh = new THREE.Mesh(geometry, material);
-				mesh.castShadow = true;
-				obj.add( mesh);	
-			}	
-
-		} else if ( name === 'rIndex2' ) {			
-
-		} else if ( name === 'rIndex3' ) {
-			//geometry = new THREE.CylinderGeometry( 8, 8, 25 );
-			// geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -pi05 ) );
-			for (var i = 0; i < 50; i++) {
-				geometry = new THREE.CubeGeometry( 20, 5, 20);
-				geometry.applyMatrix( new THREE.Matrix4().makeTranslation( Math.random() * 20 - 10,  Math.random() * 20, Math.random() * 60 - 30) );
-				mesh = new THREE.Mesh(geometry, material);
-				mesh.castShadow = true;
-				obj.add( mesh);	
-			}				
-			
-
-		} else if ( name === 'rMid1' ) {
-			//geometry = new THREE.CylinderGeometry( 8, 8, 35 );
-			//geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -pi05 ) );
-			for (var i = 0; i < 50; i++) {
-				geometry = new THREE.CubeGeometry( 20, 5, 20);
-				geometry.applyMatrix( new THREE.Matrix4().makeTranslation( Math.random() * 20 - 10,  Math.random() * 20, Math.random() * 60 - 30) );
-				mesh = new THREE.Mesh(geometry, material);
-				mesh.castShadow = true;
-				obj.add( mesh);	
-			}
-			
-		} else if ( name === 'rMid2') {
-		
-		} else if ( name === 'rMid3' ) {
-			//geometry = new THREE.CylinderGeometry( 8, 8, 30 );
-			//geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -pi05 ) );
-			for (var i = 0; i < 50; i++) {
-				geometry = new THREE.CubeGeometry( 20, 5, 20);
-				geometry.applyMatrix( new THREE.Matrix4().makeTranslation( Math.random() * 20 - 10,  Math.random() * 20, Math.random() * 60 - 30) );
-				mesh = new THREE.Mesh(geometry, material);
-				mesh.castShadow = true;
-				obj.add( mesh);	
-			}			
-		
-		} else if ( name === 'rRing1' ) {
-			//geometry = new THREE.CylinderGeometry( 8, 8, 35 );
-			//geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -pi05 ) );
-			for (var i = 0; i < 50; i++) {
-				geometry = new THREE.CubeGeometry( 20, 5, 20);
-				geometry.applyMatrix( new THREE.Matrix4().makeTranslation( Math.random() * 20 - 10,  Math.random() * 20, Math.random() * 60 - 30) );
-				mesh = new THREE.Mesh(geometry, material);
-				mesh.castShadow = true;
-				obj.add( mesh);	
-			}			
-		} else if ( name === 'rRing2' ) {
-		
-		} else if ( name === 'rRing3' ) {
-			//geometry = new THREE.CylinderGeometry( 8, 8, 30 );
-			//geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -pi05 ) );
-			for (var i = 0; i < 50; i++) {
-				geometry = new THREE.CubeGeometry( 20, 5, 20);
-				geometry.applyMatrix( new THREE.Matrix4().makeTranslation( Math.random() * 20 - 10,  Math.random() * 20, Math.random() * 60 - 30) );
-				mesh = new THREE.Mesh(geometry, material);
-				mesh.castShadow = true;
-				obj.add( mesh);	
-			}
-		} else if ( name === 'rPinky1' ) {
-			//geometry = new THREE.CylinderGeometry( 6, 6, 25 );
-			//geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -pi05 ) );
-
-		} else if ( name === 'rPinky2' ) {
-			for (var i = 0; i < 50; i++) {
-				geometry = new THREE.CubeGeometry( 20, 5, 20);
-				geometry.applyMatrix( new THREE.Matrix4().makeTranslation( Math.random() * 20 - 10,  Math.random() * 20, Math.random() * 60 - 30) );
-				mesh = new THREE.Mesh(geometry, material);
-				mesh.castShadow = true;
-				obj.add( mesh);	
-			}		
-		} else if ( name === 'rPinky3' ) {
-			//geometry = new THREE.CylinderGeometry( 6, 6, 25 );
-			//geometry.applyMatrix( new THREE.Matrix4().makeRotationX( -pi05 ) );
-			for (var i = 0; i < 50; i++) {
-				geometry = new THREE.CubeGeometry( 20, 5, 20);
-				geometry.applyMatrix( new THREE.Matrix4().makeTranslation( Math.random() * 20 - 10,  Math.random() * 20, Math.random() * 60 - 30) );
-				mesh = new THREE.Mesh(geometry, material);
-				mesh.castShadow = true;
-				obj.add( mesh);	
-			}
-		} else { // must be root
-			//geometry = new THREE.CubeGeometry( 50, 20, 100 );
-			//geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 10, 0, -100 ) );
-			for (var i = 0; i < 50; i++) {
-				geometry = new THREE.CubeGeometry( 20, 5, 20);
-				geometry.applyMatrix( new THREE.Matrix4().makeTranslation( Math.random() * 60 - 30,  Math.random() * 20, Math.random() * 100 - 150) );
-				mesh = new THREE.Mesh(geometry, material);
-				mesh.castShadow = true;
-				obj.add( mesh);	
-			}			
-
 		}
-		return obj;
+
+		ref = this.channels;
+		for ( var i = 0, len = ref.length; i < len; i++) {
+			ch = ref[ i ];
+			switch ( ch.prop ) {
+				case 'Xrotation':
+					ch.node.rotation.x = ( parseFloat(this.data[n]) ) * d2r;
+					break;
+				case 'Yrotation':
+					ch.node.rotation.y = ( parseFloat(this.data[n]) ) * d2r;
+					break;
+				case 'Zrotation':
+					ch.node.rotation.z = ( parseFloat(this.data[n]) ) * d2r;
+					break;
+				case 'Xposition':
+					ch.node.position.x = ch.node.offset.x + parseFloat( this.data[n]);
+					break;
+				case 'Yposition':
+					ch.node.position.y = ch.node.offset.y + parseFloat( this.data[n] );
+					break;
+				case 'Zposition':
+					ch.node.position.z = ch.node.offset.z + parseFloat( this.data[n] );
+			}
+			n++;
+		}
+	};
+
+	function animate() {
+		requestAnimationFrame( animate );
+		controls.update();
+		renderer.render( scene, camera );
+		stats.update();
+		if ( Bvh.play.checked ) {
+			Bvh.frame = ( (Date.now() - Bvh.startTime ) / Bvh.secsPerFrame / 1000) | 0;
+			Bvh.animate( Bvh.frame );
+		}
 	}
-	
-	init();
+
+	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }
+	function v2( x, y ){ return new THREE.Vector2( x, y ); }
+
 </script>
 </body>
 </html>

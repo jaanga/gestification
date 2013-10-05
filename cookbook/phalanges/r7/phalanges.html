@@ -132,7 +132,7 @@
 
 			geometry = new THREE.CubeGeometry( 15, 15, lenZ[ i ] );
 			material = new THREE.MeshBasicMaterial( { color: 0xcccccc, opacity: 0.7, side: THREE.DoubleSide, transparent: true } );
-			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 0, 0 ) );
+			// geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 0, 0 ) );
 			mesh = new THREE.Mesh( geometry, material );
 			mesh.position.x = tranX[ i ];
 			mesh.position.z = tranZ[ i ];

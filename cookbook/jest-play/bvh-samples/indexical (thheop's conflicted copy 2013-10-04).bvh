@@ -9,7 +9,7 @@ ROOT rForeArm
 		CHANNELS 3 Zrotation Yrotation Xrotation
 		JOINT rThumb1
 		{
-			OFFSET -48 0 -10
+			OFFSET -38 0 -15
 			CHANNELS 3 Zrotation Yrotation Xrotation
 			JOINT rThumb2
 			{
