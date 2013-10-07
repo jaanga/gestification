@@ -62,7 +62,7 @@
 		light.castShadow = true;
 		light.shadowMapWidth = 2048;
 		light.shadowMaHeight = 2048;
-		var d = 200;
+		var d = 250;
 		light.shadowCameraLeft = -d;
 		light.shadowCameraRight = d;
 		light.shadowCameraTop = d * 2;
@@ -78,6 +78,11 @@
         scene.add( new THREE.ArrowHelper( v(0, 0, 1), v(0, 0, 0), 20, 0x0000cc) );
 
 // Assets
+		material = new THREE.MeshNormalMaterial( { shading: THREE.SmoothShading, side: THREE.BackSide });
+		geometry = new THREE.SphereGeometry( 1200 );
+		mesh = new THREE.Mesh( geometry, material );
+		scene.add( mesh );
+
 		material = new THREE.MeshBasicMaterial( { color: 0x999999 });
 		geometry = new THREE.CubeGeometry( 600, 10, 300 );
 		mesh = new THREE.Mesh( geometry, material );
