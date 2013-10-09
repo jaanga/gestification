@@ -6,9 +6,9 @@
 </head>
 <body>
 <script src = http://js.leapmotion.com/0.2.1/leap.min.js ></script>
-<script src = http://mrdoob.github.com/three.js/build/three.min.js ></script>
-<script src = http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js ></script>
-<script src = http://mrdoob.github.com/three.js/examples/js/libs/stats.min.js ></script>
+<script src = http://mrdoob.github.io/three.js/build/three.min.js ></script>
+<script src = http://mrdoob.github.io/three.js/examples/js/controls/TrackballControls.js ></script>
+<script src = http://mrdoob.github.io/three.js/examples/js/libs/stats.min.js ></script>
 <script>
 	var renderer, scene, camera, controls, stats;
 	var info, palm, fingers = [];
@@ -29,9 +29,10 @@
 		info.innerHTML = info.txt = '<h1>boilerplate ~ ' +
 			'<a href=# onclick=toggleInfo() ><large>&#x24D8;</large></a></h1>' +
 			'<p>Show one hand and five fingers to start</p>' +
+			'<div id=data></div>' +
 		'</p>';
 		
-// Three.js Basics
+// Three.js basics
 		scene = new THREE.Scene();
 		
 		renderer = new THREE.WebGLRenderer( { antialias: true } );
@@ -76,12 +77,12 @@
 //		light.shadowCameraVisible = true;
 		scene.add( light );
 
-// Axes
-        scene.add( new THREE.ArrowHelper( v(1, 0, 0), v(0, 0, 0), 30, 0xcc0000) );
-        scene.add( new THREE.ArrowHelper( v(0, 1, 0), v(0, 0, 0), 30, 0x00cc00) );
-        scene.add( new THREE.ArrowHelper( v(0, 0, 1), v(0, 0, 0), 30, 0x0000cc) );
+// axes
+		scene.add( new THREE.ArrowHelper( v(1, 0, 0), v(0, 0, 0), 30, 0xcc0000) );
+		scene.add( new THREE.ArrowHelper( v(0, 1, 0), v(0, 0, 0), 30, 0x00cc00) );
+		scene.add( new THREE.ArrowHelper( v(0, 0, 1), v(0, 0, 0), 30, 0x0000cc) );
 
-// Ground plane
+// ground plane
 		material = new THREE.MeshBasicMaterial( {color: 0xaaaaaa } );
 		geometry = new THREE.CubeGeometry( 600, 10, 300 );
 		mesh = new THREE.Mesh( geometry, material );
@@ -100,8 +101,7 @@
 
 // fingers		
 		geometry = new THREE.CubeGeometry( 16, 12, 1 );
-		// material = new THREE.MeshNormalMaterial();
-		for (var j = 0; j < 5; j++) {
+		for (var i = 0; i < 5; i++) {
 			mesh = new THREE.Mesh( geometry, material );
 			mesh.castShadow = true;
 			mesh.receiveShadow = true;
@@ -129,12 +129,14 @@
 		if ( frame.hands.length > 0) {
 			hand = frame.hands[0];
 			palm.position.set( hand.stabilizedPalmPosition[0], hand.stabilizedPalmPosition[1], hand.stabilizedPalmPosition[2] );
-			//direction = v( hand.direction[0], hand.direction[1], hand.direction[2] );  // best so far
-			//palm.lookAt( direction.add( palm.position ) );
-			//roll = Math.atan2( hand.palmNormal[0], hand.palmNormal[1] );
-			//palm.rotation.z = -hand.roll() ;
-			palm.rotation.set( hand.pitch(), -hand.yaw(), hand.roll() );
+			direction = v( hand.direction[0], hand.direction[1], hand.direction[2] );  // best so far
+			palm.lookAt( direction.add( palm.position ) );
+			palm.rotation.z = -hand.roll() ;
+			//palm.rotation.set( hand.pitch(), -hand.yaw(), hand.roll() );
 			palm.visible = true;
+			
+			data.innerHTML = 'Hand X:' + hand.stabilizedPalmPosition[0].toFixed(0) + ' Y:' +  hand.stabilizedPalmPosition[1].toFixed(0) + ' Z:' + hand.stabilizedPalmPosition[2].toFixed(0);
+				
 		} else {
 			palm.visible = false;
 		}
@@ -162,7 +164,7 @@
 			}
 			palm.hasFingers = false;
 		}
-	});
+});
 
 	function animate() {
 		requestAnimationFrame( animate );
