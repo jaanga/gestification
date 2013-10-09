@@ -60,8 +60,8 @@ The JSON app supersedes '[save-json](https://github.com/jaanga/gestification/tre
 
 ###Issues
 * jestRecord BVH: be able to adjust parameters for size and spacing of fingers
-* Data is being recorded at a hundred times or more per second. The rate could br broght down closer to an animation industry standard of 24 frames per second.
-* jestRecord BVH should be able to do an instand replay of a motion - similar to jestRecord JSON.
+* Data is being recorded at a hundred times or more per second. The rate could be brought down closer to an animation industry standard of 24 frames per second. << 2013-10-05? Done
+* jestRecord BVH should be able to do an instant replay of a motion - similar to jestRecord JSON.
 * Hand and fingers flashing on replay << 2013-09-03 fixed
 * Should not need to have fingers displayed all the time << 2013-09-03 fixed
 
@@ -75,14 +75,14 @@ The JSON app supersedes '[save-json](https://github.com/jaanga/gestification/tre
 2013-10-02/04
 * jestReplay BVH: continuing code refining cleanup
 * jestRecord BVH: continuing code refining cleanup
-* BVH samples: buiding and refining the collection
+* BVH samples: building and refining the collection
 
 2013-10-01 ~ Theo
 * Continued work on BVH capabilities
 
 2013-09-30 ~ Theo
 * jestPlay JSON code cleanup
-* Renaming the files to jestRecord *** an jestReplay ***
+* Renaming the files to jestRecord and jestReplay
 
 
 2013-09-29 ~ Theo
