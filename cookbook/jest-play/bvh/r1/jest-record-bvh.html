@@ -101,7 +101,7 @@
         scene.add( new THREE.ArrowHelper( v(0, 1, 0), v(0, 0, 0), 20, 0x00cc00) );
         scene.add( new THREE.ArrowHelper( v(0, 0, 1), v(0, 0, 0), 20, 0x0000cc) );
 		
-// Assets
+// ground plane
 		material = new THREE.MeshBasicMaterial( { color: 0x999999 });
 		geometry = new THREE.CubeGeometry( 600, 10, 300 );
 		mesh = new THREE.Mesh( geometry, material );
@@ -109,7 +109,7 @@
 		mesh.castShadow = true;
 		mesh.receiveShadow = true;
 		scene.add( mesh );
-		
+// Assets		
 		geometry = new THREE.CubeGeometry( 8, 8, 8 );
 		material = new THREE.MeshBasicMaterial( { color: 0xcc0000 });
 		leapHand3D = new THREE.Mesh( geometry, material );

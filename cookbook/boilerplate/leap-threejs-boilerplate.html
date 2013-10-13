@@ -29,7 +29,7 @@
 		info.innerHTML = info.txt = '<h1>boilerplate ~ ' +
 			'<a href=# onclick=toggleInfo() ><large>&#x24D8;</large></a></h1>' +
 			'<p>Show one hand and five fingers to start</p>' +
-			'<div id=data></div>' +
+			'<div id=data ></div>' +
 		'</p>';
 		
 // Three.js basics
@@ -119,8 +119,8 @@
 			'<a href="http://leapmotion.com" target="_blank">leap motion</a> - ' +
 			'<a href="http://khronos.org/webgl/" target="_blank">webgl</a> - ' +
 			'<a href="http://jaanga.github.io" target="_blank">jaanga</a><br>' +	
-			'copyright &copy; 2013 jaanga authors ~ mit license</small<br>' + 	
-			'<br><br><i>Click anywhere in this message to hide...</i>' +
+			'copyright &copy; 2013 jaanga authors ~ mit license</small><br><br>' + 	
+			'<i>Click anywhere in this message to hide...</i>' +
 		'</div>';
 	}
 	
@@ -164,7 +164,7 @@
 			}
 			palm.hasFingers = false;
 		}
-});
+	});
 
 	function animate() {
 		requestAnimationFrame( animate );
