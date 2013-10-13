@@ -104,13 +104,12 @@
 	}
 
 	Leap.loop( function( frame ) {
-		var hand, direction;	
+		var hand;	
 		if ( frame.hands.length > 0) {
 			hand = frame.hands[0];
 			pumpkin.position.set( hand.stabilizedPalmPosition[0], hand.stabilizedPalmPosition[1], hand.stabilizedPalmPosition[2] );
 			pumpkin.rotation.set( hand.pitch(), -hand.yaw(), hand.roll() );
 			pumpkin.visible = true;
-			
 			//data.innerHTML = 'Hand X:' + hand.stabilizedPalmPosition[0].toFixed(0) + ' Y:' +  hand.stabilizedPalmPosition[1].toFixed(0) + ' Z:' + hand.stabilizedPalmPosition[2].toFixed(0) + '<br>' +
 			//pumpkin.visible + ' ' + pumpkin.position.x + ' '  + pumpkin.position.y + ' '  + pumpkin.position.z + ' ' 
 			//'';
@@ -124,8 +123,6 @@
 		controls.update();
 		renderer.render( scene, camera );
 	}
-	
-	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }
 </script>
 </body>
 </html>
