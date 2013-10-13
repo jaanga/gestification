@@ -1,7 +1,7 @@
 jestLive
 ========
 
-Live demo: http://jaanga.github.io/gestification/cookbook/jest-live/r1/index.html
+Live demo: http://jaanga.github.io/gestification/cookbook/jest-live/r1/jest-live.html
 
 ### Copyright, License and Credits
 copyright &copy; 2013 Jaanga authors ~ MIT License
