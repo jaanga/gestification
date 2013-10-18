@@ -60,12 +60,13 @@
 
 		light = new THREE.DirectionalLight( 0xffffff, 1 );
 		light.position.set( -1, -1, -1 ).normalize();
+		scene.add( light );
 		
  		light = new THREE.DirectionalLight( 0xffffff, 1 );
 		light.position.set( 0, 500, 0 );
 		light.castShadow = true;
 		light.shadowMapWidth = 2048;
-		light.shadowMaHeight = 2048;
+		light.shadowMapHeight = 2048;
 		var d = 200;
 		light.shadowCameraLeft = -d;
 		light.shadowCameraRight = d;
