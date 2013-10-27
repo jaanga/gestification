@@ -124,8 +124,15 @@
 			'<i>Click anywhere in this message to hide...</i>' +
 		'</div>';
 	}
-	
-	Leap.loop( function( frame ) {
+
+	var controller = new Leap.Controller();
+	controller.connect();
+	updateRate = 100; // milliseconds
+	setInterval( function() { leapUpdate( controller.frame(0) ) } , updateRate);
+        
+//        Leap.loop( function( frame ) {
+
+	function leapUpdate( frame ) {
 		var hand, direction, len;
 		if ( frame.hands.length > 0) {
 			hand = frame.hands[0];
@@ -165,7 +172,8 @@
 			}
 			palm.hasFingers = false;
 		}
-	});
+	}
+//	});
 
 	function animate() {
 		requestAnimationFrame( animate );
