@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang=en>
+<head>
+<title>Leap.js</title>
+<meta charset=utf-8>
+<link href=http://fonts.googleapis.com/css?family=Inconsolata rel=stylesheet >
+</head>
+<body>
+<script src = http://js.leapmotion.com/0.2.1/leap.min.js ></script>
+<script src = http://mrdoob.github.com/three.js/examples/js/Detector.js ></script>
+<script src = http://mrdoob.github.com/three.js/build/three.min.js ></script>
+<script src = http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js> </script>
+<script>
+	var renderer, scene, camera, controls;
+	var info, pumpkin;
+
+	init();
+	animate();
+
+	function init() {
+		var css, light, geometry, material, mesh;
+	
+		css = document.body.appendChild( document.createElement('style') );
+		css.innerHTML = 'body {font: 400 12pt inconsolata, monospace; margin: auto; overflow: hidden; width: 100%;}' +
+			'a { color: #f00; text-decoration: none;}  ' +
+			'h1 {font-size: 48pt; font-weight: 800;}' +
+			'#grayarea { background-color: oldlace; opacity: 0.7; padding: 3px 18px; outline: 2px solid silver;}' +
+		'';
+
+		info = document.body.appendChild( document.createElement( 'div' ) );
+		info.style.cssText = 'left: 0; margin: auto; position: absolute; right: 0; width: 50%; ';
+		info.innerHTML = 
+			'<div style=text-align:right; >Getting Started Examples Tutorials API</div>' +
+			'<h2><a href=# >Leap.js</a></h2>' +
+			'<h1 title="The Leap Motion presence on Gitub">welcome to Leap.js!</h1>' +
+			'<h2>To obtain the latest Leap.js...</h2>' +
+			
+			'<div id=grayarea>' +
+			'<h3>For your browser</h3>' + 
+			'<p><b>For production</b></p>' +
+			'<p><a href="http://js.leapmotion.com/0.2.1/leap.min.js" title="View the minimized code">&lt;script src=\/\/js.leapmotion.com/0.2.1/leap.min.js>&lt;/script></a></p>' +
+			'<p><b>For development</b></p>' +
+			'<p><a href="http://js.leapmotion.com/0.2.1/leap.js" title="View the source code">&lt;script src=\/\/js.leapmotion.com/0.2.1/leap.js>&lt;/script></a></p>' +
+			'</div>' +
+			'<br>' +
+			'<div id=grayarea>' +
+			'<h3>For Node.js</h3>' +
+			'<p><b>Install from npm</b></p>' +
+			'<p>$ npm install leapjs -v0.2.1</p>' +
+			'<p><b>Or add to your package.json</b></b>' +
+			'<p>"leapjs": "0.2.1"</p>' +
+			'</div>' +
+			
+			'<h2>Please join us on github!</h2>' +
+			'<a href="https://github.com/leapmotion/leapjs">https://github.com/leapmotion/leapjs</a><br>' +
+			'<h5 style=text-align:right; title="All rights reserved.">copyright &copy 2013 Leap Motion<h5>' +
+			'<h5 style=text-align:center; title="Proceed at your own risk.">this page is airDoodled<h5>' +
+			'<div id=data></div>' +
+		'';
+		
+		scene = new THREE.Scene();
+		if ( ! Detector.webgl ) {
+			renderer = new THREE.CanvasRenderer( { antialias: true } );
+		} else {
+			renderer = new THREE.WebGLRenderer( { antialias: true } );
+		}
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		renderer.setClearColor(0xffffff, 1);
+		renderer.shadowMapEnabled = true;
+		document.body.appendChild( renderer.domElement );
+		
+		camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 1000 );
+		camera.position.set( -500, 500, 500 );
+		controls = new THREE.TrackballControls( camera, renderer.domElement );
+		controls.target.set( 0, 100, 0 );
+
+// Lights
+		light = new THREE.AmbientLight( 0x888888 );
+		scene.add( light );
+
+ 		light = new THREE.DirectionalLight( 0xffffff, 1 );
+		light.position.set( 0, 200, 0 );
+		light.castShadow = true;
+		light.shadowMapWidth = light.shadowMaHeight = 1024;
+
+		var d = 55;
+		light.shadowCameraLeft = -d;
+		light.shadowCameraRight = d;
+		light.shadowCameraTop = d;
+		light.shadowCameraBottom = -d;
+
+		light.shadowCameraNear = 100;
+		light.shadowCameraFar = 300;
+//		light.shadowCameraVisible = true;
+		scene.add( light );		
+
+		loader = new THREE.JSONLoader();
+		loader.load( 'pumpkin.js', function ( geometry, materials ) {
+			pumpkin = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
+			pumpkin.visible = false;
+			pumpkin.scale.set( 100, 100, 100 )
+			scene.add( pumpkin );		
+		} );	
+	}
+
+	Leap.loop( function( frame ) {
+		var hand;	
+		if ( frame.hands.length > 0) {
+			hand = frame.hands[0];
+			pumpkin.position.set( hand.stabilizedPalmPosition[0], hand.stabilizedPalmPosition[1], hand.stabilizedPalmPosition[2] );
+			pumpkin.rotation.set( hand.pitch(), -hand.yaw(), hand.roll() );
+			pumpkin.visible = true;
+			//data.innerHTML = 'Hand X:' + hand.stabilizedPalmPosition[0].toFixed(0) + ' Y:' +  hand.stabilizedPalmPosition[1].toFixed(0) + ' Z:' + hand.stabilizedPalmPosition[2].toFixed(0) + '<br>' +
+			//pumpkin.visible + ' ' + pumpkin.position.x + ' '  + pumpkin.position.y + ' '  + pumpkin.position.z + ' ' 
+			//'';
+		} else {
+			pumpkin.visible = false;
+		}
+	});	
+
+	function animate() {
+		requestAnimationFrame( animate );
+		controls.update();
+		renderer.render( scene, camera );
+	}
+</script>
+</body>
+</html>

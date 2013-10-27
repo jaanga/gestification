@@ -1,3 +1,10 @@
+Work-In-Hand
+============
+
+_This folder does not yet have an HTML web page._  
+
+
+
 The apps in this folder are things that work - after a fashion - but which could use a lot more effort.
 
 [**Phalanges**](https://github.com/jaanga/gestification/tree/gh-pages/work-in-hand/phalanges)  

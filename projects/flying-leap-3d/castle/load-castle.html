@@ -5,7 +5,7 @@
 <meta charset=utf-8>
 </head>
 <body>
-<script src="http://js.leapmotion.com/0.2.0/leap.min.js"></script>
+<script src="http://js.leapmotion.com/0.2.2/leap.min.js"></script>
 <!--
 <script src=../../../git-repos/three.js/examples/js/Detector.js></script>
 <script src=../../../git-repos/three.js/build/three.min.js></script>
@@ -152,29 +152,12 @@
 		mesh = mesh.clone();
 		mesh.material = new THREE.MeshBasicMaterial( { wireframe: true } );
 		scene.add( mesh );
-/*		
-		geometry = new THREE.CubeGeometry( 200, 20, 80 );
-		material = new THREE.MeshNormalMaterial();
-		palm = new THREE.Mesh( geometry, material );
-		palm.position.set( 0, -50, 0 )
-		palm.castShadow = true;
-		palm.receiveShadow = true;
-		scene.add( palm );
-
-		geometry = new THREE.CubeGeometry( 16, 12, 20 );
-		material = new THREE.MeshNormalMaterial();
-		for (var j = 0; j < 5; j++) {
-			mesh = new THREE.Mesh( geometry, material );
-			mesh.castShadow = true;
-			mesh.receiveShadow = true;
-			scene.add( mesh );
-			fingers.push( mesh );
-		}	
-*/		
+		
 		var loader = new THREE.OBJMTLLoader();
-		loader.addEventListener( 'load', function ( event ) {
-			mesh = event.content;
-			mesh.position.set( 50, -5, 80 );
+
+		loader.load( 'castle/castle.obj', 'castle/castle.mtl', function ( mesh ) {
+			mesh.position.set( 50, -8, 80 );
+			
 			for (var i = 0, len = mesh.children[0].children.length; i < len; i++) {
 				mesh.children[0].children[i].castShadow = true;
 				mesh.children[0].children[i].receiveShadow = true;		
@@ -184,13 +167,10 @@
 				mesh.children[0].children[i].material.emissive.r = Math.random();
 				mesh.children[0].children[i].material.emissive.g = Math.random();
 				mesh.children[0].children[i].material.emissive.b = Math.random();				
-			}
-
+			}			
 			scene.add( mesh );
-// console.log( mesh );			
-		});
 
-		loader.load( 'castle/castle.obj', 'castle/castle.mtl' );
+		} );
 
 	}
 

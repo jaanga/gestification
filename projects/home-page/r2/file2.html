@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang=en>
+<head>
+<title>File 2</title>
+<meta charset=utf-8>
+<meta name=author content='Theo Armour'>
+</head>
+<body>
+<script>
+
+	document.body.style.cssText = ' font: bold 12pt monospace; ';
+	var info = document.body.appendChild( document.createElement( 'div' ) );
+	info.innerHTML = '<h1>Specification</h1>' +
+		'<p>Works in GitHub gh-page contect.</p>' +
+		'<p>Code is beginner to intermediate level JavaScript</p>' +
+		'<p>Links in the menu panel may load local files into the ccontent panel.</p>' +
+		'<p>Links in the menu panel may load any vall http files into the ccontent panel.</p>' +
+		'<p>Links in the menu may redirect the current tab or window to any other web page.</p>' +
+		'<p>Links in the content panel may load local files into the ccontent panel.</p>' +
+		'<p>Links in the content panel may load any valid http files into the ccontent panel.</p>' +
+		'<p>Links in the content panel may redirect the current tab or window to any other web page.</p>' +		
+		'<p>Menu panel may contain any sort of content.</p>' +
+		'<p>Menu and contents windows scroll independently.</p>' +
+		'<p>Updates to content window do not cause the menu window to scroll.</p>' +
+		'<p>&#x2766;</p>' +
+		'<p>Load local file into contents panel: <a href=JavaScript:parent.ifr.src="file3.html"; >Copyright, License & Credits</a></p>' +
+		'<p>Load an external web page into contents panel: <a href=JavaScript:parent.ifr.src="http://jaanga.github.io/cookbook"; >jaanga cookbook</a></p>' +		
+	'';
+
+</script>
+</body>
+</html>

@@ -25,18 +25,24 @@
 		'';
 		
 		var info = document.body.appendChild( document.createElement( 'div' ) );
-		info.style.cssText = 'left: 0;  margin: auto; max-width: 900px; position: absolute; right: 0; ';
-		info.innerHTML = '<h1>airDoodle</h1>' +
-			'<p>airDoodle is what happens when the whitespace behind a web page is filled with a real-time animated 3D object.</p>' +	
-			'<p>These objects do not distract. airDoodles appear only when you want them to appear.</p>' +
-			'<p>Who loves it when people want things to appear? Teachers, advertisers and search engines...</p>' +
-			'<p>An AirDoodle:</p>' +
+		info.style.cssText = 'left: 10px; margin: 0 30px 0 0; position: absolute; max-width: 900px; ';
+		info.innerHTML = '<h1>Projects</h1>' +
+			'<p>This folder contains work of a more complex nature.</p>' +	
+			'<p>AirDoodle</p>' +
 			'<ul>' +
-			'<li>Does not interfere with regular content. </li>' +
-			'<li>Only appears when you want it to appear. </li>' +
-			'<li>Only loads if you have the appropriate hardware</li>' +
-			'<li>And you really want the airDoodle to appear - even if only for a brief moment - because you have not seen what\'s there yet...</li>' +
+			'<li>The future of meta-communication Wright in the palm of your hand</li>' +
+			'</ul>' +
 			
+			'<p><a href="https://github.com/jaanga/gestification/tree/gh-pages/projects/flying-leap-3d" target="_blank">Flying Leap 3D</a></p>' +
+			'<ul><li>Worth a visit</li>' +
+			'<li>The proposal is to build an app for the Leap Motion device that allows you to \'fly\' over various landscapes</li>' +
+			'</ul>' +
+			
+			'<p><a href="http://jaanga.github.io/gestification/projects/webgl-2013-08-22/index.html" target="_blank">San Francisco WebGL MeetUp 2013-08-22</a></p>' +
+			'<ul>' +
+			'<li>The demo files used for the presentation of the Leap Motion device to the group. Includes a Leap-enbled user interface</li>' +
+			'<li><a href="https://github.com/jaanga/gestification/tree/gh-pages/projects/webgl-2013-08-22" target="_blank">Source code on GitHub</a></li>' +
+			'</ul>' +
 		'';
 
 		var doodle = document.body.appendChild( document.createElement( 'div' ) );
@@ -79,8 +85,8 @@
 		scene.add( light );		
 
 		loader = new THREE.JSONLoader();
-		loader.load( 'pumpkin.js', function ( geometry, materials ) {
-			airDoodle = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
+		loader.load( 'WrightFlyer-pb-jw.js', function ( geometry, materials ) {
+			airDoodle = new THREE.Mesh( geometry, new THREE.MeshNormalMaterial( materials ) );
 			airDoodle.castShadow = true;
 			//airDoodle.receiveShadow = true;
 			airDoodle.visible = false;

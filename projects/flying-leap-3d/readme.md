@@ -7,7 +7,7 @@ Live Demo #1: http://jaanga.github.io/gestification/projects/flying-leap-3d/r1/f
 Live Demo #2: http://jaanga.github.io/gestification/projects/flying-leap-3d/castle/load-castle.html
 - A test of loading an OBJ file into Thrree.js. Note the castle - which is the static OBJ file - also refreshes its colors with each reload. 
 
-Live Demo #3: http://jaanga.github.io/gestification/projects/flying-leap-3d/barfolina-pavillion/r1/barfolina-pavillion.html
+Live Demo #3: http://jaanga.github.io/gestification/projects/flying-leap-3d/barfolina-pavillion/r2/barfolina-pavillion.html
 - Worth a visit
 - The entire pavilion - except for the sculpture - is created by procedures. This is the modern way of designing - which we are calling 'archieCode'.
 
@@ -64,6 +64,10 @@ Copyright &copy; 2013 Jaanga authors
 MIT License
 
 ###Change Log
+
+2013-10-26 ~ Theo
+* Update Readme
+* Fix Castle 3D loading issues
 
 2013-09-02 ~ Theo
 * Updated this readme.
