@@ -1,9 +1,10 @@
 Cookbook
 ========
+![image](http://w3.org/Icons/valid-xhtml10)
 
 Cookbook code is an example of programming code that identifies or demonstrates a particular or specific aspect of a library or toolkit.
 
-* [Boilerplate](./boilerplate) - A starting-off point file that loads the Three.js and Leap libraries and creates a simple 3D display of hands and pointables. 
+* ![Boilerplate](./boilerplate/boilerplate.png) [Boilerplate](./boilerplate) - A starting-off point file that loads the Three.js and Leap libraries and creates a simple 3D display of hands and pointables. 
 * [Draw 3D Objects](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/draw-3d-objects) - 3D printing without a printer. Could be significant - one day.
 * [Gesture Tally](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/gesture-tally) - See the swipes. Response to LM forum question. Code example.
 * [Handy Videos](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/handy-videos) ~ Not your mother's video. Somewhat insane.
@@ -20,9 +21,9 @@ Much effort here - but not quite ready for prime time.
 
 ###Change log
 
-2013-10-01 ~ Theo
-* Added Boilerplate and Phalanges
-* Updated Read Me
+2013-10-01 ~ Theo  
+* Added Boilerplate and Phalanges  
+* Updated Read Me  
 
-2013-09-02 ~ Theo
-* Adding links
+2013-09-02 ~ Theo  
+* Adding links  

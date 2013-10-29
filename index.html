@@ -18,7 +18,7 @@
 	var info = document.body.appendChild( document.createElement( 'div' ) );
 	info.style.cssText = 'left: 10px; position: absolute; overflow: auto; top: 0px; width: 250px;';
 	info.innerHTML = '<h1>Gestification</h1>' +
-		'<p><i><small>The apps here may work.<br>Keep your fingers crossed...</small></i></p>' +
+		'<p><i><small>The apps here may come in handy.<br>Keep your fingers crossed...</small></i></p>' +
 		
 		'<p>' +
 		'<a href=#projects/home-page/r2/introduction.html onclick=ifr.src="projects/home-page/r2/introduction.html" >Introduction</a><br>' +
@@ -28,10 +28,11 @@
 		'<a href=#cookbook/index.html onclick=ifr.src="cookbook/index.html" >Cookbook</a><br>' +
 		'<a href=#projects/index.html onclick=ifr.src="projects/index.html" >Projects</a><br>' +
 		'<a href=https://github.com/jaanga/gestification/blob/gh-pages/work-in-hand/readme.md target="_blank" >Work-in-hand</a><br>' +
+		'<p style=color:red; ><br><i>2013-10-29: Gestification is currently under heavy construction right now. Many things are broken...</i></p>' +
 	'</p>';
 	
 	var ifr = document.body.appendChild( document.createElement( 'iframe' ) );
-	ifr.style.cssText = 'border: 0px solid black; height: ' + (window.innerHeight - 0) + 'px; left: 330px; position: absolute; top: 0px; width: ' + (window.innerWidth - 320) + 'px; ';
+	ifr.style.cssText = ' height: ' + (window.innerHeight * 0.8) + 'px; left: 330px; position: absolute; top: 5%; width: 60%; ';
 	
 	if ( !location.hash ) {
 		ifr.src = 'projects/home-page/r2/introduction.html';
