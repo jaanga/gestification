@@ -98,9 +98,9 @@
 	function introduction() {
 		thing.ifr.style.cssText = thing.borderNo + ' bottom: 0; height: ' + window.innerHeight + 'px;' +
 		thing.left + 'margin: 0 auto; overflow: hidden; top: 0; width: 100%; ' ;
-		thing.ifr.src = 'introduction.html';
+		thing.ifr.src = ''; // 'introduction.html';
 
-		thing.readme.style.cssText = 'border: 0px solid black; height: ' + (window.innerHeight * 0.80) + 'px;' + thing.left + ' max-width: 900px; position: absolute; ' + thing.top;
+		thing.readme.style.cssText = 'border: 1px solid black; height: ' + (window.innerHeight * 0.85) + 'px;' + thing.left + ' max-width: 1000px; overflow: scroll; padding: 20px; position: absolute; ' + thing.top;
 		thing.readme.innerHTML = converter.makeHtml( requestFile( 'readme.md' ) );
 
 		thing.runApp.innerHTML = '';
