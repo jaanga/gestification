@@ -6,7 +6,7 @@ Please do read the 'Road Map / Goals' section further down.
 
 And watch the gentle progress of each new revision:
 
-Demo R7: http://jaanga.github.io/gestification/cookbook/phalanges/r7/phalanges.html  
+Demo R7: <http://jaanga.github.io/gestification/cookbook/phalanges/r7/phalanges.html>  
 - Finally, a solution that doesn't suck much. If you are lucky, you might be able to approximate an OK sign. 
 Generally you should be able to see your virtual right hand move around the screen with little lag, not have fingers disappear if some of the fingers are occlude or clenched.
 Support for one right hand only. Support for moderate pitch, roll and yaw only. 

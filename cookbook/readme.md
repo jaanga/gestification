@@ -1,23 +1,20 @@
 Cookbook readMe
 ===============
-<i>2013-10-30. This is a work-in-progress. It's all about learning how far yoy can go with Markdown in GitHub. More tomorrrow.</i>
-<style>
-.pic { float:left; margin:60px; width: 200px;}
-</style>
+
 
 Cookbook code is an example of programming code that identifies or demonstrates a particular or specific aspect of a library or toolkit.
 
-<div class=pic>
+<div style=float:left;margin:60px;width:200px;>
 <img src =./boilerplate/boilerplate.png /><br>
-<a href="./boilerplate" ><b>Boilerplate</b></a><br>
+<a href="./boilerplate/leap-threejs-boilerplate.html" ><b>Boilerplate</b></a><br>
 A starting-off point file that loads the Three.js and Leap libraries and creates a simple 3D display of hands and pointables. 
 </div>
-<div class=pic >
+<div style=float:left;margin:60px;width:200px;>
 <img src=./jest-live/r1/jest-live-screen-grab-240x180.png /><br>
 <a href="./jest-live/r1/" ><b>jestLive</b></a><br>
 Real-time handiness.
 </div>
-<div class=pic >
+<div style=float:left;margin:60px;width:200px; >
 <img src=./jest-play/json/r1/jest-record-json-screen-grab-240x180.png><br>
 <a href="https://github.com/jaanga/gestification/tree/gh-pages/cookbook/jest-play" >j<b>estPlay</b></a><br>
 Record and replay Leap Motion JSON and BVH data capture. 

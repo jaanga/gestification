@@ -1,9 +1,9 @@
 'Heavens to Murgatroyd'
 =======================
 
-Demo: http://jaanga.github.io/gestification/cookbook/murgatroyd-heaven/
+Demo: <http://jaanga.github.io/gestification/cookbook/murgatroyd-heaven/>
 
-See also http://www.phrases.org.uk/meanings/heavens-to-murgatroyd.html
+See also <http://www.phrases.org.uk/meanings/heavens-to-murgatroyd.html>
 
 Move hand in XYZ: moves the player sphere in XYZ  
 Rotate hand: rotates the camera about the origin  
