@@ -8,10 +8,8 @@
 <body>
 <script src=http://jaanga.github.io/libs/md/showdown.js ></script>
 <script>
-	var ifr;
+
 	var thing = {};
-
-
 	var converter = new Showdown.converter();
 
 	var css = document.body.appendChild( document.createElement('style') );
@@ -19,7 +17,7 @@
 	'';
 
 	var menu = document.body.appendChild( document.createElement( 'div' ) );
-	menu.style.cssText = 'height: ' + window.innerHeight + 'px; left: 20px; padding: 0 40px 0 0; position: absolute; overflow: scroll; ' +
+	menu.style.cssText = 'height: ' + window.innerHeight + 'px; left: 2%; padding: 0 40px 0 0; position: absolute; overflow: scroll; ' +
 		'max-width: 280px; width: 15%';
 
 	menu.innerHTML = '<h1><a href=../../ >Jaanga</a><br>' +
@@ -70,9 +68,8 @@
 		'<p><a href=JavaScript:showOfHands(); >Show of Hands</a> - Use one hand to display seven hands. The prettiest app?</p>' +		
 		
 		'<p><a href=JavaScript:handyVideos(); >Handy Videos</a> ~ Not your mother\'s video. Somewhat insane.</p>' +		
-		
-		
 	'';
+	
 	thing.border = 'outline: black groove thin; ';
 	thing.borderNo = 'border: black groove 0px; ';
 	thing.height = ' height: ' + (window.innerHeight * 0.50) + 'px;';
@@ -83,9 +80,12 @@
 	thing.top2 = ' top: ' + (window.innerHeight * 0.60) + 'px;';
 	thing.width = ' width: 60%; ';
 
+	thing.ifr = document.body.appendChild( document.createElement( 'iframe' ) );
+	thing.ifr.style.cssText = 'border: 0px solid black; ';
+	thing.ifrStyle = thing.height + thing.left + 'position: absolute; ' + thing.top + thing.width;
+	
 	thing.readme = document.body.appendChild( document.createElement( 'div' ) );
-	thing.readmeStyle = thing.border + thing.height2 + thing.left + ' overflow: scroll; padding-left: 10px; position: absolute; ' +
-		thing.top2 + thing.width;
+	thing.readmeStyle = thing.border + thing.height2 + thing.left + ' overflow: scroll; padding-left: 10px; position: absolute;' + thing.top2 + thing.width;
 
 	thing.runApp = document.body.appendChild( document.createElement( 'div' ) );
 	thing.runApp.style.cssText = thing.left2 + 'position: absolute; ' + thing.top + ' width: 100px; ';
@@ -93,15 +93,11 @@
 	thing.viewSource = document.body.appendChild( document.createElement( 'div' ) );
 	thing.viewSource.style.cssText = thing.left2 + 'position: absolute; ' + thing.top2 ;
 
-	thing.ifr = document.body.appendChild( document.createElement( 'iframe' ) );
-	thing.ifr.style.cssText = 'border: 0px solid black; ';
-
-	thing.ifrStyle = thing.height + thing.left + 'position: absolute; ' + thing.top + thing.width;
-
 	introduction();
 
 	function introduction() {
-		thing.ifr.style.cssText = thing.borderNo + ' bottom: 0; height: ' + window.innerHeight + 'px; margin: 0 auto; overflow: hidden; top: 0; width: 100%; ' ;
+		thing.ifr.style.cssText = thing.borderNo + ' bottom: 0; height: ' + window.innerHeight + 'px;' +
+		thing.left + 'margin: 0 auto; overflow: hidden; top: 0; width: 100%; ' ;
 		thing.ifr.src = 'introduction.html';
 
 		thing.readme.style.cssText = 'border: 0px solid black; height: ' + (window.innerHeight * 0.80) + 'px;' + thing.left + ' max-width: 900px; position: absolute; ' + thing.top;
@@ -272,6 +268,7 @@
 		xmlHttp.send( null );
 		return xmlHttp.responseText;
 	}
+	
 </script>
 </body>
 </html>
