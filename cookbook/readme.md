@@ -1,6 +1,6 @@
 Cookbook readMe
 ===============
-
+<i>2013-10-30. This is a work-in-progress. It's all about learning how far yoy can go with Markdown in GitHub. More tomorrrow.</i>
 <style>
 .pic { float:left; margin:60px; width: 200px;}
 </style>
@@ -31,14 +31,15 @@ Much effort here - Nearly ready for prime time.
 
 * ![Boilerplate](./boilerplate/boilerplate.png) [Boilerplate](./boilerplate) - A starting-off point file that loads the Three.js and Leap libraries and creates a simple 3D display of hands and pointables. 
 * ![jestLive](./jest-live/r1/jest-live-screen-grab-240x180.png) ~ real-time handiness.
+* ![jestPlay]( ./jest-play/json/r1/jest-record-json-screen-grab-240x180.png) ~ [jestPlay](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/jest-play) - Record and replay Leap Motion JSON and BVH data capture. 
+Much effort here - but not quite ready for prime time.
 -->
 
 
 * ![Draw 3D Objects]( ./draw-3d-objects/r1/draw-3d-objects-screen-grab-240x180.png) ~ [Draw 3D Objects](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/draw-3d-objects) - 3D printing without a printer. Could be significant - one day.
 * [Gesture Tally](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/gesture-tally) - See the swipes. Response to LM forum question. Code example.
 * [Handy Videos](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/handy-videos) ~ Not your mother's video. Somewhat insane.
-* ![jestPlay]( ./jest-play/json/r1/jest-record-json-screen-grab-240x180.png) ~ [jestPlay](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/jest-play) - Record and replay Leap Motion JSON and BVH data capture. 
-Much effort here - but not quite ready for prime time.
+
 * [Leap Distance vs Normal](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/leap-distance-vs-normal) - another pitch, roll and yaw issues demo. Code example.
 * ![Phalanges](./phalanges/r7/phalanges-screen-grab-240x180.png) ~ [Phalanges](./phalanges) - Now at R7. Base code for showing hand and fingers even when data is not available from the Leap device. Much effort here.
 * [Murgatroyd Heaven](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/murgatroyd-heaven) - not an easy game. Early work.
