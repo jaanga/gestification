@@ -15,17 +15,20 @@ _Let's start with just one file that's not too complicated_
 		<img border=1 src=http://jaanga.github.io/gestification/cookbook/boilerplate/leap-threejs-boilerplate-screen-grab-240x180.png ><br>
 		<a href=https://github.com/jaanga/gestification/tree/gh-pages/cookbook/boilerplate ><b>Boilerplate</b></a><br>
 		A starting-off point file that loads the Three.js and Leap libraries and creates a simple 3D display of hands and pointables.</td>
+<!--
     <td width=20 ></td>
 	<td width=250 ></td>
 	<td width=20 ></td>
     <td width=250 ></td>
+-->	
   </tr>
 </table>
 
 
 ### Real-time Hands
 
-_Can we use the Leap data to design hands, claws, robot apendages, puppets, sign-language engines. Maybe not yet. But let's see if we can get a good start..._
+_Can you use the Leap data to design hands, claws, robot apendages, puppets, sign-language engines? Maybe not yet. But let's see if we can get a good start..._
+
 <table border=0 >
   <tr valign=top >
   <td  width=240>
@@ -104,7 +107,7 @@ _What sorts of new things can we design and make using six degrees of freedom?_
 <br>
 
 ### Data Gathering
-*Your hands are miving with six degree of freedom. That's a heck of a lot of data every second. Can we visisualze the motions and th numbers simultaneously?*
+*Your hands move with six degrees of freedom. That's a heck of a lot of data every second. Can we visualze the motions and the numbers simultaneously?*
  
 <table border=0 >
   <tr valign=top >
