@@ -9,11 +9,13 @@ Cookbook code is an example of programming code that identifies or demonstrates 
 
 <table border=0 >
   <tr valign=top >
-	<td width=250 >
+	<td width=240 >
 		<img src=./boilerplate/leap-threejs-boilerplate-screen-grab-240x180.png ><br>
-		<a href=https://github.com/jaanga/gestification/tree/gh-pages/cookbook/boilerplate ><b>Boilerplate</b></a> 
+		<a href=https://github.com/jaanga/gestification/tree/gh-pages/cookbook/boilerplate ><b>Boilerplate</b></a><br>
 		A starting-off point file that loads the Three.js and Leap libraries and creates a simple 3D display of hands and pointables.</td>
-    <td width=250 ></td>
+    <td width=20 ></td>
+	<td width=250 ></td>
+	<td width=20 ></td>
     <td width=250 ></td>
   </tr>
 </table>
@@ -27,16 +29,16 @@ Cookbook code is an example of programming code that identifies or demonstrates 
 		<img src=http://jaanga.github.io/gestification/cookbook/jest-live/r1/jest-live-screen-grab-240x180.png><br>
 		<a href=https://github.com/jaanga/gestification/tree/gh-pages/cookbook/jest-live ><b>jestLive</b></a><br>
 		See your motions in a lively, handy way. Choose the hand you want. </td>
-    <td width=25 ></td>
+    <td width=20 ></td>
 	<td width=240>
-		<img src=http://jaanga.github.io/gestification/cookbook/jest-play/json/r1/jest-record-json-screen-grab-240x180.png ><br>
-		<a href=https://github.com/jaanga/gestification/tree/gh-pages/cookbook/jest-play >jestPlay</a><br>
+		<img border=1 src=http://jaanga.github.io/gestification/cookbook/jest-play/json/r1/jest-record-json-screen-grab-240x180.png ><br>
+		<a href=https://github.com/jaanga/gestification/tree/gh-pages/cookbook/jest-play ><b>jestPlay</b></a><br>
 		Record and replay Leap Motion JSON and BVH data capture. Much effort here - Nearly ready for prime time.</td>
-    <td width=25 ></td>
+    <td width=20 ></td>
 	<td width=240>
 		<img src=http://jaanga.github.io/gestification/cookbook/phalanges/r7/phalanges-screen-grab-240x180.png ><br>
-		<a href=https://github.com/jaanga/gestification/tree/gh-pages/cookbook/jest-play ><br>
-		Phalanges</a> Now at R7. Base code for showing hand and fingers even when data is not available from the Leap device. Much effort here.</td>
+		<a href=https://github.com/jaanga/gestification/tree/gh-pages/cookbook/jest-play ><b>Phalanges</b></a><br>
+		Now at R7. Base code for showing hand and fingers even when data is not available from the Leap device. Much effort here.</td>
   </tr>
 </table>
 
@@ -67,19 +69,122 @@ Much effort here - but not quite ready for prime time.
 
 -->
 
+### Creativity
 
+<table border=0 >
+  <tr valign=top >
+	<td width=240 >
+		<img src=./draw-3d-objects/r1/draw-3d-objects-screen-grab-240x180.png ><br>
+		<a href=https://github.com/jaanga/gestification/tree/gh-pages/cookbook/draw-3d-objects/ ><b>Draw 3D Objects</b></a><br>
+		3D printing without a printer. Could be significant - one day.</td>
+    <td width=20 ></td>
+	<td width=250 ></td>
+	<td width=20 ></td>
+    <td width=250 ></td>
+  </tr>
+</table>
+
+
+
+<!--
 * ![Draw 3D Objects]( ./draw-3d-objects/r1/draw-3d-objects-screen-grab-240x180.png) ~ [Draw 3D Objects](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/draw-3d-objects) - 3D printing without a printer. Could be significant - one day.
 * [Gesture Tally](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/gesture-tally) - See the swipes. Response to LM forum question. Code example.
-* [Handy Videos](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/handy-videos) ~ Not your mother's video. Somewhat insane.
 
-* [Leap Distance vs Normal](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/leap-distance-vs-normal) - another pitch, roll and yaw issues demo. Code example.
 * ![Phalanges](./phalanges/r7/phalanges-screen-grab-240x180.png) ~ [Phalanges](./phalanges) - Now at R7. Base code for showing hand and fingers even when data is not available from the Leap device. Much effort here.
+* ![youGest](./yougest/r4/index-screen-grab-240x180.png)[youGest](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/yougest) - The ultimate Leap Motion data explorer. Much effort here.
+* [Pointing or Not](http://jaanga.github.io/gestification/cookbook/pointing-or-not/r1/pointing-or-not.html) - Are you pointing your finger? Code example.
+
+-->
+
+<br>
+
+### Data Gathering
+
+<table border=0 >
+  <tr valign=top >
+  <td  width=240>
+		<img src=http://jaanga.github.io/gestification/cookbook/yougest/r4/index-screen-grab-240x180.png><br>
+		<a href=https://github.com/jaanga/gestification/tree/gh-pages/cookbook/yougest ><b>youGest</b></a><br>
+		The ultimate Leap Motion data explorer. Much effort here.</td>
+    <td width=20 ></td>
+	<td width=240>
+		<img border=1 src=http://jaanga.github.io/gestification/cookbook/gesture-tally/r1/gesture-tally-screen-grab-240x180.png ><br>
+		<a href=https://github.com/jaanga/gestification/tree/gh-pages/cookbook/gesture-tally ><b>Gesture Tally</b></a><br>
+		See the swipes. Response to LM forum question. Code example.</td>
+    <td width=20 ></td>
+	<td width=240>
+		<img src=http://jaanga.github.io/gestification/cookbook/phalanges/r7/phalanges-screen-grab-240x180.png ><br>
+		<a href=https://github.com/jaanga/gestification/tree/gh-pages/cookbook/pointing-or-not ><b>Pointing or Not</b></a><br>
+		Are you pointing your finger? Code example.</td>
+  </tr>
+</table>
+
+<br>
+
+<table border=0 > 
+<tr valign=top >
+	<td width=240>
+		<img border=1 src=http://jaanga.github.io/gestification/cookbook/gesture-tally/r1/gesture-tally-screen-grab-240x180.png ><br>
+		<a href=https://github.com/jaanga/gestification/tree/gh-pages/cookbook/gesture-tally ><b>Pitch Roll and Yaw</b></a><br>
+		pitch, roll and yaw issues demo. Code example.</td>  
+	<td width=20 ></td>	
+	<td  width=240>
+		<img src=http://jaanga.github.io/gestification/cookbook/yougest/r4/index-screen-grab-240x180.png><br>
+		<a href=https://github.com/jaanga/gestification/tree/gh-pages/cookbook/yougest ><b>Leap direction vs normal</b></a><br>
+		aAother pitch, roll and yaw issues demo. Code example.</td>
+    <td width=20 ></td>
+	<td width=240>
+</tr> 
+</table>
+
+<br>
+
+### Fun & Games
+
+<table border=0 >
+<tr valign=top >
+  <td  width=240>
+		<img src=http://jaanga.github.io/gestification/cookbook/touchly/r4/touchly-screen-grab-240x180.png ><br>
+		<a href=https://github.com/jaanga/gestification/tree/gh-pages/cookbook/touchly ><b>Touchly</b></a><br>
+		A bubble-popping-like game. Fun.</td>
+    <td width=20 ></td>
+	<td width=240>
+		<img border=1 src=http://jaanga.github.io/gestification/cookbook/murgatroyd-heaven/murgatroyd-heaven-screen-grab-240x180.png ><br>
+		<a href=https://github.com/jaanga/gestification/tree/gh-pages/cookbook/murgatroyd-heaven><b>Murgatroyd Heaven</b></a><br>
+		not an easy game. Early work.</td>
+    <td width=20 ></td>
+	<td width=240>
+		<img src=http://jaanga.github.io/gestification/cookbook/show-of-hands/show-of-hands-screen-grab-240x180.png ><br>
+		<a href=https://github.com/jaanga/gestification/tree/gh-pages/cookbook/show-of-hands ><b>Show of Hands</b></a><br>
+		Who is for the motion? Let's have a show of hands. Use one hand to display seven hands. The prettiest app?</td>
+</tr>
+</table>
+
+<br>
+
+<table border=0 >   
+<tr valign=top >
+	<td width=240>
+		<img border=1 src=http://jaanga.github.io/gestification/cookbook/handy-videos/handy-videos-screen-grab-240x180.png ><br>
+		<a href=https://github.com/jaanga/gestification/tree/gh-pages/cookbook/handy-videos ><b>Handy Videos</b></a><br>
+		Not your mother's video. Somewhat insane.</td>  
+	<td width=20 ></td>	
+	<td  width=240>
+    <td width=20 ></td>
+	<td width=240>
+</tr> 
+</table>
+
+<!--
+* [Handy Videos](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/handy-videos) ~ Not your mother's video. Somewhat insane.
+* [Leap Distance vs Normal](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/leap-distance-vs-normal) - another pitch, roll and yaw issues demo. Code example.
 * [Murgatroyd Heaven](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/murgatroyd-heaven) - not an easy game. Early work.
 * [Pitch Roll and Yaw](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/pitch-roll-yaw) - pitch, roll and yaw issues demo. Code example.
-* [Pointing or Not](http://jaanga.github.io/gestification/cookbook/pointing-or-not/r1/pointing-or-not.html) - Are you pointing your finger? Code example.
 * [Show of Hands](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/show-of-hands) - Use one hand to display seven hands. The prettiest app?
 * [Touchly](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/touchly) ~ A bubble-pooping-like game. Fun.
-* ![youGest](./yougest/r4/index-screen-grab-240x180.png)[youGest](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/yougest) - The ultimate Leap Motion data explorer. Much effort here.
+-->
+
+<br>
 
 ###Change log
 
