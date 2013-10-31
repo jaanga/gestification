@@ -4,17 +4,54 @@ Cookbook readMe
 
 Cookbook code is an example of programming code that identifies or demonstrates a particular or specific aspect of a library or toolkit.
 
-<div style=float:left;margin:60px;width:200px;>
+
+### Start Here
+
+<table border=0 >
+  <tr valign=top >
+	<td width=250 >
+		<img src=./boilerplate/leap-threejs-boilerplate-screen-grab-240x180.png ><br>
+		<a href=https://github.com/jaanga/gestification/tree/gh-pages/cookbook/boilerplate ><b>Boilerplate</b></a> 
+		A starting-off point file that loads the Three.js and Leap libraries and creates a simple 3D display of hands and pointables.</td>
+    <td width=250 ></td>
+    <td width=250 ></td>
+  </tr>
+</table>
+
+
+### Real-time Hands
+
+<table border=0 >
+  <tr valign=top >
+  <td  width=240>
+		<img src=http://jaanga.github.io/gestification/cookbook/jest-live/r1/jest-live-screen-grab-240x180.png><br>
+		<a href=https://github.com/jaanga/gestification/tree/gh-pages/cookbook/jest-live ><b>jestLive</b></a><br>
+		See your motions in a lively, handy way. Choose the hand you want. </td>
+    <td width=25 ></td>
+	<td width=240>
+		<img src=http://jaanga.github.io/gestification/cookbook/jest-play/json/r1/jest-record-json-screen-grab-240x180.png ><br>
+		<a href=https://github.com/jaanga/gestification/tree/gh-pages/cookbook/jest-play >jestPlay</a><br>
+		Record and replay Leap Motion JSON and BVH data capture. Much effort here - Nearly ready for prime time.</td>
+    <td width=25 ></td>
+	<td width=240>
+		<img src=http://jaanga.github.io/gestification/cookbook/phalanges/r7/phalanges-screen-grab-240x180.png ><br>
+		<a href=https://github.com/jaanga/gestification/tree/gh-pages/cookbook/jest-play ><br>
+		Phalanges</a> Now at R7. Base code for showing hand and fingers even when data is not available from the Leap device. Much effort here.</td>
+  </tr>
+</table>
+
+<!--
+<div style="float:left;margin:60px;width:200px;" >
 <img src =./boilerplate/boilerplate.png /><br>
 <a href="./boilerplate/leap-threejs-boilerplate.html" ><b>Boilerplate</b></a><br>
 A starting-off point file that loads the Three.js and Leap libraries and creates a simple 3D display of hands and pointables. 
 </div>
-<div style=float:left;margin:60px;width:200px;>
+<div style="float:left;margin:60px;width:200px;" >
 <img src=./jest-live/r1/jest-live-screen-grab-240x180.png /><br>
 <a href="./jest-live/r1/" ><b>jestLive</b></a><br>
 Real-time handiness.
 </div>
-<div style=float:left;margin:60px;width:200px; >
+<div style="float:left;margin:60px;width:200px;" >
 <img src=./jest-play/json/r1/jest-record-json-screen-grab-240x180.png><br>
 <a href="https://github.com/jaanga/gestification/tree/gh-pages/cookbook/jest-play" >j<b>estPlay</b></a><br>
 Record and replay Leap Motion JSON and BVH data capture. 
@@ -23,13 +60,11 @@ Much effort here - Nearly ready for prime time.
 
 <br style=clear:both >
 
-
-<!--
-
 * ![Boilerplate](./boilerplate/boilerplate.png) [Boilerplate](./boilerplate) - A starting-off point file that loads the Three.js and Leap libraries and creates a simple 3D display of hands and pointables. 
 * ![jestLive](./jest-live/r1/jest-live-screen-grab-240x180.png) ~ real-time handiness.
 * ![jestPlay]( ./jest-play/json/r1/jest-record-json-screen-grab-240x180.png) ~ [jestPlay](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/jest-play) - Record and replay Leap Motion JSON and BVH data capture. 
 Much effort here - but not quite ready for prime time.
+
 -->
 
 
