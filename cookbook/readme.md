@@ -35,12 +35,12 @@ _Can you use the Leap data to design hands, claws, robot apendages, puppets, sig
 		<img border=1  src=http://jaanga.github.io/gestification/cookbook/jest-live/r1/jest-live-screen-grab-240x180.png><br>
 		<a href=https://github.com/jaanga/gestification/tree/gh-pages/cookbook/jest-live ><b>jestLive</b></a><br>
 		See your motions in a lively, handy way. Choose the hand you want. </td>
-    <td width=20 ></td>
+    <td width=10 ></td>
 	<td width=240>
 		<img border=1 src=http://jaanga.github.io/gestification/cookbook/jest-play/json/r1/jest-record-json-screen-grab-240x180.png ><br>
 		<a href=https://github.com/jaanga/gestification/tree/gh-pages/cookbook/jest-play ><b>jestPlay</b></a><br>
 		Record and replay Leap Motion JSON and BVH data capture. Much effort here - Nearly ready for prime time.</td>
-    <td width=20 ></td>
+    <td width=10 ></td>
 	<td width=240>
 		<img border=1  src=http://jaanga.github.io/gestification/cookbook/phalanges/r7/phalanges-screen-grab-240x180.png ><br>
 		<a href=https://github.com/jaanga/gestification/tree/gh-pages/cookbook/phalanges/ ><b>Phalanges</b></a><br>
