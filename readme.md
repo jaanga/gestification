@@ -10,7 +10,7 @@ You have a [Leap Motion](http://leapmotion.com) device.
 
 You're looking for cool apps with lots of JavaScript source code.  
 
-<b style="color:red">&iexcl;&iexcl;&iexcl;Bingo!!!</b>
+<b style="color:red"><i>&iexcl;&iexcl;&iexcl;Bingo!!!</i></b>
 
 You've arrived at a good place.  
 
@@ -30,6 +30,45 @@ And each app has source code available under the do-what-pleases-you MIT License
 
 <img border=1  src=http://jaanga.github.io/gestification/cookbook/leap-direction-vs-normal/r2/leap-direction-vs-normal-screen-grab-240x180.png  width=150>
 
+Here's the thing:
+
+Actually there are two places.
+
+One place is the _play with the apps_ place. 
+
+And the other is the _read the source code_ place.
+
+Which place are you in right now?
+
+Actually, it's not easy to know the answer as both places are GitHub places.
+
+And one place may be the evil twin of the other.
+
+If you mostly see white, then you are in the _play with the apps_  place. To go to the other place click here.
+
+If you scroll up to the top and you see the Octokitty icon then you are in the _read the source code_ place.  To go to the other place click [here](https://github.com/jaanga/gestification/).
+
+And, if you see lots of advertising then you may be in one of those sites that pilfers content. To go to the other place you can clickety-click-click.
+
+<img border=1  src=http://jaanga.github.io/gestification/cookbook/touchly/r4/touchly-screen-grab-240x180.png width=150>
+
+Welcome back from the dark side.
+
+Now, here, there are three sections you can visit.
+
+
+The **'[cookbook](https://github.com/jaanga/gestification/tree/gh-pages/cookbook)'** folder contains a number of short, simple apps that you coud use to build bigger apps. Files are generally about 200 or so lines of code.
+
+The **'[projects](https://github.com/jaanga/gestification/tree/gh-pages/projects)'** folder contains work that probably has start and finish dates and tends to be more complicated stuff.
+
+The **'[work-in-hand](https://github.com/jaanga/gestification/tree/gh-pages/work-in-hand)'** folder contains more experimental work where the final outcome is more up in the air.
+
+The TL;DR is, <bdo dir="rtl" title='The BDO tag is a barrel of monkeys fun!' >hello</bdo>, just go to the first one.
+
+
+<br>
+
+_And now for the corporate stuff..._
 
 ###Featured Apps
 
