@@ -13,7 +13,8 @@ _Let's start with just one file that's not too complicated_
 	<td width=240 >
 		<img border=1 src=http://jaanga.github.io/gestification/cookbook/boilerplate/leap-threejs-boilerplate-screen-grab-240x180.png ><br>
 		<a href=https://github.com/jaanga/gestification/tree/gh-pages/cookbook/boilerplate ><b>Boilerplate</b></a><br>
-		A starting-off point file that loads the Three.js and Leap libraries and creates a simple 3D display of hands and pointables.</td>
+		A starting-off point file that loads the Three.js and Leap libraries and creates a simple 3D display of hands and pointables.
+	</td>
   </tr>
 </table>
 
@@ -24,17 +25,17 @@ _Can you use the Leap data to design hands, claws, robot apendages, puppets, sig
 
 <table border=0 >
   <tr valign=top >
-  <td  width=240>
+  <td>
 		<img border=1  src=http://jaanga.github.io/gestification/cookbook/jest-live/r1/jest-live-screen-grab-240x180.png><br>
 		<a href=https://github.com/jaanga/gestification/tree/gh-pages/cookbook/jest-live ><b>jestLive</b></a><br>
 		See your motions in a lively, handy way. Choose the hand you want. </td>
-    <td width=10 ></td>
+    <td></td>
 	<td width=240>
 		<img border=1 src=http://jaanga.github.io/gestification/cookbook/jest-play/json/r1/jest-record-json-screen-grab-240x180.png ><br>
 		<a href=https://github.com/jaanga/gestification/tree/gh-pages/cookbook/jest-play ><b>jestPlay</b></a><br>
 		Record and replay Leap Motion JSON and BVH data capture. Much effort here - Nearly ready for prime time.</td>
-    <td width=10 ></td>
-	<td width=240>
+    <td></td>
+	<td>
 		<img border=1  src=http://jaanga.github.io/gestification/cookbook/phalanges/r7/phalanges-screen-grab-240x180.png ><br>
 		<a href=https://github.com/jaanga/gestification/tree/gh-pages/cookbook/phalanges/ ><b>Phalanges</b></a><br>
 		Now at R7. Base code for showing hand and fingers even when data is not available from the Leap device. Much effort here.</td>
