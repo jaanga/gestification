@@ -1,22 +1,23 @@
 Gestification Read Me
 =====================
 
-<img border=1 src=http://jaanga.github.io/gestification/cookbook/jest-live/r1/jest-live-screen-grab-240x180.png width=200><img border=1 src=http://jaanga.github.io/gestification/cookbook/jest-play/json/r1/jest-record-json-screen-grab-240x180.png  width=200><img border=1 src=http://jaanga.github.io/gestification/cookbook/phalanges/r7/phalanges-screen-grab-240x180.png width=200><img border=1 src=http://jaanga.github.io/gestification/cookbook/draw-3d-objects/r1/draw-3d-objects-screen-grab-240x180.png  width=200>
+<img border=1 title='Don&apos;t believe a word this guys says' src=http://jaanga.github.io/gestification/cookbook/jest-live/r1/jest-live-screen-grab-240x180.png width=150>
+<img border=1 title='He&apos;s just an ailing script kiddie' src=http://jaanga.github.io/gestification/cookbook/jest-play/json/r1/jest-record-json-screen-grab-240x180.png width=150>
+<img border=1 title='Don&apos;t you agree that these screen grabs totally suck?' src=http://jaanga.github.io/gestification/cookbook/phalanges/r7/phalanges-screen-grab-240x180.png width=150>
+<img border=1 title='Well, guess what? his code ain&apos;t any better' src=http://jaanga.github.io/gestification/cookbook/draw-3d-objects/r1/draw-3d-objects-screen-grab-240x180.png width=150>
 
 You have a [Leap Motion](http://leapmotion.com) device.  
 
 You're looking for cool apps with lots of JavaScript source code.  
 
-Bingo!  
+<b style="color:red">&iexcl;&iexcl;&iexcl;Bingo!!!</b>
 
-<span style="color:blue">blue</span>
+You've arrived at a good place.  
 
-You've come to the right place.  
-
-<img border=1 src=http://jaanga.github.io/gestification/cookbook/yougest/r4/index-screen-grab-240x180.png width=200>
-
-
-
+<img border=1 src=http://jaanga.github.io/gestification/cookbook/yougest/r4/index-screen-grab-240x180.png width=150>
+<img border=1 src=http://jaanga.github.io/gestification/cookbook/gesture-tally/r1/gesture-tally-screen-grab-240x180.png width=150>
+<img border=1 src=http://jaanga.github.io/gestification/cookbook/pointing-or-not/r1/pointing-or-not-screen-grab-240x180.png width=150>
+<img border=1 src=http://jaanga.github.io/gestification/cookbook/pitch-roll-yaw/r2/pitch-roll-yaw-screen-grab-240x180.png width=150>
 
 
 <!--
@@ -25,7 +26,9 @@ JavaScript web-apps from Jaanga for the awesome [Leap Motion](http://leapmotion.
 
 Gestification has lots of live demos that all run in your browser. Just click and go. It's as easy as watching TV.
 
-And each app has source code available under the do-what-you-choose MIT License.
+And each app has source code available under the do-what-pleases-you MIT License.
+
+<img border=1  src=http://jaanga.github.io/gestification/cookbook/leap-direction-vs-normal/r2/leap-direction-vs-normal-screen-grab-240x180.png  width=150>
 
 
 ###Featured Apps
