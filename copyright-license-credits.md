@@ -1,5 +1,7 @@
 Copyright, License and Credits
 ========
+
+
 ###All Jaanga works
 Copyright &copy; 2013 jaanga authors
 
@@ -23,6 +25,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 ###Three.js
+<http://threejs.org>  
+
 Copyright (c) 2010-2013 three.js authors
 
 The MIT License
@@ -46,9 +50,9 @@ THE SOFTWARE.
 
 
 ###Leap.js
-http://js.leapmotion.com/
+<http://js.leapmotion.com/>
 
-Copyright (c) 2013, Leap Motion, Inc.
+Copyright &copy; 2013, Leap Motion, Inc.
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -61,13 +65,13 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 ###FileSaver.js
 Saving data is handled via Eli Gray's FileSaver.js obtained from:
 
-https://github.com/eligrey/FileSaver.js 
+<https://github.com/eligrey/FileSaver.js> 
+
+Copyright &copy; 2011 Eli Grey.
 
 This software is licensed under the MIT/X11 license.
 
 MIT/X11 license
-
-Copyright © 2011 Eli Grey.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software 
 and associated documentation files (the "Software"), to deal in the Software without restriction, 
@@ -82,3 +86,5 @@ BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR P
 IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE 
 OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+

@@ -49,7 +49,7 @@ _What sorts of new things can we design and make using six degrees of freedom?_
 <table border=0 >
   <tr valign=top >
 	<td width=240 >
-		<img border=1 src=http://jaanga.github.io/gestification/cookbook/draw-3d-objects/r1/draw-3d-objects-screen-grab-240x180.png ><br>
+		<img border=1  src=http://jaanga.github.io/gestification/cookbook/draw-3d-objects/r1/draw-3d-objects-screen-grab-240x180.png ><br>
 		<a href=https://github.com/jaanga/gestification/tree/gh-pages/cookbook/draw-3d-objects/ ><b>Draw 3D Objects</b></a><br>
 		3D printing without a printer. Could be significant - one day.</td>
     <td width=20 ></td>
@@ -67,7 +67,7 @@ _What sorts of new things can we design and make using six degrees of freedom?_
 <table border=0 >
   <tr valign=top >
   <td  width=240>
-		<img border=1 src=http://jaanga.github.io/gestification/cookbook/yougest/r4/index-screen-grab-240x180.png><br>
+		<img border=1  src=http://jaanga.github.io/gestification/cookbook/yougest/r4/index-screen-grab-240x180.png><br>
 		<a href=https://github.com/jaanga/gestification/tree/gh-pages/cookbook/yougest ><b>youGest</b></a><br>
 		The ultimate Leap Motion data explorer. Much effort here.</td>
     <td width=20 ></td>

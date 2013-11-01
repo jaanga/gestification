@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang=en>
 <head>
-<title>Jaanga Gestification Cookbook</title>
+<title>Cookbook Gestification Jaanga</title>
 <meta charset=utf-8>
 <meta name=author content='Theo Armour'>
 </head>
@@ -9,256 +9,146 @@
 <script src=http://jaanga.github.io/libs/md/showdown.js ></script>
 <script>
 
-	var thing = {};
-	var converter = new Showdown.converter();
+	document.body.style.cssText = 'font: bold 12pt monospace; margin: 0; overflow: hidden;';
 
-	var css = document.body.appendChild( document.createElement('style') );
-	css.innerHTML = 'body { font: 400 12pt monospace; height: 600px; margin: 0; overflow: hidden; }' +
-	'';
+	var DS = {};
+	DS.converter = new Showdown.converter();
 
-	var menu = document.body.appendChild( document.createElement( 'div' ) );
-	menu.style.cssText = 'height: ' + window.innerHeight + 'px; left: 2%; padding: 0 40px 0 0; position: absolute; overflow: scroll; ' +
-		'max-width: 400px; width: 18%';
-
-	menu.innerHTML = '<h1><a href=../../ >Jaanga</a> &raquo; <br>' +
-		'<a href=../ target="_blank">Gestification</a> &raquo;<br>' +
+	DS.menu = document.body.appendChild( document.createElement( 'div' ) );
+	DS.menu.innerHTML = '<h1><a href=../../ >Jaanga</a> &raquo;<br>' +
+		'<a href=../ target="_blank">Gestification</a>&nbsp;&raquo;<br>' +
 		'<a href=# >Cookbook</a></h1>' +
 
-		'<p><a href=JavaScript:introduction(); >Introduction</a></p>' +
+		'<p><a href=JavaScript:displayPage("readme.md"); >Cookbook Read Me on GitHub</a></p>' +
 
 		'<p></p>' +
-		
+
 		'<h3>Start here</h3>' +
-				
-		'<p><a href=JavaScript:boilerplate(); >Boilerplate</a> - A starting-off-point file that loads the Three.js and Leap libraries ' +
-		'and creates a simple 3D display of hands and pointables.<p>' +
-		
+
+		'<p><a href=JavaScript:displayOverview("boilerplate/","leap-threejs-boilerplate.html"); >' +
+		'<img src=http://jaanga.github.io/gestification/cookbook/boilerplate/leap-threejs-boilerplate-screen-grab-240x180.png />' +
+		'Boilerplate</a><br>A starting-off point file that loads the Three.js and Leap libraries and creates a simple 3D display of hands and pointables.<p>' +
+
 		'<h3>Real-time Hands</h3>' +
-		
-		'<p><a href=JavaScript:jestLive(); >jestLive</a> ~ See your motions in a lively, handy way. Choose the hand you want.</p>' +
 
-		'<p><a href=JavaScript:jestPlay(); >jestPlay</a> - Record and replay Leap Motion JSON and BVH data capture. ' +
-		'Much effort here - but not quite ready for prime time.</p>' +
+		'<p><a href=JavaScript:displayOverview("jest-live/","r1/jest-live.html"); >' +
+		'<img src=http://jaanga.github.io/gestification/cookbook/jest-live/r1/jest-live-screen-grab-240x180.png />' +
+		'jestLive R1</a><br>See your motions in a lively, handy way. Choose the hand you want.</p>' +
 
-		'<p><a href=JavaScript:phalanges(); >Phalanges</a> - Now at R7. Base code for showing hand and fingers even when data is not available from the Leap device. ' +
-		' Much effort here. </p>' +
+		'<p><a href=JavaScript:displayOverview("jest-play/","bvh/r1/jest-replay-bvh.html"); >' +
+		'<img src=http://jaanga.github.io/gestification/cookbook/jest-play/json/r1/jest-record-json-screen-grab-240x180.png />' +
+		'jestPlay R1</a><br>Record and replay Leap Motion JSON and BVH data capture. Much effort here - Nearly ready for prime time.</p>' +
+
+		'<p><a href=JavaScript:displayOverview("phalanges/","r7/phalanges.html"); >' +
+		'<img src=http://jaanga.github.io/gestification/cookbook/phalanges/r7/phalanges-screen-grab-240x180.png />' +
+		'Phalanges R7</a><br>Now at R7. Base code for showing hand and fingers even when data is not available from the Leap device. Much effort here.</p>' +
 
 		'<h3>Creativity</h3>' +
 
-		'<p><a href=JavaScript:draw3d(); >Draw 3D Objects</a> - 3D printing without a printer. Could be significant - one day.</p>' +
+		'<p><a href=JavaScript:displayOverview("draw-3d-objects/","r2/draw-3d-objects.html"); >' +
+		'<img src=http://jaanga.github.io/gestification/cookbook/draw-3d-objects/r1/draw-3d-objects-screen-grab-240x180.png />' +
+		'Draw 3D Objects</a><br>3D printing without a printer. Could be significant - one day.</p>' +
 
-		'<h3>Gathering Data</h3>' +
-		
-		'<p><a href=JavaScript:youGest(); >youGest</a> - The ultimate Leap Motion data explorer. Much effort here.</p>' +
-		
-		'<p><a href=JavaScript:gestureTally(); >Gesture Tally</a>- See the swipes. Response to LM forum question. Code example.</p>' +
-		
-		'<p><a href=JavaScript:pointingOrNot(); >Pointing or Not</a> - Are you pointing your finger? Code example.</p>' +		
+		'<h3>Data Gathering</h3>' +
 
-		'<p><a href=JavaScript:leapDistanceVsNormal(); >Leap Distance vs Normal</a>- another pitch, roll and yaw issues demo. Code example.</p>' +
+		'<p><a href=JavaScript:displayOverview("yougest/","r4/index.html"); >' +
+		'<img src=http://jaanga.github.io/gestification/cookbook/yougest/r4/index-screen-grab-240x180.png />' +
+		'youGest</a><br>The ultimate Leap Motion data explorer. Much effort here.</p>' +
 
-		'<p><a href=JavaScript:pitchRollYaw(); >Pitch Roll and Yaw</a>- pitch, roll and yaw issues demo. Code example.</p>' +
-		
+		'<p><a href=JavaScript:displayOverview("gesture-tally/","r1/gesture-tally.html"); >' +
+		'<img src=http://jaanga.github.io/gestification/cookbook/gesture-tally/r1/gesture-tally-screen-grab-240x180.png />' +
+		'Gesture Tally</a><br>See the swipes. Response to LM forum question. Code example.</p>' +
+
+		'<p><a href=JavaScript:displayOverview("pointing-or-not/","r1/pointing-or-not.html"); >' +
+		'<img srchttp://jaanga.github.io/gestification/cookbook/pointing-or-not/r1/pointing-or-not-screen-grab-240x180.png= />' +
+		'Pointing or Not</a><br>Are you pointing your finger? Code example.</p>' +
+
+		'<p><a href=JavaScript:displayOverview("leap-direction-vs-normal/","r2/leap-direction-vs-normal.html"); >' +
+		'<img src=http://jaanga.github.io/gestification/cookbook/pitch-roll-yaw/r2/pitch-roll-yaw-screen-grab-240x180.png />' +
+		'Leap Distance vs Normal</a><br>Another pitch, roll and yaw issues demo. Code example.</p>' +
+
+		'<p><a href=JavaScript:displayOverview("pitch-roll-yaw/","r2/pitch-roll-yaw.html"); >' +
+		'<img src=http://jaanga.github.io/gestification/cookbook/leap-direction-vs-normal/r2/leap-direction-vs-normal-screen-grab-240x180.png />' +
+		'Pitch Roll and Yaw</a><br>pitch, roll and yaw issues demo. Code example.</p>' +
+
 		'<h3>Fun & Games</h3>' +
-		
-		'<p><a href=JavaScript:touchly(); >Touchly</a> ~ A bubble-popping-like game. Fun.</p>' +
-		
-		'<p><a href=JavaScript:murgatroydHeaven(); >Murgatroyd Heaven </a>- not an easy game. Early work.</p>' +
-		
-		'<p><a href=JavaScript:showOfHands(); >Show of Hands</a> - Use one hand to display seven hands. The prettiest app?</p>' +		
-		
-		'<p><a href=JavaScript:handyVideos(); >Handy Videos</a> ~ Not your mother\'s video. Somewhat insane.</p>' +		
+
+		'<p><a href=JavaScript:displayOverview("touchly/","r4/touchly.html"); >' +
+		'<img srchttp://jaanga.github.io/gestification/cookbook/touchly/r4/touchly-screen-grab-240x180.png= />' +
+		'Touchly</a><br>A bubble-popping-like game. Fun.</p>' +
+
+		'<p><a href=JavaScript:displayOverview("murgatroyd-heaven/","murgatroyd-heaven.html"); >' +
+		'<img src=http://jaanga.github.io/gestification/cookbook/murgatroyd-heaven/murgatroyd-heaven-screen-grab-240x180.png />' +
+		'Murgatroyd Heaven </a><br>Not an easy game. Early work.</p>' +
+
+		'<p><a href=JavaScript:displayOverview("show-of-hands/","r1/show-of-hands.html"); >' +
+		'<img src=http://jaanga.github.io/gestification/cookbook/show-of-hands/r1/show-of-hands-screen-grab-240x180.png />' +
+		'Show of Hands</a><br>Use one hand to display seven hands. The prettiest app?</p>' +
+
+		'<p><a href=JavaScript:displayOverview("handy-videos/","video-select.html"); >' +
+		'<img src=http://jaanga.github.io/gestification/cookbook/handy-videos/handy-videos-screen-grab-240x180.png />' +
+		'Handy Videos</a><br>Not your mother\'s video editor. Somewhat insane.</p>' +
 	'';
+
+	DS.basic = 'border: 3px double #eee; overflow-x: hidden; overflow-y: auto; position: absolute; ';
+	DS.padding = 'padding: 0px 20px 0px 20px;';
+	DS.position = 'position: absolute;';	
 	
-	thing.border = 'outline: #ddd solid 1px; ';
-	thing.borderNo = 'border: black groove 0px; ';
-	thing.height = ' height: ' + (window.innerHeight * 0.50) + 'px;';
-	thing.height2 = ' height: ' + (window.innerHeight * 0.35) + 'px;';
-	thing.left = ' left: 28%;';
-	thing.left2 = ' left: 90%;';
-	thing.top = ' top: ' + (window.innerHeight * 0.05) + 'px;';
-	thing.top2 = ' top: ' + (window.innerHeight * 0.60) + 'px;';
-	thing.width = ' width: 60%; ';
+	DS.horzMnu = 'left: 0; width: 18%;';
+	DS.horzIfr = 'left: 25%; margin: auto; right: 20%; width: 55%;' ;
+	DS.horzRdm = 'left: 25%; margin: auto; right: 20%; ';
+	DS.horzLnk = 'right: 0; width: 18%; ';	
 
-	thing.ifr = document.body.appendChild( document.createElement( 'iframe' ) );
-	thing.ifr.style.cssText = thing.border
-	thing.ifrStyle = thing.height + thing.left + 'position: absolute; ' + thing.top + thing.width;
+	DS.height = ' height: ' + (window.innerHeight * 0.40) + 'px;';
+	DS.heightFull = ' height: ' + (window.innerHeight * 0.90) + 'px;';
+
+	DS.top1 = ' top: ' + (window.innerHeight * 0.05) + 'px;';
+	DS.top2 = ' top: ' + (window.innerHeight * 0.55) + 'px;';
 	
-	thing.readme = document.body.appendChild( document.createElement( 'div' ) );
-	thing.readmeStyle = thing.border + thing.height2 + thing.left + ' overflow-x: hidden; overflow-y: scroll; padding-left: 10px; position: absolute;' + thing.top2 + thing.width;
+	
+	DS.menu.style.cssText = DS.basic + DS.heightFull + DS.padding + DS.horzMnu + DS.top1;
+	
+	DS.ifr = document.body.appendChild( document.createElement( 'iframe' ) );
+	DS.ifrStyle = DS.basic + DS.height + DS.top1 + DS.horzIfr;
 
-	thing.runApp = document.body.appendChild( document.createElement( 'div' ) );
-	thing.runApp.style.cssText = 'font: 800 14pt monospace; ' + thing.left2 + 'position: absolute; ' + thing.top + ' width: 100px; ';
+	DS.readme = document.body.appendChild( document.createElement( 'div' ) );
+	DS.readmeStyleFull = DS.basic + DS.heightFull + DS.padding + DS.top1 + DS.horzRdm;
+	DS.readmeStyle = DS.basic + DS.height + DS.padding + DS.top2 + DS.horzRdm;
+	
+	DS.runApp = document.body.appendChild( document.createElement( 'div' ) );
+	DS.runApp.style.cssText = DS.position + DS.top1 + DS.horzLnk;
 
-	thing.viewSource = document.body.appendChild( document.createElement( 'div' ) );
-	thing.viewSource.style.cssText = thing.left2 + 'position: absolute; ' + thing.top2 ;
+	DS.viewSource = document.body.appendChild( document.createElement( 'div' ) );
+	DS.viewSource.style.cssText = DS.position + DS.top2 + DS.horzLnk;
+	
+	displayPage( 'readme.md' );
 
-	introduction();
+	function displayPage( fname ) {
+	
+		DS.ifr.style.cssText = 'display: none;';
 
-	function introduction() {
-		thing.ifr.style.cssText = thing.borderNo + ' bottom: 0; height: ' + window.innerHeight + 'px;' +
-		thing.left + 'margin: 0 auto; overflow: hidden; top: 0; width: 100%; ' ;
-		thing.ifr.src = ''; // 'introduction.html';
+		DS.readme.innerHTML = DS.converter.makeHtml( requestFile( fname ) );
+		DS.readme.style.cssText = DS.readmeStyleFull;
 
-		thing.readme.style.cssText = thing.border + ' height: ' + (window.innerHeight * 0.85) + 'px;' + thing.left + ' overflow-y: scroll; max-width: 1000px; padding: 20px; position: absolute; ' + thing.top + thing.width;
-		thing.readme.innerHTML = converter.makeHtml( requestFile( 'readme.md' ) );
+		DS.runApp.innerHTML = '<h2><a href="https://github.com/jaanga/gestification/tree/gh-pages/cookbook" target="_blank">' +
+			'View<br>Cookbook<br>source code<br> on GitHub<br>in <br> new tab</a></h2>';
+		DS.viewSource.innerHTML = '';
 
-		thing.runApp.innerHTML = '<a href="https://github.com/jaanga/gestification/tree/gh-pages/cookbook" >View<br>Read Me<br>in<br>GitHub</a>'
-		thing.viewSource.innerHTML = '';
 	}
 
-	function jestLive() {
-		thing.ifr.style.cssText = thing.ifrStyle
-		thing.ifr.src = 'jest-live/r1/jest-live.html';
+	function displayOverview( folder, fname ) {
 
-		thing.readme.style.cssText = thing.readmeStyle;
-		thing.readme.innerHTML = converter.makeHtml( requestFile( 'jest-live/readme.md' ) );
+		DS.ifr.src = folder + fname;
+		DS.ifr.style.cssText = DS.ifrStyle;
 
-		thing.runApp.innerHTML = '<a href="jest-live/r1/jest-live.html" target="_blank">Run app<br>in<br> new tab</a>';
-		thing.viewSource.innerHTML = '<a href="https://github.com/jaanga/gestification/tree/gh-pages/cookbook/jest-live" target="_blank">View source<br>in<br> new tab</a>';
-	}
+		DS.readme.innerHTML = DS.converter.makeHtml( requestFile( folder + 'readme.md' ) );
+		DS.readme.style.cssText = DS.readmeStyle;
 
-	function jestPlay() {
-		thing.ifr.style.cssText = thing.ifrStyle;
-		thing.ifr.src = 'jest-play/bvh/r1/jest-replay-bvh.html';
+		DS.runApp.innerHTML = '<h2><a href="' + folder + fname + '" target="_blank">Run<br>HTML app<br>in<br>new tab</a></h2>';
 
-		thing.readme.style.cssText = thing.readmeStyle;
-		thing.readme.innerHTML = converter.makeHtml( requestFile( 'jest-play/readme.md' ) );
+		DS.viewSource.innerHTML = '<h2><a href="https://github.com/jaanga/gestification/tree/gh-pages/cookbook/' + folder + '" target="_blank">' +
+			'View<br> source code<br> on GitHub<br>in <br> new tab</a></h2>';
 
-		thing.runApp.innerHTML = '<a href="jest-play/bvh/r1/jest-replay-bvh.html" target="_blank">Run app<br>in<br> new tab</a>';
-		thing.viewSource.innerHTML = '<a href="https://github.com/jaanga/gestification/tree/gh-pages/cookbook/jest-play" target="_blank">View source<br>in<br> new tab</a>';
-	}
-
-	function boilerplate() {
-		thing.ifr.style.cssText = thing.ifrStyle;
-		thing.ifr.src = 'boilerplate/leap-threejs-boilerplate.html';
-
-		thing.readme.style.cssText = thing.readmeStyle;
-		thing.readme.innerHTML = converter.makeHtml( requestFile( 'boilerplate/readme.md' ) );
-
-		thing.runApp.innerHTML = '<a href="boilerplate/leap-threejs-boilerplate.html" target="_blank">Run app<br>in<br> new tab</a>';		
-		thing.viewSource.innerHTML = '<a href=https://github.com/jaanga/gestification/tree/gh-pages/cookbook/boilerplate/ target="_blank">View source<br>in<br> new tab</a>';
-	}
-
-	function phalanges() {
-		thing.ifr.style.cssText = thing.ifrStyle;
-		thing.ifr.src = 'phalanges/r7/phalanges.html';
-
-		thing.readme.style.cssText = thing.readmeStyle;
-		thing.readme.innerHTML = converter.makeHtml( requestFile( 'phalanges/readme.md' ) );
-		
-		thing.runApp.innerHTML = '<a href="phalanges/r7/phalanges.html" target="_blank">Run app<br>in<br> new tab</a>';		
-		thing.viewSource.innerHTML = '<a href="https://github.com/jaanga/gestification/tree/gh-pages/cookbook/phalanges/" target="_blank">View source<br>in<br> new tab</a>';		
-	}
-
-	function handyVideos() {
-		thing.ifr.style.cssText = thing.ifrStyle;
-		thing.ifr.src = 'handy-videos/video-select.html';
-
-		thing.readme.style.cssText = thing.readmeStyle;
-		thing.readme.innerHTML = converter.makeHtml( requestFile( 'handy-videos/readme.md' ) );
-		
-		thing.runApp.innerHTML = '<a href="handy-videos/video-select.html" target="_blank">Run app<br>in<br> new tab</a>';		
-		thing.viewSource.innerHTML = '<a href="https://github.com/jaanga/gestification/tree/gh-pages/cookbook/handy-videos/" target="_blank">View source<br>in<br> new tab</a>';		
-	}
-
-	function draw3d() {
-		thing.ifr.style.cssText = thing.ifrStyle;
-		thing.ifr.src = 'draw-3d-objects/r1/draw-3d-objects.html';
-
-		thing.readme.style.cssText = thing.readmeStyle;
-		thing.readme.innerHTML = converter.makeHtml( requestFile( 'draw-3d-objects/readme.md' ) );
-
-		thing.runApp.innerHTML = '<a href="draw-3d-objects/r1/draw-3d-objects.html" target="_blank">Run app<br>in<br> new tab</a>';		
-		thing.viewSource.innerHTML = '<a href="https://github.com/jaanga/gestification/tree/gh-pages/cookbook/draw-3d-objects/" target="_blank">View source<br>in<br> new tab</a>';		
-	}
-
-	function gestureTally() {
-		thing.ifr.style.cssText = thing.ifrStyle;
-		thing.ifr.src = 'gesture-tally/r1/gesture-tally.html';
-
-		thing.readme.style.cssText = thing.readmeStyle;
-		thing.readme.innerHTML = converter.makeHtml( requestFile( 'gesture-tally/readme.md' ) );
-		
-		thing.runApp.innerHTML = '<a href="gesture-tally/r1/gesture-tally.html" target="_blank">Run app<br>in<br> new tab</a>';		
-		thing.viewSource.innerHTML = '<a href="https://github.com/jaanga/gestification/tree/gh-pages/cookbook/gesture-tally/" target="_blank">View source<br>in<br> new tab</a>';		
-	}
-
-	function leapDistanceVsNormal() {
-		thing.ifr.style.cssText = thing.ifrStyle;
-		thing.ifr.src = 'leap-distance-vs-normal/r2/leap-distance-vs-normal.html';
-
-		thing.readme.style.cssText = thing.readmeStyle;
-		thing.readme.innerHTML = converter.makeHtml( requestFile( 'leap-distance-vs-normal/readme.md' ) );
-		
-		thing.runApp.innerHTML = '<a href="leap-distance-vs-normal/r2/leap-distance-vs-normal.html" target="_blank">Run app<br>in<br> new tab</a>';		
-		thing.viewSource.innerHTML = '<a href="https://github.com/jaanga/gestification/tree/gh-pages/cookbook/leap-distance-vs-normal/" target="_blank">View source<br>in<br> new tab</a>';		
-	}
-
-	function pitchRollYaw() {
-		thing.ifr.style.cssText = thing.ifrStyle;
-		thing.ifr.src = 'pitch-roll-yaw/r2/pitch-roll-yaw.html';
-
-		thing.readme.style.cssText = thing.readmeStyle;
-		thing.readme.innerHTML = converter.makeHtml( requestFile( 'pitch-roll-yaw/readme.md' ) );
-		
-		thing.runApp.innerHTML = '<a href="pitch-roll-yaw/r2/pitch-roll-yaw.html" target="_blank">Run app<br>in<br> new tab</a>';		
-		thing.viewSource.innerHTML = '<a href="https://github.com/jaanga/gestification/tree/gh-pages/cookbook/pitch-roll-yaw/" target="_blank">View source<br>in<br> new tab</a>';		
-	}
-
-	function pointingOrNot() {
-		thing.ifr.style.cssText = thing.ifrStyle;
-		thing.ifr.src = 'pointing-or-not/r1/pointing-or-not.html';
-
-		thing.readme.style.cssText = thing.readmeStyle;
-		thing.readme.innerHTML = converter.makeHtml( requestFile( 'pointing-or-not//readme.md' ) );
-		
-		thing.runApp.innerHTML = '<a href="pointing-or-not/r1/pointing-or-not.html" target="_blank">Run app<br>in<br> new tab</a>';		
-		thing.viewSource.innerHTML = '<a href="https://github.com/jaanga/gestification/tree/gh-pages/cookbook/pointing-or-not/" target="_blank">View source<br>in<br> new tab</a>';		
-	}
-
-	function showOfHands() {
-		thing.ifr.style.cssText = thing.ifrStyle;
-		thing.ifr.src = 'show-of-hands/r1/show-of-hands.html';
-
-		thing.readme.style.cssText = thing.readmeStyle;
-		thing.readme.innerHTML = converter.makeHtml( requestFile( 'show-of-hands/readme.md' ) );
-		
-		thing.runApp.innerHTML = '<a href="show-of-hands/r1/show-of-hands.html" target="_blank">Run app<br>in<br> new tab</a>';		
-		thing.viewSource.innerHTML = '<a href="https://github.com/jaanga/gestification/tree/gh-pages/cookbook/show-of-hands/" target="_blank">View source<br>in<br> new tab</a>';		
-	}
-
-	function touchly() {
-		thing.ifr.style.cssText = thing.ifrStyle;
-		thing.ifr.src = 'touchly/r4/touchly.html';
-
-		thing.readme.style.cssText = thing.readmeStyle;
-		thing.readme.innerHTML = converter.makeHtml( requestFile( 'touchly/readme.md' ) );
-		
-		thing.runApp.innerHTML = '<a href="touchly/r4/touchly.html" target="_blank">Run app<br>in<br> new tab</a>';		
-		thing.viewSource.innerHTML = '<a href="https://github.com/jaanga/gestification/tree/gh-pages/cookbook/touchly/" target="_blank">View source<br>in<br> new tab</a>';		
-	}
-
-	function youGest() {
-		thing.ifr.style.cssText = thing.ifrStyle;
-		thing.ifr.src = 'yougest/r4/index.html';
-
-		thing.readme.style.cssText = thing.readmeStyle;
-		thing.readme.innerHTML = converter.makeHtml( requestFile( 'yougest/readme.md' ) );
-		
-		thing.runApp.innerHTML = '<a href="yougest/r4/index.html" target="_blank">Run app<br>in<br> new tab</a>';		
-		thing.viewSource.innerHTML = '<a href="https://github.com/jaanga/gestification/tree/gh-pages/cookbook/yougest/" target="_blank">View source<br>in<br> new tab</a>';		
-	}
-
-	function murgatroydHeaven() {
-		thing.ifr.style.cssText = thing.ifrStyle;
-		thing.ifr.src = 'murgatroyd-heaven/index.html';
-
-		thing.readme.style.cssText = thing.readmeStyle;
-		thing.readme.innerHTML = converter.makeHtml( requestFile( 'murgatroyd-heaven/readme.md' ) );
-		
-		thing.runApp.innerHTML = '<a href="murgatroyd-heaven/index.html" target="_blank">Run app<br>in<br> new tab</a>';		
-		thing.viewSource.innerHTML = '<a href="https://github.com/jaanga/gestification/tree/gh-pages/cookbook/" target="_blank">View source<br>in<br> new tab</a>';		
 	}
 
 	function requestFile( fname ) {
@@ -268,7 +158,13 @@
 		xmlHttp.send( null );
 		return xmlHttp.responseText;
 	}
-	
+
 </script>
+<script src = http://js.leapmotion.com/0.2.2/leap.min.js ></script>
+<script src = http://mrdoob.github.com/three.js/examples/js/Detector.js ></script>
+<script src = http://mrdoob.github.com/three.js/build/three.min.js ></script>
+<script src = http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js> </script>
+<script src = http://jaanga.github.io/libs/ado/air-doodle.js ></script>
+<script>init( '../models/ado/rubber-duck-10.js' );</script>
 </body>
 </html>

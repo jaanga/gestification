@@ -41,7 +41,7 @@
 		css = document.body.appendChild( document.createElement('style') );
 		css.innerHTML = 'body { color: #777; font: 400 12pt monospace; margin: 0; overflow: hidden; }' ;
 
-		renderer = new THREE.WebGLRenderer( { setClearColor: 0xffffff, antialias: true } );
+		renderer = new THREE.WebGLRenderer( { setClearColor: 0xffffff, antialias: true, preserveDrawingBuffer: true } );
 		// renderer = new THREE.WebGLRenderer();
 		renderer.shadowMapEnabled = true;
 		renderer.setSize( window.innerWidth, window.innerHeight );

@@ -1,8 +1,5 @@
-Work-In-Hand
-============
-
-_This folder does not yet have an HTML web page._  
-
+Work-In-Hand Read Me
+====================
 
 
 The apps in this folder are things that work - after a fashion - but which could use a lot more effort.
