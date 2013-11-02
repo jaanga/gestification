@@ -1,10 +1,6 @@
 jestPlay
 ========
-* A Suite of Apps to Record and Replay Leap Device Data Files
-
-![jestPlay](http://jaanga.github.io/gestification/cookbook/jest-play/json/r1/jest-record-json-screen-grab-320x240.png)
-
-
+Suite of Apps to Record and Replay Leap Device Data Files
 
 ### Live Demos
 Currently jestPlay is a suite of four apps - described as follows:
@@ -81,6 +77,11 @@ Pressing the space-bar pauses all operations. Pressing the 'x' key clears the BV
 * Hand and fingers flashing on replay << 2013-09-03 fixed
 * Should not need to have fingers displayed all the time << 2013-09-03 fixed
 
+### Screen Capture
+
+![jestPlay](http://jaanga.github.io/gestification/cookbook/jest-play/json/r1/jest-record-json-screen-grab-320x240.png)
+
+* 320 x 240 pixels. Second out of four images in R1 folder
 
 ### License and Credits
 [Copyright, License and Credits](https://github.com/jaanga/gestification/blob/gh-pages/cookbook/jest-play/copyright-license-credits.md)

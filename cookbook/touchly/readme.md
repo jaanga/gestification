@@ -7,15 +7,15 @@ A touch-expander: touch things and watch them expand. Repeat.
 
 [Touchly R4](http://jaanga.github.io/gestification/cookbook/touchly/r4/touchly.html)
 
+
+### Description
+Early attempt at working out a 3D user interface.
+
 ### Screen Capture
 
 ![Touchly](http://jaanga.github.io/gestification/cookbook/touchly/r4/touchly-screen-grab-320x240.png)
 
 * 320 x 240 pixels. Second out of four images in R1 folder
-
-### Description
-Early attempt at working out a 3D user interface.
-
 
 ###Copyright and License
 

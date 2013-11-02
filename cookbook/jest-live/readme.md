@@ -1,14 +1,10 @@
 jestLive
 ========
+Real-time Leap and bones.
 
-### Live demo
+### Live Demo
 
-[![jestLive][pic]<br>jestLive][jl]
-
-[pic]: http://jaanga.github.io/gestification/cookbook/jest-live/r1/leap-threejs-boilerplate-screen-grab-320x240.png
-[jl]: http://jaanga.github.io/gestification/cookbook/jest-live/r1/jest-live.html>
-
-
+[jestLive]( http://jaanga.github.io/gestification/cookbook/jest-live/r1/jest-live.html)
 
 ### Description
 
@@ -20,10 +16,15 @@ The jestLive app translates Leap Motion data into a character animation industry
 The [BVH](http://en.wikipedia.org/wiki/Biovision_Hierarchy) data is used to build and update objects (or 'bones') using Three.js.
 
 
-
 ### References
 
 See also: [Jaanga.com label = BVH](http://www.jaanga.com/search/label/BVH)
+
+### Screen Capture
+
+![jestLive](http://jaanga.github.io/gestification/cookbook/jest-live/r1/jest-live-screen-grab-320x240.png)
+
+* 320 x 240 pixels. Second out of four images in R1 folder
 
 
 ### Copyright, License and Credits

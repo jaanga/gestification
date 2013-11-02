@@ -1,9 +1,10 @@
 Three.js - Leap.js - Boilerplate
 ================================
+Start here. Wave your hands to say 'Hello World!'
 
-### Live Demo:
+### Live Demo
 
-[![Three.js - Leap.js - Boilerplate][pic]<br>Three.js - Leap.js - Boilerplate][boil]
+[Three.js - Leap.js - Boilerplate](http://jaanga.github.io/gestification/cookbook/boilerplate/r1/leap-threejs-boilerplate.html)
 
 ### Description
 
@@ -21,14 +22,24 @@ Here's a link to the YouTube video:
 <img src="http://img.youtube.com/vi/gLxXUcSJyJw/0.jpg" alt="boilerplate video" />
 </a>
 
-[pic]: http://jaanga.github.io/gestification/cookbook/boilerplate/r1/leap-threejs-boilerplate-screen-grab-320x240.png "Start here!"
-[boil]: http://jaanga.github.io/gestification/cookbook/boilerplate/index.html
+
+### Screen Capture
+
+![Three.js - Leap.js - Boilerplate](http://jaanga.github.io/gestification/cookbook/boilerplate/r1/leap-threejs-boilerplate-screen-grab-320x240.png)
+
+* 320 x 240 pixels. Second out of four images in R1 folder
 
 ### Change Log
 
+2013-11-02 ~ Theo
+
+* Readme updates
+
 2013-10-31 ~ Theo  
+
 * readme updated
 * index.html added
  
-2013-10-01 ~ Theo  
+2013-10-01 ~ Theo
+  
 * Folder and files added
