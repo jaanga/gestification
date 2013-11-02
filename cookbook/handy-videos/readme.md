@@ -21,7 +21,7 @@ It all started with a simple end-user question:
 
 See:
 
-[WebGL: Displaying Video on Wobbly, Moving Surfaces](http://www.jaanga.com/2013/08/webgl-displaying-video-on-wobbly-moving.html)
+[WebGL: Displaying Video on Wobbly, Moving Surfaces](http://www.jaanga.com/2013/08/webgl-displaying-video-on-wobbly-moving.html)  
 [Folding Polygons the Naughty Way: in 3D, with Intersections and a Video Veneer](http://www.jaanga.com/2013/09/folding-polygons-naughty-way-in-3d-with.html)
 
 
@@ -32,11 +32,11 @@ Copyright &copy; 2013 Jaanga authors
 MIT License
 
 
-*** Change Log
+### Change Log
 
 2013-11-02 ~ Theo
 
-* Readmr updates
+* Readme updates
 
 2013-09-28 ~ Theo
 * R1 added
