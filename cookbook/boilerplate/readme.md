@@ -9,6 +9,7 @@ This HTM/JavaScript file provides a minimum amount of code that loads the Three.
 
 This file was featured by the Leap Motion labs web site on 15 October 2013 in a post titled:  
 
+## References
 '[Thinking as a Designer: What’s a Good Leap + Three.js Boilerplate?](http://labs.leapmotion.com/post/64166391272/thinking-as-a-designer-whats-a-good-leap-three-js])'
 
 Here's a link to the YouTube video:
