@@ -9,7 +9,11 @@
 <script src=http://jaanga.github.io/libs/md/showdown.js ></script>
 <script>
 
-	document.body.style.cssText = 'font: bold 12pt monospace; margin: 0; overflow: hidden;';
+	var css = document.body.appendChild( document.createElement('style') );
+	css.innerHTML = 'body { font: bold 12pt monospace; margin: 0; overflow: hidden; }' +
+		'h1, h2, h3, p { margin: 10px 0px; padding: 0px 20px;  }' +
+		'p {padding: 5px 20px 5px 20px; }' +
+	'';
 
 	var DS = {};
 	var ADO = ADO || {};
@@ -21,11 +25,9 @@
 		'<a href=../ target="_blank">Gestification</a>&nbsp;&raquo;<br>' +
 		'<a href=# >Cookbook</a></h1>' +
 		
-		'<p><a href=# onclick=displayPage("introduction.md",this.parentNode); >Introducing</a></p>' +
+		'<p id=intro ><a href=# onclick=displayPage("introduction.md",this.parentNode); >Introducing</a></p>' +
 		
 		'<p><a href=# onclick=displayPage("readme.md",this.parentNode); >Cookbook Read Me on GitHub</a></p>' +
-
-		'<p></p>' +
 
 		'<h3>Start here</h3>' +
 
@@ -100,10 +102,9 @@
 	'';
 
 	DS.basic = 'border: 3px double #eee; overflow-x: hidden; overflow-y: auto; position: absolute; ';
-	DS.padding = 'padding: 0px 20px 0px 20px;';
 	DS.position = 'position: absolute;';	
 	
-	DS.horzMnu = 'left: 0; width: 18%;';
+	DS.horzMnu = 'left: 0; width: 20%;';
 	DS.horzIfr = 'left: 25%; margin: auto; right: 20%; width: 55%;' ;
 	DS.horzRdm = 'left: 25%; margin: auto; right: 20%; ';
 	DS.horzLnk = 'right: 0; width: 18%; ';	
@@ -114,15 +115,14 @@
 	DS.top1 = ' top: ' + (window.innerHeight * 0.05) + 'px;';
 	DS.top2 = ' top: ' + (window.innerHeight * 0.55) + 'px;';
 	
-	
-	DS.menu.style.cssText = DS.basic + DS.heightFull + DS.padding + DS.horzMnu + DS.top1;
+	DS.menu.style.cssText = DS.basic + DS.heightFull + DS.horzMnu + DS.top1;
 	
 	DS.ifr = document.body.appendChild( document.createElement( 'iframe' ) );
 	DS.ifrStyle = DS.basic + DS.height + DS.top1 + DS.horzIfr;
 
 	DS.readme = document.body.appendChild( document.createElement( 'div' ) );
-	DS.readmeStyleFull = DS.basic + DS.heightFull + DS.padding + DS.top1 + DS.horzRdm;
-	DS.readmeStyle = DS.basic + DS.height + DS.padding + DS.top2 + DS.horzRdm;
+	DS.readmeStyleFull = DS.basic + DS.heightFull + DS.top1 + DS.horzRdm;
+	DS.readmeStyle = DS.basic + DS.height + DS.top2 + DS.horzRdm;
 	
 	DS.runApp = document.body.appendChild( document.createElement( 'div' ) );
 	DS.runApp.style.cssText = DS.position + DS.top1 + DS.horzLnk;
@@ -131,14 +131,13 @@
 	DS.viewSource.style.cssText = DS.position + DS.top2 + DS.horzLnk;
 
 	if ( !location.hash ) {
-		displayPage( 'introduction.html', null );
+		displayPage( 'introduction.md', intro );
 	} else {
 		var str = location.hash.split('#');
 		displayOverview( str[1], str[2], null ) 
 	}
 
 	function displayPage( fname, element ) {
-	
 		DS.ifr.style.cssText = 'display: none;';
 
 		DS.readme.innerHTML = DS.converter.makeHtml( requestFile( fname ) );
@@ -151,11 +150,16 @@
 		
 		clearMenuHighlights( element );
 		
-		ADO.showDood = true;
+		if ( ADO.doodle ) {
+			ADO.doodle.style.display = 'block';
+			ADO.showDoodle = true;
+			animate();
+		}	
 	}
 
 	function displayOverview( folder, fname, element) {
-		ADO.showDood = false;
+		ADO.showDoodle = false;
+		ADO.doodle.style.display = 'none';
 		
 		DS.ifr.src = folder + fname;
 		DS.ifr.style.cssText = DS.ifrStyle;
@@ -173,7 +177,6 @@
 	}
 	
 	function clearMenuHighlights( element ) {
-// update current menu highlights	
 		var paragraphs = document.getElementsByTagName('p');
 		for (var i = 0, len = paragraphs.length; i < len; i++) {
 			paragraphs[i].style.backgroundColor='';
