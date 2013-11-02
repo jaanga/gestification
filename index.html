@@ -96,7 +96,7 @@
 		DS.readme.innerHTML = DS.converter.makeHtml( requestFile( folder + '/readme.md' ) );
 		DS.readme.style.cssText = DS.readmeStyle;
 
-		DS.runApp.innerHTML = '<h2><a href="' + folder + '/index.html" target="_blank">Run<br>viewer/browser<br>HTML app<br>in<br>new tab</a></h2>';
+		DS.runApp.innerHTML = '<h2><a href="' + folder + '/index.html" >Open<br>'  + folder + '<br>viewer/browser<br>HTML app</a></h2>';
 		DS.viewSource.innerHTML = '<h2><a href="https://github.com/jaanga/gestification/tree/gh-pages/' + folder +
 			'/" target="_blank">View<br> source code<br> on GitHub<br>in <br> new tab</a></h2>';
 	}

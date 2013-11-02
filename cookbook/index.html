@@ -12,13 +12,17 @@
 	document.body.style.cssText = 'font: bold 12pt monospace; margin: 0; overflow: hidden;';
 
 	var DS = {};
+	var ADO = ADO || {};
+	
 	DS.converter = new Showdown.converter();
 
 	DS.menu = document.body.appendChild( document.createElement( 'div' ) );
 	DS.menu.innerHTML = '<h1><a href=../../ >Jaanga</a> &raquo;<br>' +
 		'<a href=../ target="_blank">Gestification</a>&nbsp;&raquo;<br>' +
 		'<a href=# >Cookbook</a></h1>' +
-
+		
+		'<p><a href=# onclick=displayPage("introduction.md",this.parentNode); >Introducing</a></p>' +
+		
 		'<p><a href=# onclick=displayPage("readme.md",this.parentNode); >Cookbook Read Me on GitHub</a></p>' +
 
 		'<p></p>' +
@@ -127,7 +131,7 @@
 	DS.viewSource.style.cssText = DS.position + DS.top2 + DS.horzLnk;
 
 	if ( !location.hash ) {
-		displayPage( 'readme.md', null );
+		displayPage( 'introduction.html', null );
 	} else {
 		var str = location.hash.split('#');
 		displayOverview( str[1], str[2], null ) 
@@ -146,10 +150,13 @@
 		location.hash = '';
 		
 		clearMenuHighlights( element );
+		
+		ADO.showDood = true;
 	}
 
 	function displayOverview( folder, fname, element) {
-	
+		ADO.showDood = false;
+		
 		DS.ifr.src = folder + fname;
 		DS.ifr.style.cssText = DS.ifrStyle;
 
