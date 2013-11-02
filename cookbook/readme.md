@@ -1,8 +1,15 @@
 Cookbook Read Me
-===============
+================
 
-Cookbook code is an example of programming code that identifies or demonstrates a particular or specific aspect of a library or toolkit.
+[Cookbook code](http://en.wikipedia.org/wiki/Cookbook#Usage_outside_the_world_of_food) is an example of programming code that identifies 
+or demonstrates particular or specific aspects of a library or toolkit.
 
+This page provides an overview of the cookbook examples in this repository in a single page.
+
+You may view this page as an [Jaanga app][app] or as a [GitHub read me][git].
+
+[app]:./index.html#readme.md#
+[git]:https://github.com/jaanga/gestification/tree/gh-pages/cookbook
 
 ### Start Here
 

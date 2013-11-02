@@ -1,60 +1,84 @@
 Phalanges
 =========
+Phalanges, using Leap.js, parses incoming Leap Motion data then, using Three.js, creates and updates 3D objects 
+that mirror the live motion of hands and fingers on screen in real-time.
+
+### Live Demos
+
+Demo R7: [Phalanges R7](http://jaanga.github.io/gestification/cookbook/phalanges/r7/phalanges.html)  
+
+* Finally, a solution that doesn't suck much. If you are lucky, you might be able to approximate an OK sign. 
+Generally you should be able to see your virtual right hand move around the screen with little lag, not have fingers disappear if some of the fingers are occlude or clenched.
+Support for one right hand only. Support for moderate pitch, roll and yaw only. 
+
+Demo R6: [Phalanges R6](http://jaanga.github.io/gestification/cookbook/phalanges/r6/phalanges.html) 
+
+* A hybrid solution. The short finger tips display Leap Motion data. The long finger tips display calculated date. One way or another there's always a finger showing.
+
+Demo R5: [Phalanges R5](http://jaanga.github.io/gestification/cookbook/phalanges/r5/phalanges.html)
+
+* Much better than r4. This release is not ready for skinning, but is much closer to a potential starting point.
+
+Demo R4: [Phalanges R4](http://jaanga.github.io/gestification/cookbook/phalanges/r4/phalanges.html) 
+
+* Note that finger tips display at awkward inappropriate angles
+
+Demo R3: [Phalanges R3](http://jaanga.github.io/gestification/cookbook/phalanges/r3/phalanges.html) 
+
+* Note that fingers disappear and connect to inappropriate bases
+
+Demo R2: [Phalanges R2](http://jaanga.github.io/gestification/cookbook/phalanges/r2/phalanges.html) 
+
+* Note that fingers disappear
+
+Demo R1: [Phalanges R1](http://jaanga.github.io/gestification/cookbook/phalanges/r1/phalanges.html)
+
+* Note that finger bases cross each other and tips connect to inappropriate bases
+
+
+### Description
+
 _Phalanges is the Latin name given to the bones in the hand._
 
 Please do read the 'Road Map / Goals' section further down.
 
 And watch the gentle progress of each new revision:
 
-Demo R7: <http://jaanga.github.io/gestification/cookbook/phalanges/r7/phalanges.html>  
-- Finally, a solution that doesn't suck much. If you are lucky, you might be able to approximate an OK sign. 
-Generally you should be able to see your virtual right hand move around the screen with little lag, not have fingers disappear if some of the fingers are occlude or clenched.
-Support for one right hand only. Support for moderate pitch, roll and yaw only. 
+See also: [phalanx bone](https://en.wikipedia.org/wiki/Phalanx_bone)
 
-Demo R6: <http://jaanga.github.io/gestification/cookbook/phalanges/r6/phalanges.html>  
-- A hybrid solution. The short finger tips display Leap Motion data. The long finger tips display calculated date. One way or another there's always a finger showing.
+### Screen Captures
 
-Demo R5: <http://jaanga.github.io/gestification/cookbook/phalanges/r5/phalanges.html>  
-- Much better than r4. This release is not ready for skinning, but is much closer to a potential starting point.
+![Phalnges R7](http://jaanga.github.io/gestification/cookbook/phalanges/r7/phalanges-screen-grab-320x240.png)
 
-Demo R4: http://jaanga.github.io/gestification/cookbook/phalanges/r4/phalanges.html  
-- Note that finger tips display at awkward inappropriate angles
+* 320 x 240 pixels. Second out of four images in R7 folder
 
-Demo R3: http://jaanga.github.io/gestification/cookbook/phalanges/r3/phalanges.html  
-- Note that fingers disappear and connect to inappropriate bases
-
-Demo R2: http://jaanga.github.io/gestification/cookbook/phalanges/r2/phalanges.html  
-- Note that fingers disappear
-
-Demo R1: http://jaanga.github.io/gestification/cookbook/phalanges/r1/phalanges.html  
-- Note that finger bases cross each other and tips connect to inappropriate bases
-
-## References
+### References
 
 <http://leap.quitebeyond.de/accure-hand-finger-recognition-3d-space/>
 
-### Related Work
+### Related Work / Links
 Roman Liutikov is doing some excellent work as described here:
 
 <http://blog.romanliutikov.com/post/60899246643/manipulating-rigged-hand-with-leap-motion-in-three-js>
 
 With demo file here:
 
-http://demo.romanliutikov.com/three/10/
+<http://demo.romanliutikov.com/three/10/>
 
 Roman's code was been re-written here:
 
-Demo: http://jaanga.github.io/gestification/cookbook/phalanges/liutikov/liutikov.html
+Demo: [Liutikov redux](http://jaanga.github.io/gestification/cookbook/phalanges/liutikov/liutikov.htm))
 
 With more information and background here:
 
-https://github.com/jaanga/gestification/tree/gh-pages/cookbook/phalanges/liutikov
+[Liutikov readme](https://github.com/jaanga/gestification/tree/gh-pages/cookbook/phalanges/liutikov)
 
  
-###Road Map / Goals
+### Road Map / Goals
 The idea is to create the procedures required to display, correctly and in real-time, a user-manipulated 3D skin and bones setup.
 
 The demo app should provide sample or generic FOSS JavaScript code that may later be used to create complete apps that will:
+
 * record, save and replay Leap data in BVH format
 * generate realtime visualizations of human-like hands or claws or other appendages with full skins and flexible surfaces
 
@@ -78,7 +102,10 @@ The code should be able to operate seamlessly with code that reads and writes ge
 * After that first five finger view, Leap device pointables data may start and stop incoming, but fingers should remain visible and in the appropriate position related to where they were last seen
 
 
-See also: https://en.wikipedia.org/wiki/Phalanx_bone
+### Copyright and License
+Copyright &copy; 2013 Jaanga authors
+
+MIT License
 
 ### Change Log
 
@@ -135,8 +162,3 @@ See also: https://en.wikipedia.org/wiki/Phalanx_bone
 
 * r1 - Folder and app started
 
-
-##Copyright and License
-Copyright &copy; 2013 Jaanga authors
-
-MIT License

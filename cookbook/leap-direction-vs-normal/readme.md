@@ -1,4 +1,25 @@
 Leap Direction vs Normal
-=======================
+========================
+Another pitch, roll and yaw issues demo. Code example.
 
-Demo: <http://jaanga.github.io/gestification/cookbook/leap-distance-vs-normal/r2/leap-direction-vs-normal.html>
+### Live Demo
+
+[Leap Direction vs Normal](http://jaanga.github.io/gestification/cookbook/leap-direction-vs-normal/r2/leap-direction-vs-normal.html)
+
+### Screen Capture
+
+![Leap Direction vs Normal](http://jaanga.github.io/gestification/cookbook/leap-direction-vs-normal/r2/leap-direction-vs-normal-screen-grab-320x240.png)
+
+* 320 x 240 pixels. Second out of four images in R1 folder
+
+
+### Copyright and License
+Copyright &copy; 2013 Jaanga authors
+
+MIT License
+
+### Change Log
+
+2013-11-02 ~ Theo
+
+* Readme updates
