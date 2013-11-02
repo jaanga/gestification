@@ -1,15 +1,28 @@
 Handy Videos
 ============
+Not your mother's video editor. A two handed approach to moving pictures
 
 ### Live Demo
 
-[Handy Videos](http://jaanga.github.io/gestification/cookbook/r1/handy-videos/video-select.html)
+[Handy Videos](http://jaanga.github.io/gestification/cookbook/handy-videos/r1/handy-videos.html)
 
 ### Screen Capture
 
-![Handy Videos](http://jaanga.github.io/gestification/cookbook/handy-videos/r1/video-select-screen-grab-320x240.png)
+![Handy Videos](http://jaanga.github.io/gestification/cookbook/handy-videos/r1/handy-videos-screen-grab-320x240.png)
 
 * 320 x 240 pixels. Second out of four images in folder
+
+### References
+
+It all started with a simple end-user question:
+
+> I want to implement a curved surface in WebGL, and map a video texture to the surface, 
+> is this possible? 
+
+See:
+
+[WebGL: Displaying Video on Wobbly, Moving Surfaces](http://www.jaanga.com/2013/08/webgl-displaying-video-on-wobbly-moving.html)
+[Folding Polygons the Naughty Way: in 3D, with Intersections and a Video Veneer](http://www.jaanga.com/2013/09/folding-polygons-naughty-way-in-3d-with.html)
 
 
 ###Copyright and License
