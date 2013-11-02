@@ -83,22 +83,27 @@ See also: https://en.wikipedia.org/wiki/Phalanx_bone
 ### Change Log
 
 2013-10-01 ~ Theo  
+
 * R7 Minor text changes and code cleanup
 * Files copied over to Cookbook
 
 2013-09-30 ~ Theo  
+
 * R7 info screen updated
 * R7 code cleanup
 * read-me updated
 
 2013-09-29 ~ Theo  
+
 * R7 added
 * This read-me updated
 
 2013-09-24 ~ Theo  
+
 * R6 added - progress being made
 
 2013-09-22 ~ Theo  
+
 * r5 added
 * Hybrid solution: 
 	* Finger tips move independently from the palm and finger bases
@@ -111,23 +116,27 @@ See also: https://en.wikipedia.org/wiki/Phalanx_bone
 	* Many issues when palm itches, rolls and yaws
  
 2013-09-19 ~ Theo  
+
 * r4 ~ been working on this for last few mornings
 * Almost looks OK when your hand is flat, but 'OK' sign still a fail
 * Fails when sees only one or two fingers
 
 2013-08-21 ~ Theo  
+
 * r3 - All day on this and a bit of progress
 * Now supports just one hand and some of the joints - sometime.
 * Still a ways to go.
 
 2013-08-06 ~ Theo  
+
 * r2 - phalanges wobble less - but it's a cheat
 
 2013-08-05 ~ Theo  
+
 * r1 - Folder and app started
 
 
-###Copyright and License
+##Copyright and License
 Copyright &copy; 2013 Jaanga authors
 
 MIT License

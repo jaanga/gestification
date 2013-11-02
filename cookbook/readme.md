@@ -11,7 +11,7 @@ _Let's start with just one file that's not too complicated_
 <table border=0 >
   <tr valign=top >
 	<td width=240 >
-		<img border=1 src=http://jaanga.github.io/gestification/cookbook/boilerplate/leap-threejs-boilerplate-screen-grab-240x180.png ><br>
+		<img border=1 src=http://jaanga.github.io/gestification/cookbook/boilerplate/r1/leap-threejs-boilerplate-screen-grab-240x180.png ><br>
 		<a href=https://github.com/jaanga/gestification/tree/gh-pages/cookbook/boilerplate ><b>Boilerplate</b></a><br>
 		A starting-off point file that loads the Three.js and Leap libraries and creates a simple 3D display of hands and pointables.
 	</td>
