@@ -170,10 +170,10 @@
 		DS.readme.innerHTML = DS.converter.makeHtml( requestFile( folder + 'readme.md' ) );
 		DS.readme.style.cssText = DS.readmeStyle;
 
-		DS.runApp.innerHTML = '<h2><a href="' + folder + fname + '" target="_blank">Run<br>HTML app<br>in<br>new tab</a></h2>';
+		DS.runApp.innerHTML = '<h2>&#x261A;<br><a href="' + folder + fname + '" target="_blank">Run<br><i>' + fname + '</i><br>in<br>new tab</a></h2>';
 
-		DS.viewSource.innerHTML = '<h2><a href="https://github.com/jaanga/gestification/tree/gh-pages/cookbook/' + folder + '" target="_blank">' +
-			'View<br> source code<br> on GitHub<br>in <br> new tab</a></h2>';
+		DS.viewSource.innerHTML = '<h2>&#x261A;<br><a href="https://github.com/jaanga/gestification/tree/gh-pages/cookbook/' + folder + '" target="_blank">' +
+			'View<br><i>' + fname + '</i><br>source code<br>on GitHub<br>in<br>new tab</a></h2>';
 
 		clearMenuHighlights( element );
 

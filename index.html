@@ -29,6 +29,7 @@
 
 		'<p><a href=JavaScript:displayOverview("cookbook"); >Cookbook</a></p>' +
 		'<p><a href=JavaScript:displayOverview("projects"); >Projects</a></p>' +
+		'<p><a href=JavaScript:displayOverview("events-timely"); >Events / Timely</a></p>' +
 		'<p><a href=JavaScript:displayOverview("work-in-hand"); >Work-in-hand</a></p>' +
 		'<br>' +
 
@@ -88,22 +89,23 @@
 		DS.readme.innerHTML = DS.converter.makeHtml( requestFile( fname ) );
 		DS.readme.style.cssText = DS.readmeStyleFull;
 
-		DS.runApp.innerHTML = '<h2><a href="https://github.com/jaanga/gestification/" target="_blank">' +
-			'View<br> source code<br> on GitHub<br>in <br> new tab</a></h2>';
+		DS.runApp.innerHTML = '<h2>&#x261A;<br><a href="https://github.com/jaanga/gestification/" target="_blank">' +
+			'View<br><i>' + fname + '</i><br>source code<br> on GitHub<br>in <br> new tab</a></h2>';
 		DS.viewSource.innerHTML = '';
 	}
 
 	function displayOverview( folder ) {
 		DS.ifr.src = folder + '/index.html';
 		DS.ifr.style.cssText = DS.ifrStyle + 'border: 3px double #ddd; opacity:0.5;' ;
-		DS.ifrWatermark.style.cssText  = DS.ifrStyle + 'font-size:120pt;opacity:0.08;transform:rotate(7deg);-webkit-transform:rotate(-10deg);';
+		DS.ifrWatermark.style.cssText  = DS.ifrStyle + 'font-size:120pt;opacity:0.08; text-align:center;transform:rotate(7deg);-webkit-transform:rotate(-10deg);';
 
 		DS.readme.innerHTML = DS.converter.makeHtml( requestFile( folder + '/readme.md' ) );
 		DS.readme.style.cssText = DS.readmeStyle;
 		
-		DS.runApp.innerHTML = '<h2>&#x261A;<br><a href="' + folder + '/index.html" >Open<br>'  + folder + '<br>viewer/browser<br>HTML app</a></h2>';
-		DS.viewSource.innerHTML = '<h2><a href="https://github.com/jaanga/gestification/tree/gh-pages/' + folder +
-			'/" target="_blank">View<br> source code<br> on GitHub<br>in <br> new tab</a></h2>';
+		DS.runApp.innerHTML = '<h2>&#x261A;<br><a href="' + folder + '/index.html" >Open<br><i>'  + folder.substr(0, 1).toUpperCase() + folder.substr(1) + 
+			'</i><br>viewer/browser<br>HTML app</a></h2>';
+		DS.viewSource.innerHTML = '<h2>&#x261A;<br><a href="https://github.com/jaanga/gestification/tree/gh-pages/' + folder +
+			'/" target="_blank">View<br><i>' + folder.substr(0, 1).toUpperCase() + folder.substr(1) +  '</i><br>source code<br> on GitHub<br>in <br> new tab</a></h2>';
 	}
 
 	function requestFile( fname ) {
