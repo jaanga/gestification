@@ -119,7 +119,7 @@ _What sorts of new things can we design and make using six degrees of freedom?_
 		A bubble-popping-like game. Fun.
 	</td>
 	<td width=240>
-		<img border=1 src=http://jaanga.github.io/gestification/cookbook/murgatroyd-heaven/murgatroyd-heaven-screen-grab-240x180.png ><br>
+		<img border=1 src=http://jaanga.github.io/gestification/cookbook/murgatroyd-heaven/r1/murgatroyd-heaven-screen-grab-240x180.png ><br>
 		<a href=https://github.com/jaanga/gestification/tree/gh-pages/cookbook/murgatroyd-heaven><b>Murgatroyd Heaven</b></a><br>
 		not an easy game. Early work.
 	</td>
@@ -136,7 +136,7 @@ _What sorts of new things can we design and make using six degrees of freedom?_
 <table>   
 <tr valign=top >
 	<td width=240>
-		<img border=1 src=http://jaanga.github.io/gestification/cookbook/handy-videos/handy-videos-screen-grab-240x180.png ><br>
+		<img border=1 src=http://jaanga.github.io/gestification/cookbook/handy-videos/r1/handy-videos-screen-grab-240x180.png ><br>
 		<a href=https://github.com/jaanga/gestification/tree/gh-pages/cookbook/handy-videos ><b>Handy Videos</b></a><br>
 		Not your mother's video editor. Somewhat insane.
 	</td>  
