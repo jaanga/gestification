@@ -6,11 +6,7 @@ Not your mother's video editor. A two handed approach to moving pictures
 
 [Handy Videos](http://jaanga.github.io/gestification/cookbook/handy-videos/r1/handy-videos.html)
 
-### Screen Capture
 
-![Handy Videos](http://jaanga.github.io/gestification/cookbook/handy-videos/r1/handy-videos-screen-grab-320x240.png)
-
-* 320 x 240 pixels. Second out of four images in folder
 
 ### References
 
@@ -23,6 +19,13 @@ See:
 
 [WebGL: Displaying Video on Wobbly, Moving Surfaces](http://www.jaanga.com/2013/08/webgl-displaying-video-on-wobbly-moving.html)  
 [Folding Polygons the Naughty Way: in 3D, with Intersections and a Video Veneer](http://www.jaanga.com/2013/09/folding-polygons-naughty-way-in-3d-with.html)
+
+
+### Screen Capture
+
+![Handy Videos](http://jaanga.github.io/gestification/cookbook/handy-videos/r1/handy-videos-screen-grab-320x240.png)
+
+* 320 x 240 pixels. Second out of four images in R1 folder
 
 
 ###Copyright and License

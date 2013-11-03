@@ -23,8 +23,8 @@
 
 		'<p><i><small>Apps for Leap Motion devices that may come in handy.<br>Do keep your fingers crossed...</small></i></p>' +
 
-		'<p><a href=JavaScript:displayPage("readme.md"); >Introduction</a><br>' +
-			'<a href=JavaScript:displayPage("copyright-license-credits.md") >License & Credits</a></p>' +
+		'<p><a href=JavaScript:displayPage("readme.md"); >Gestification Read Me</a></p>' +
+		'<p><a href=JavaScript:displayPage("copyright-license-credits.md") >License & Credits</a></p>' +
 		'<br>' +
 
 		'<p><a href=JavaScript:displayOverview("cookbook"); >Cookbook</a></p>' +
@@ -32,6 +32,7 @@
 		'<p><a href=JavaScript:displayOverview("work-in-hand"); >Work-in-hand</a></p>' +
 		'<br>' +
 
+		'<p style=color:red; >2013-11-02 ~ Progress is being made. Fewer things are broken. Still not easy enough to understand...</p>' +
 		'<p style=color:red; ><br><i>2013-10-29: Gestification is currently under heavy construction right now. Many things are broken...</i></p>' +
 		'<p style=color:red; ><i>If you are having issues, the easiest DS is to visit the source code site: ' +
 			'<a href="https://github.com/jaanga/gestification/" target="_blank">jaanga/gestification</a></i></p>' +
@@ -55,9 +56,12 @@
 	
 	DS.menu.style.cssText = DS.basic + DS.heightFull + DS.padding + DS.horzMnu + DS.top1;
 	
+	DS.ifrWatermark = document.body.appendChild( document.createElement( 'div' ) );
+	DS.ifrWatermark.innerHTML = 'Working<br>Sample';	
+	
 	DS.ifr = document.body.appendChild( document.createElement( 'iframe' ) );
 	DS.ifrStyle = DS.basic + DS.height + DS.top1 + DS.horzIfr;
-
+	
 	DS.readme = document.body.appendChild( document.createElement( 'div' ) );
 	DS.readmeStyleFull = DS.basic + DS.heightFull + DS.padding + DS.top1 + DS.horzRdm;
 	DS.readmeStyle = DS.basic + DS.height + DS.padding + DS.top2 + DS.horzRdm;
@@ -79,7 +83,7 @@
 
 	function displayPage( fname ) {
 		// DS.ifr.src = DS.viewSource.innerHTML = '';
-		DS.ifr.style.cssText = 'display: none;';
+		DS.ifrWatermark.style.cssText = DS.ifr.style.cssText = 'display: none;';
 
 		DS.readme.innerHTML = DS.converter.makeHtml( requestFile( fname ) );
 		DS.readme.style.cssText = DS.readmeStyleFull;
@@ -91,12 +95,13 @@
 
 	function displayOverview( folder ) {
 		DS.ifr.src = folder + '/index.html';
-		DS.ifr.style.cssText = DS.ifrStyle;
+		DS.ifr.style.cssText = DS.ifrStyle + 'border: 3px double #ddd; opacity:0.5;' ;
+		DS.ifrWatermark.style.cssText  = DS.ifrStyle + 'font-size:120pt;opacity:0.08;transform:rotate(7deg);-webkit-transform:rotate(-10deg);';
 
 		DS.readme.innerHTML = DS.converter.makeHtml( requestFile( folder + '/readme.md' ) );
 		DS.readme.style.cssText = DS.readmeStyle;
-
-		DS.runApp.innerHTML = '<h2><a href="' + folder + '/index.html" >Open<br>'  + folder + '<br>viewer/browser<br>HTML app</a></h2>';
+		
+		DS.runApp.innerHTML = '<h2>&#x261A;<br><a href="' + folder + '/index.html" >Open<br>'  + folder + '<br>viewer/browser<br>HTML app</a></h2>';
 		DS.viewSource.innerHTML = '<h2><a href="https://github.com/jaanga/gestification/tree/gh-pages/' + folder +
 			'/" target="_blank">View<br> source code<br> on GitHub<br>in <br> new tab</a></h2>';
 	}

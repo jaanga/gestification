@@ -1,35 +1,49 @@
 <!doctype html>
 <html lang=en>
 <head>
-<title></title>
+<title>Projects Gestification Jaanga</title>
 <meta charset=utf-8>
 <meta name=author content='Theo Armour'>
 </head>
 <body>
+<script src=http://jaanga.github.io/libs/md/showdown.js ></script>
 <script src=http://js.leapmotion.com/0.2.2/leap.min.js ></script>
-<script src=http://mrdoob.github.io/three.js/examples/js/Detector.js ></script>
-<script src=http://mrdoob.github.io/three.js/build/three.min.js ></script>
-<script src=http://mrdoob.github.io/three.js/examples/js/controls/TrackballControls.js> </script>
+<script src=http://mrdoob.github.com/three.js/examples/js/Detector.js ></script>
+<script src=http://mrdoob.github.com/three.js/build/three.min.js ></script>
+<script src=http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js > </script>
+<script src=http://jaanga.github.io/libs/ado/air-doodle.js ></script>
+<script></script>
 <script>
-		
-	css = document.body.appendChild( document.createElement('style') );
-	css.innerHTML = 'body { font: 600 12pt monospace; margin: 0; overflow: hidden;  }' +
+	init( '../models/ado/rubber-duck-10.js' );
+	
+	var DS = DS || {};
+
+	DS.css = document.body.appendChild( document.createElement('style') );
+	DS.css.innerHTML = 'body { font: bold 12pt monospace; margin: 0; overflow: hidden; }' +
+		'h1, h2, h3, p { margin: 10px 0px; padding: 0px 20px;  }' +
+		'p {padding: 5px 20px 5px 20px; }' +
 	'';
 	
-	var info = document.body.appendChild( document.createElement( 'div' ) );
-	info.style.cssText = 'left: 10px; margin: 0 30px 0 0; position: absolute; max-width: 900px; ';
-	info.innerHTML = '<h1>Projects</h1>' +
+	DS.menu = document.body.appendChild( document.createElement( 'div' ) );
+	DS.menu.innerHTML = 
+		'<h1><a href=../../ >Jaanga</a> &raquo;<br>' +
+		'<a href=../ >Gestification</a>&nbsp;&raquo;<br>' +
+		'<a href="" >Projects</a></h1>' +
+		
+		'<p id=intro ><a href=JavaScript:displayPage("introduction.md",intro); >Projects Introduction</a></p>' +
+	
+		'<p id=rm ><a href=JavaScript:displayPage("readme.md",rm); >Project Read Me on GitHub</a></p>' +
+	
 		'<p>This folder contains work of a more complex nature.</p>' +	
 		
-		'<p><a href=JavaScript:parent.ifr.src="projects/air-doodle/index.html" >AirDoodle</a></p>' +
-		'<ul>' +
-		'<li>The future of meta-communication Wright in the palm of your hand</li>' +
-		'</ul>' +
+		'<p id=ad><a href=JavaScript:displayPage("air-doodle/air-doodle-introduction.md",ad); >AirDoodle</a><br>' +
+		'The future of meta-communication Wright in the palm of your hand.' +
+		'</p>' +
 		
-		'<p><a href="https://github.com/jaanga/gestification/tree/gh-pages/projects/flying-leap-3d" target="_blank">Flying Leap 3D</a></p>' +
-		'<ul><li>Worth a visit</li>' +
-		'<li>The proposal is to build an app for the Leap Motion device that allows you to \'fly\' over various landscapes</li>' +
-		'</ul>' +
+		'<p id=fl><a href=JavaScript:displayPage("flying-leap-3d/readme.md",fl); >Flying Leap 3D</a><br>' +
+		'Worth a visit<br>' +
+		'The proposal is to build an app for the Leap Motion device that allows you to \'fly\' over various landscapes.' +
+		'</p>' +
 		
 		'<p><a href="http://jaanga.github.io/gestification/projects/webgl-2013-08-22/index.html" target="_blank">San Francisco WebGL MeetUp 2013-08-22</a></p>' +
 		'<ul>' +
@@ -39,11 +53,6 @@
 	'';
 
 </script>
-<script src = http://js.leapmotion.com/0.2.2/leap.min.js ></script>
-<script src = http://mrdoob.github.com/three.js/examples/js/Detector.js ></script>
-<script src = http://mrdoob.github.com/three.js/build/three.min.js ></script>
-<script src = http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js> </script>
-<script src = http://jaanga.github.io/libs/ado/air-doodle.js ></script>
-<script>init( '../models/ado/rubber-duck-10.js' );</script>
+<script src='doc-simple.js' ></script>
 </body>
 </html>

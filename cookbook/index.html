@@ -9,25 +9,24 @@
 <script src=http://jaanga.github.io/libs/md/showdown.js ></script>
 <script>
 
-	var css = document.body.appendChild( document.createElement('style') );
-	css.innerHTML = 'body { font: bold 12pt monospace; margin: 0; overflow: hidden; }' +
+	var DS = {};
+	var ADO = ADO || {};
+
+	DS.css = document.body.appendChild( document.createElement('style') );
+	DS.css.innerHTML = 'body { font: bold 12pt monospace; margin: 0; overflow: hidden; }' +
 		'h1, h2, h3, p { margin: 10px 0px; padding: 0px 20px;  }' +
 		'p {padding: 5px 20px 5px 20px; }' +
 	'';
 
-	var DS = {};
-	var ADO = ADO || {};
-
-	DS.converter = new Showdown.converter();
-
 	DS.menu = document.body.appendChild( document.createElement( 'div' ) );
-	DS.menu.innerHTML = '<h1><a href=../../ >Jaanga</a> &raquo;<br>' +
-		'<a href=../ target="_blank">Gestification</a>&nbsp;&raquo;<br>' +
+	DS.menu.innerHTML =
+		'<h1><a href=../../ >Jaanga</a> &raquo;<br>' +
+		'<a href=../ >Gestification</a>&nbsp;&raquo;<br>' +
 		'<a href=# >Cookbook</a></h1>' +
 
 		'<p id=intro ><a href=JavaScript:displayPage("introduction.md",intro); >Introducing</a></p>' +
 
-		'<p id=rm ><a href=JavaScript:displayPage("readme.md",rm);console.log(this.parentNode); >Cookbook Read Me on GitHub</a></p>' +
+		'<p id=rm ><a href=JavaScript:displayPage("readme.md",rm); >Cookbook Read Me on GitHub</a></p>' +
 
 		'<h3>Start here</h3>' +
 
@@ -77,10 +76,10 @@
 		'<p id=py ><a href=JavaScript:displayOverview("pitch-roll-yaw/","r2/pitch-roll-yaw.html",py); >' +
 		'<img src=http://jaanga.github.io/gestification/cookbook/leap-direction-vs-normal/r2/leap-direction-vs-normal-screen-grab-240x180.png /><br>' +
 		'Pitch Roll and Yaw</a><br>pitch, roll and yaw issues demo. Code example.</p>' +
-		
+
 		'<p id=dn ><a href=JavaScript:displayOverview("leap-direction-vs-normal/","r2/leap-direction-vs-normal.html",dn); >' +
 		'<img src=http://jaanga.github.io/gestification/cookbook/pitch-roll-yaw/r2/pitch-roll-yaw-screen-grab-240x180.png /><br>' +
-		'Leap Direction vs Normal</a><br>Another pitch, roll and yaw issues demo. Code example.</p>' +		
+		'Leap Direction vs Normal</a><br>Another pitch, roll and yaw issues demo. Code example.</p>' +
 
 		'<h3>Fun & Games</h3>' +
 
@@ -100,6 +99,8 @@
 		'<img src=http://jaanga.github.io/gestification/cookbook/handy-videos/r1/handy-videos-screen-grab-240x180.png /><br>' +
 		'Handy Videos</a><br>Not your mother\'s video editor. Somewhat insane.</p>' +
 	'';
+
+	DS.converter = new Showdown.converter();
 
 	DS.basic = 'border: 3px double #eee; overflow-x: hidden; overflow-y: auto; position: absolute; ';
 	DS.position = 'position: absolute;';
