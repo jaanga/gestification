@@ -1,25 +1,27 @@
 Cookbook Read Me
 ================
 
+<div style=display:none; >
+_You may view this page as a [Jaanga app][http://jaanga.github.io/gestification/cookbook/index.html#readme.md#]._
+</div>
+
+This page provides an overview of the cookbook code examples in this repository in a single page.
+
 [Cookbook code](http://en.wikipedia.org/wiki/Cookbook#Usage_outside_the_world_of_food) is an example of programming code that identifies 
 or demonstrates particular or specific aspects of a library or toolkit.
 
-This page provides an overview of the cookbook examples in this repository in a single page.
-
-You may view this page as an [Jaanga app][app] or as a [GitHub read me][git].
-
-[app]:./index.html#readme.md#
-[git]:https://github.com/jaanga/gestification/tree/gh-pages/cookbook
+_Clicking on an image or links in this read me will take you to the source code of the app._
 
 ### Start Here
 
-_Let's start with just one file that's not too complicated_
+_Why not start with just one file that's not too complicated..._
 
 <table border=0 >
   <tr valign=top >
 	<td width=240 >
+		<a href=https://github.com/jaanga/gestification/tree/gh-pages/cookbook/boilerplate >
 		<img border=1 src=http://jaanga.github.io/gestification/cookbook/boilerplate/r1/leap-threejs-boilerplate-screen-grab-240x180.png ><br>
-		<a href=https://github.com/jaanga/gestification/tree/gh-pages/cookbook/boilerplate ><b>Boilerplate</b></a><br>
+		<b>Boilerplate</b></a><br>
 		A starting-off point file that loads the Three.js and Leap libraries and creates a simple 3D display of hands and pointables.
 	</td>
   </tr>
