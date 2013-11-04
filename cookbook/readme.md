@@ -1,8 +1,9 @@
 Cookbook Read Me
 ================
 
+<!-- Only show the following div when viewed on GitHub -->
 <div style=display:none; >
-_You may view this page as a [Jaanga app][http://jaanga.github.io/gestification/cookbook/index.html#readme.md#]._
+You may also view this project as a <a href="http://jaanga.github.io/gestification/#cookbook#readme.md#" target="_blank">Jaanga app</a>.
 </div>
 
 This page provides an overview of the cookbook code examples in this repository in a single page.

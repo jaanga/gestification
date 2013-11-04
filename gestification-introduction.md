@@ -4,28 +4,27 @@ Gestification Introduction
 <div style=display:none; >
 You may also view this project as a <a href="http://jaanga.github.io/gestification/" target="_blank">Jaanga app</a>.
 </div>
-You have a [Leap Motion](http://leapmotion.com) device. 
 <table>
 <tr>
 <td>
-<img border=1 title='Don&apos;t believe a word this guys says' src=http://jaanga.github.io/gestification/cookbook/jest-live/r1/jest-live-screen-grab-240x180.png >
+<img src=http://jaanga.github.io/gestification/cookbook/jest-live/r1/jest-live-screen-grab-240x180.png border=1 title="Don&apos;t believe a word this guys says" >
 </td>
 <td></td>
 <td>
-<img border=1 title='He&apos;s just an ailing script kiddie' src=http://jaanga.github.io/gestification/cookbook/jest-play/json/r1/jest-record-json-screen-grab-240x180.png >
+<img src=http://jaanga.github.io/gestification/cookbook/jest-play/json/r1/jest-record-json-screen-grab-240x180.png border=1 title='He&apos;s just an ailing script kiddie' >
 </td>
 <td></td>
 <td>
-<img border=1 title='Don&apos;t you agree that these screen grabs totally suck?' src=http://jaanga.github.io/gestification/cookbook/phalanges/r7/phalanges-screen-grab-240x180.png >
+<img src=http://jaanga.github.io/gestification/cookbook/phalanges/r7/phalanges-screen-grab-240x180.png border=1 title='Don&apos;t you agree that these screen grabs totally suck?' >
 </td>
 <td></td>
 <td>
-<img border=1 title='Well, guess what? his code ain&apos;t any better' src=http://jaanga.github.io/gestification/cookbook/draw-3d-objects/r1/draw-3d-objects-screen-grab-240x180.png >
+<img src=http://jaanga.github.io/gestification/cookbook/draw-3d-objects/r1/draw-3d-objects-screen-grab-240x180.png border=1 title='Well, guess what? his code ain&apos;t any better'>
 </td>
 </tr>
 </table>
 
- 
+You have a [Leap Motion](http://leapmotion.com) device.  
 
 You're looking for cool apps with lots of JavaScript source code.  
 
