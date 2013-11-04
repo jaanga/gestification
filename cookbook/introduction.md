@@ -25,9 +25,19 @@ If you've not done so already, kindly have a glance at:
 
 <div style=display:none; >
 
-This text should appear on the GitHub view of the page but nit the HTML version...
+This text is contained with `div1 tags that have a style set to `display: none;`
+
+Therefore this text appears on the GitHub view of this page but not the HTML view...
 
 </div>
 
-hi
+<script>
+
+alert('howdy');
+
+	document.write('hello world!');
+	
+</script>
+
+
 
