@@ -1,11 +1,9 @@
 Gestfication Introduction
 =========================
-
-
-_You may view this project as an [Jaanga app][app] or as a [GitHub read me][git]._
-
-[app]:http://jaanga.github.io/gestification/
-[git]:https://github.com/jaanga/gestification/
+<!-- Only show the following when viewed on GitHub -->
+<div style=display:none >
+_You may also view this project as a [Jaanga app](http://jaanga.github.io/gestification/)._
+</div>
 
 <table>
 <tr>

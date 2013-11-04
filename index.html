@@ -6,11 +6,11 @@
 <meta name=author content='Theo Armour'>
 </head>
 <body>
-<script src=http://jaanga.github.io/libs/md/showdown.js ></script>
+<script src=http://jaanga.github.io/libs/md/showdown.js >// https://github.com/coreyti/showdown</script>
 <!--
-<script src=../../libs/ado/r1/air-doodle.js ></script>
--->
 <script src=http://jaanga.github.io/libs/ds/r1/doc-simple.js ></script>
+-->
+<script src=../libs/ds/r1/doc-simple.js ></script>
 <script>
 	
 	DS.menu.innerHTML = 
@@ -19,17 +19,17 @@
 
 		'<p><i><small>Apps for Leap Motion devices that may come in handy.<br>Do keep your fingers crossed...</small></i></p>' +
 
-		'<p id=gi ><a href=JavaScript:displayPage("gestification-introduction.md",gi); >Introducing Gestification </a></p>' +
-		'<p id=rm ><a href=JavaScript:displayPage("readme.md",rm); >Gestification Read Me</a></p>' +
-		'<p id=cp><a href=JavaScript:displayPage("copyright-license-credits.md",cp) >License & Credits</a></p>' +
+		'<p id=gi ><a href=JavaScript:displayPage("","gestification-introduction.md",gi); >Introducing Gestification </a></p>' +
+		'<p id=rm ><a href=JavaScript:displayPage("","readme.md",rm); >Gestification Read Me</a></p>' +
+		'<p id=cp> <a href=JavaScript:displayPage("","copyright-license-credits.md",cp) >License & Credits</a></p>' +
 		
 		'<br>' +
 		'<h3>Contents</h3>' +
 		
-		'<p id=cb ><a href=JavaScript:displayOverview("cookbook","/index.html",cb); >Cookbook</a></p>' +
-		'<p id=pr ><a href=JavaScript:displayOverview("projects","/index.html",pr); >Projects</a></p>' +
-		'<p id=et ><a href=JavaScript:displayOverview("events-timely","/index.html",et); >Events / Timely</a></p>' +
-		'<p id=wh ><a href=JavaScript:displayOverview("work-in-hand","/index.html",wh); >Work-in-hand</a></p>' +
+		'<p id=cb ><a href=JavaScript:displayApp("cookbook","readme.md",cb); >Cookbook</a></p>' +
+		'<p id=pr ><a href=JavaScript:displayApp("projects","readme.md",pr); >Projects</a></p>' +
+		'<p id=et ><a href=JavaScript:displayApp("events-timely","readme.md",et); >Events / Timely</a></p>' +
+		'<p id=wh ><a href=JavaScript:displayApp("work-in-hand","readme.md",wh); >Work-in-hand</a></p>' +
 		'<br>' +
 
 		'<h3>Updates</h3>' +
@@ -39,7 +39,7 @@
 			'<a href="https://github.com/jaanga/gestification/" target="_blank">jaanga/gestification</a></i></p>' +
 	'';	
 	
-	DS.init( 'gestification-introduction.md', gi );
+	DS.init( '','gestification-introduction.md', gi );
 	
 </script>
 </body>
