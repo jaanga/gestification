@@ -7,30 +7,27 @@
 </head>
 <body>
 <script src=http://jaanga.github.io/libs/md/showdown.js ></script>
+<!--
+<script src=../../libs/ado/r1/air-doodle.js ></script>
+-->
+<script src=http://jaanga.github.io/libs/ds/r1/doc-simple.js ></script>
 <script>
-// to add
-// menu highlighting
-// hash linking
-
-	document.body.style.cssText = 'font: bold 12pt monospace; margin: 0; overflow: hidden;';
 	
-	var DS = DS || {};
-	DS.converter = new Showdown.converter();
-
-	DS.menu = document.body.appendChild( document.createElement( 'div' ) );
-	DS.menu.innerHTML = '<h1><a href=../ >Jaanga</a> &raquo;<br>' +
+	DS.menu.innerHTML = 
+		'<h1><a href=../ >Jaanga</a> &raquo;<br>' +
 		'<a href="" >Gestification</a></h1>' +
 
 		'<p><i><small>Apps for Leap Motion devices that may come in handy.<br>Do keep your fingers crossed...</small></i></p>' +
 
-		'<p><a href=JavaScript:displayPage("readme.md"); >Gestification Read Me</a></p>' +
-		'<p><a href=JavaScript:displayPage("copyright-license-credits.md") >License & Credits</a></p>' +
+		'<p id=rm ><a href=JavaScript:displayPage("readme.md",rm); >Gestification Read Me</a></p>' +
+		'<p id=cp><a href=JavaScript:displayPage("copyright-license-credits.md",cp) >License & Credits</a></p>' +
+		
 		'<br>' +
 
-		'<p><a href=JavaScript:displayOverview("cookbook"); >Cookbook</a></p>' +
-		'<p><a href=JavaScript:displayOverview("projects"); >Projects</a></p>' +
-		'<p><a href=JavaScript:displayOverview("events-timely"); >Events / Timely</a></p>' +
-		'<p><a href=JavaScript:displayOverview("work-in-hand"); >Work-in-hand</a></p>' +
+		'<p id=cb ><a href=JavaScript:displayOverview("cookbook","/index.html",cb); >Cookbook</a></p>' +
+		'<p id=pr ><a href=JavaScript:displayOverview("projects","/index.html",pr); >Projects</a></p>' +
+		'<p id=et ><a href=JavaScript:displayOverview("events-timely","/index.html",et); >Events / Timely</a></p>' +
+		'<p id=wh ><a href=JavaScript:displayOverview("work-in-hand","/index.html",wh); >Work-in-hand</a></p>' +
 		'<br>' +
 
 		'<p style=color:red; >2013-11-02 ~ Progress is being made. Fewer things are broken. Still not easy enough to understand...</p>' +
@@ -38,83 +35,9 @@
 		'<p style=color:red; ><i>If you are having issues, the easiest DS is to visit the source code site: ' +
 			'<a href="https://github.com/jaanga/gestification/" target="_blank">jaanga/gestification</a></i></p>' +
 	'';	
-
-	DS.basic = 'border: 3px double #eee; overflow-x: hidden; overflow-y: auto; position: absolute; ';
-	DS.padding = 'padding: 0px 20px 0px 20px;';
-	DS.position = 'position: absolute;';	
 	
-	DS.horzMnu = 'left: 0; width: 18%;';
-	DS.horzIfr = 'left: 25%; margin: auto; right: 20%; width: 55%;' ;
-	DS.horzRdm = 'left: 25%; margin: auto; right: 20%; ';
-	DS.horzLnk = 'right: 0; width: 18%; ';	
-
-	DS.height = ' height: ' + (window.innerHeight * 0.40) + 'px;';
-	DS.heightFull = ' height: ' + (window.innerHeight * 0.90) + 'px;';
-
-	DS.top1 = ' top: ' + (window.innerHeight * 0.05) + 'px;';
-	DS.top2 = ' top: ' + (window.innerHeight * 0.55) + 'px;';
+	DS.init( 'readme.md', rm );
 	
-	
-	DS.menu.style.cssText = DS.basic + DS.heightFull + DS.padding + DS.horzMnu + DS.top1;
-	
-	DS.ifrWatermark = document.body.appendChild( document.createElement( 'div' ) );
-	DS.ifrWatermark.innerHTML = 'Working<br>Sample';	
-	
-	DS.ifr = document.body.appendChild( document.createElement( 'iframe' ) );
-	DS.ifrStyle = DS.basic + DS.height + DS.top1 + DS.horzIfr;
-	
-	DS.readme = document.body.appendChild( document.createElement( 'div' ) );
-	DS.readmeStyleFull = DS.basic + DS.heightFull + DS.padding + DS.top1 + DS.horzRdm;
-	DS.readmeStyle = DS.basic + DS.height + DS.padding + DS.top2 + DS.horzRdm;
-	
-	DS.runApp = document.body.appendChild( document.createElement( 'div' ) );
-	DS.runApp.style.cssText = DS.position + DS.top1 + DS.horzLnk;
-
-	DS.viewSource = document.body.appendChild( document.createElement( 'div' ) );
-	DS.viewSource.style.cssText = DS.position + DS.top2 + DS.horzLnk;
-
-/*
-	if ( !location.hash ) {
-		DS.ifr.src = 'projects/home-page/r2/introduction.html';
-	} else {
-		DS.ifr.src = location.hash.substr(1);
-	}
-*/
-	displayPage( 'readme.md' );
-
-	function displayPage( fname ) {
-		// DS.ifr.src = DS.viewSource.innerHTML = '';
-		DS.ifrWatermark.style.cssText = DS.ifr.style.cssText = 'display: none;';
-
-		DS.readme.innerHTML = DS.converter.makeHtml( requestFile( fname ) );
-		DS.readme.style.cssText = DS.readmeStyleFull;
-
-		DS.runApp.innerHTML = '<h2>&#x261A;<br><a href="https://github.com/jaanga/gestification/" target="_blank">' +
-			'View<br><i>' + fname + '</i><br>source code<br> on GitHub<br>in <br> new tab</a></h2>';
-		DS.viewSource.innerHTML = '';
-	}
-
-	function displayOverview( folder ) {
-		DS.ifr.src = folder + '/index.html';
-		DS.ifr.style.cssText = DS.ifrStyle + 'border: 3px double #ddd; opacity:0.5;' ;
-		DS.ifrWatermark.style.cssText  = DS.ifrStyle + 'font-size:120pt;opacity:0.08; text-align:center;transform:rotate(7deg);-webkit-transform:rotate(-10deg);';
-
-		DS.readme.innerHTML = DS.converter.makeHtml( requestFile( folder + '/readme.md' ) );
-		DS.readme.style.cssText = DS.readmeStyle;
-		
-		DS.runApp.innerHTML = '<h2>&#x261A;<br><a href="' + folder + '/index.html" >Open<br><i>'  + folder.substr(0, 1).toUpperCase() + folder.substr(1) + 
-			'</i><br>viewer/browser<br>HTML app</a></h2>';
-		DS.viewSource.innerHTML = '<h2>&#x261A;<br><a href="https://github.com/jaanga/gestification/tree/gh-pages/' + folder +
-			'/" target="_blank">View<br><i>' + folder.substr(0, 1).toUpperCase() + folder.substr(1) +  '</i><br>source code<br> on GitHub<br>in <br> new tab</a></h2>';
-	}
-
-	function requestFile( fname ) {
-		var xmlHttp = null;
-		xmlHttp = new XMLHttpRequest();
-		xmlHttp.open( 'GET', fname, false );
-		xmlHttp.send( null );
-		return xmlHttp.responseText;
-	}
 </script>
 </body>
 </html>

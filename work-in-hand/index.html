@@ -6,15 +6,77 @@
 <meta name=author content='Theo Armour'>
 </head>
 <body>
+<!--
+<script src=http://js.leapmotion.com/0.2.2/leap.min.js ></script>
+<script src=http://mrdoob.github.com/three.js/examples/js/Detector.js ></script>
+<script src=http://mrdoob.github.com/three.js/build/three.min.js ></script>
+<script src=http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js > </script>
+<script src=http://jaanga.github.io/libs/ado/air-doodle.js ></script>
+<script src=http://jaanga.github.io/libs/ado/r1/air-doodle.js ></script>
+-->
+<script src=http://jaanga.github.io/libs/md/showdown.js ></script>
+<script src=http://jaanga.github.io/libs/ds/r1/doc-simple.js ></script>
+
+	<div id=txt >
+	
+	<h1>
+		<a href=../../ >Jaanga</a> &raquo;<br>
+		<a href=../ >Gestification</a>&nbsp;&raquo;<br>
+		<a href="" >Work in Hand</a>
+	</h1>
+			
+	<p id=wh >
+		<a href=JavaScript:displayPage("work-in-hand-introduction.md",wh); >Work in Hand Introduction</a>
+	</p>
+	
+	<p id=rm >
+		<a href=JavaScript:displayPage("readme.md",rm); >Work in Hand Read Me on GitHub</a>
+	</p>
+		
+	<p>
+		The apps in this folder are things that work - after a fashion - but which could use a bit more manipulating.
+	</p>	
+			
+	<p id=ab>
+		<a href=JavaScript:displayOverview("webgl-2013-08-22","/index.html",ab); >San Francisco WebGL Meet-up 2013-08-22</a><br>
+		Files used for the presentation of the Leap Motion device to San Francisco WebGL MeetUp 2013-08-22
+	</p>
+
+	<p id=de>
+		<a href=JavaScript:displayOverview("home-page/r1","/index.html",de); >Gestification Home Pge R1</a><br>
+		First efforts on considering a 3D interface based upon use of the Leap device..
+	</p>
+
+	</div>		
+
 <script>
 
-	document.body.style.cssText = ' font: bold 12pt monospace; ';
-	var info = document.body.appendChild( document.createElement( 'div' ) );
+/*
 
-	info.innerHTML = '<h1>Work in Hand</h1>' +
-		'<p>The apps in this folder are things that work - after a fashion - but which could use a lot more effort.</p>' +
+	DS.menu.innerHTML = 
+		'<h1>' +
+			'<a href="" >Projects</a>' +
+		'</h1>' +
+		
+		'<p id=rm ><a href=JavaScript:displayPage("readme.md",rm); >Project Read Me on GitHub</a></p>' +
+	
+		'<p>This folder contains work of a more ongoing and complex nature.</p>' +	
+		
+		'<p id=ab><a href=JavaScript:displayOverview("test-folder-abc","/index.html",ab); >Test Folder ABC</a><br>' +
+			'Iteration system wide engenders economies of scale, cross-media technology, presentation action items and life cycle replication.' +
+		'</p>' +
+
+		'<p id=de><a href=JavaScript:displayOverview("test-folder-def","/index.html",de); >Test Folder DEF</a><br>' +
+			'Marketing teams input produce cross purposing in view of goal alignments due to knowledge paucity, necessitating workflow education and orientation. Media sourcing as an acquisition strategy is counterproductive in a internet environment in virtual component methodology. Imaging through ideals rather than real world branding, is a perilous undertaking with negative results. Branding strategies generating motion as activity without reproducible results is a ultimately futile effort if left in place.' +
+		'</p>' +
+		
 	'';
+*/
 
+	DS.menu.innerHTML = txt.innerHTML;
+	txt.innerHTML = '';
+	DS.init( 'work-in-hand-introduction.md', wh );
+	
 </script>
 </body>
 </html>
