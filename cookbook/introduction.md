@@ -27,19 +27,13 @@ If you've not done so already, kindly have a glance at:
 
 This text is contained within `div` tags that have a style set to `display: none;`
 
+<br>
 
-Therefore this text appears on the GitHub view of this page but not the HTML view...
+Therefore this text appears on the GitHub view of this page but not the HTML / Jaanga App view...
+
+View this page as a <a href="http://jaanga.github.io/gestification/cookbook/index.html#introduction.md#" target="_blank">Jaanga app</a>.
 
 </div>
 
-<script>
-
-alert('howdy');
-
-	document.write('hello world!');
-	
-</script>
-
-<iframe src=readme.md width=500></iframe>
 
 
