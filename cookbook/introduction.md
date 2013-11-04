@@ -23,3 +23,11 @@ If you've not done so already, kindly have a glance at:
  
 ## &#x261A;<br>Click on any link or image in the scrollable menu to the left to browse the cookbook apps
 
+<div style=display:none; >
+
+This text should appear on the GitHub view of the page but nit the HTML version...
+
+</div>
+
+hi
+
