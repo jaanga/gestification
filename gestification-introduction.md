@@ -4,7 +4,6 @@ Gestfication Introduction
 <div style=display:none; >
 You may also view this project as a <a href="http://jaanga.github.io/gestification/" target="_blank">Jaanga app</a>.
 </div>
-
 <table>
 <tr>
 <td>

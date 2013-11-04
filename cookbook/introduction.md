@@ -30,7 +30,7 @@ If you've not done so already, kindly have a glance at:
 
 <p>Therefore this text appears on the GitHub view of this page but not the HTML / Jaanga App view...</p>
 
-<p>View this page as a <a href="http://jaanga.github.io/gestification/cookbook/index.html#introduction.md" target="_blank">Jaanga app</a>.</p>
+<p>View this page as a <a href="http://jaanga.github.io/gestification/cookbook/index.html#cookbook#introduction.md" target="_blank">Jaanga app</a>.</p>
 
 </div>
 
