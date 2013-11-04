@@ -23,14 +23,17 @@ If you've not done so already, kindly have a glance at:
  
 ## &#x261A;<br>Click on any link or image in the scrollable menu to the left to browse the cookbook apps
 
+<br>
+
 <div style=display:none; >
+
+<p>This page is for the Jannga app that enables you to browse through JavaScript apps hosted on GitHub.</p>
 
 <p>This text is contained within `div` tags that have a style set to `display: none;`</p>
 
-
 <p>Therefore this text appears on the GitHub view of this page but not the HTML / Jaanga App view...</p>
 
-<p>View this page as a <a href="http://jaanga.github.io/gestification/#cookbook#introduction.md" target="_blank">Jaanga app</a>.</p>
+<p>View this page in the <a href="http://jaanga.github.io/gestification/#cookbook#introduction.md" target="_blank">Jaanga app</a>.</p>
 
 </div>
 

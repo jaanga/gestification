@@ -1,4 +1,4 @@
-Gestfication Introduction
+Gestification Introduction
 =========================
 <!-- Only show the following when viewed on GitHub -->
 <div style=display:none; >
@@ -23,7 +23,7 @@ You have a [Leap Motion](http://leapmotion.com) device.
 <img border=1 title='Well, guess what? his code ain&apos;t any better' src=http://jaanga.github.io/gestification/cookbook/draw-3d-objects/r1/draw-3d-objects-screen-grab-240x180.png >
 </td>
 </tr>
-<table>
+</table>
 
  
 
