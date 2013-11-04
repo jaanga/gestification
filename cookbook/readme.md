@@ -10,7 +10,7 @@ This page provides an overview of the cookbook code examples in this repository 
 [Cookbook code](http://en.wikipedia.org/wiki/Cookbook#Usage_outside_the_world_of_food) is an example of programming code that identifies 
 or demonstrates particular or specific aspects of a library or toolkit.
 
-_Clicking on an image or links in this read me will take you to the source code of the app._
+_Clicking on an image or links in this `read me` will take you to the source code of the app._
 
 ### Start Here
 

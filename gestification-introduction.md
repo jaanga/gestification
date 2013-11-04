@@ -4,6 +4,7 @@ Gestfication Introduction
 <div style=display:none; >
 You may also view this project as a <a href="http://jaanga.github.io/gestification/" target="_blank">Jaanga app</a>.
 </div>
+You have a [Leap Motion](http://leapmotion.com) device. 
 <table>
 <tr>
 <td>
@@ -24,7 +25,7 @@ You may also view this project as a <a href="http://jaanga.github.io/gestificati
 </tr>
 <table>
 
-You have a [Leap Motion](http://leapmotion.com) device.  
+ 
 
 You're looking for cool apps with lots of JavaScript source code.  
 
