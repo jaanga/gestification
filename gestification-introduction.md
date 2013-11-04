@@ -1,8 +1,8 @@
 Gestfication Introduction
 =========================
 <!-- Only show the following when viewed on GitHub -->
-<div style=display:none >
-_You may also view this project as a [Jaanga app](http://jaanga.github.io/gestification/)._
+<div style=display:none; >
+You may also view this project as a <a href="http://jaanga.github.io/gestification/" target="_blank">Jaanga app</a>.
 </div>
 
 <table>
