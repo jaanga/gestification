@@ -25,13 +25,12 @@ If you've not done so already, kindly have a glance at:
 
 <div style=display:none; >
 
-This text is contained within `div` tags that have a style set to `display: none;`
+<p>This text is contained within `div` tags that have a style set to `display: none;`</p>
 
-<br>
 
-Therefore this text appears on the GitHub view of this page but not the HTML / Jaanga App view...
+<p>Therefore this text appears on the GitHub view of this page but not the HTML / Jaanga App view...</p>
 
-View this page as a <a href="http://jaanga.github.io/gestification/cookbook/index.html#introduction.md#" target="_blank">Jaanga app</a>.
+<p>View this page as a <a href="http://jaanga.github.io/gestification/cookbook/index.html#introduction.md" target="_blank">Jaanga app</a>.</p>
 
 </div>
 
