@@ -25,7 +25,8 @@ If you've not done so already, kindly have a glance at:
 
 <div style=display:none; >
 
-This text is contained with `div1 tags that have a style set to `display: none;`
+This text is contained within `div` tags that have a style set to `display: none;`
+
 
 Therefore this text appears on the GitHub view of this page but not the HTML view...
 
@@ -39,5 +40,6 @@ alert('howdy');
 	
 </script>
 
+<iframe src=readme.md width=500></iframe>
 
 
