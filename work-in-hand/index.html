@@ -19,63 +19,63 @@
 
 	<div id=txt >
 	
-	<h1>
-		<a href=../../ >Jaanga</a> &raquo;<br>
-		<a href=../ >Gestification</a>&nbsp;&raquo;<br>
-		<a href="" >Work in Hand</a>
-	</h1>
+		<h1>
+			<a href=../../ >Jaanga</a> &raquo;<br>
+			<a href=../ >Gestification</a>&nbsp;&raquo;<br>
+			<a href="" >Work in Hand</a>
+		</h1>
+<!--				
+		<p id=wh >
+			<a href=JavaScript:displayPage("work-in-hand","work-in-hand-introduction.md",wh); >Work in Hand Introduction</a>
+		</p>
+-->		
+		<p id=rm >
+			<a href=JavaScript:displayPage("work-in-hand","readme.md",rm); >Work in Hand Read Me on GitHub</a>
+		</p>
 			
-	<p id=wh >
-		<a href=JavaScript:displayPage("work-in-hand","work-in-hand-introduction.md",wh); >Work in Hand Introduction</a>
-	</p>
-	
-	<p id=rm >
-		<a href=JavaScript:displayPage("work-in-hand","readme.md",rm); >Work in Hand Read Me on GitHub</a>
-	</p>
+		<p>
 		
-	<p>
-		The apps in this folder are things that work - after a fashion - but which could use a bit more manipulating.
-	</p>	
-			
-	<p id=ab>
-		<a href=JavaScript:displayOverview("webgl-2013-08-22","/index.html",ab); >San Francisco WebGL Meet-up 2013-08-22</a><br>
-		Files used for the presentation of the Leap Motion device to San Francisco WebGL MeetUp 2013-08-22
-	</p>
+			The apps in this folder are things that work - after a fashion - but which could use a bit more manipulating.
+		</p>	
 
-	<p id=de>
-		<a href=JavaScript:displayOverview("home-page/r1","/index.html",de); >Gestification Home Pge R1</a><br>
-		First efforts on considering a 3D interface based upon use of the Leap device..
-	</p>
+		<h3>Contents</h3>
+				
+		<p><small><i>Clicking an image or link in this menu will start the app.</i></small></p>
+		
+		<p id=hg>
+			<a href=JavaScript:displayOverview("hand2go","/hand2go.html",hg); >Hand 2 Go</a><br>
+			Infinitely extendible 3D landscape. Use your hand to travel through the countryside.
+		</p>
 
+		<p id=he>
+			<a href=JavaScript:displayOverview("holdem","/holdem.html",he); >Hold 'Em</a><br>
+			An early attempt at building user interface elements for the Leap Motion device.
+		</p>
+
+		<p id=md>
+			<a href=JavaScript:displayOverview("motion-device-detector","/leap_device_detection.html",md); >Motion Device Detector</a><br>
+			Part of a Stackoverflow discussion to ascertain if there is an easy and reliable method for determing if a Leap Motion device is connected.
+		</p>		
+
+		<p id=tt>
+			<a href=JavaScript:displayOverview("toolbar-test","/toolbar-test.html",tt); >Toolbar Test</a><br>
+			The app for testing modec-threejs-utils.
+		</p>		
+
+		<p id=tp>
+			<a href=JavaScript:displayOverview("touch-placards","/r1/index.html",tp); >Touch Placards</a><br>
+			Learning to code for and deal with two hands.
+		</p>		
+
+
+		
 	</div>		
 
 <script>
 
-/*
-
-	DS.menu.innerHTML = 
-		'<h1>' +
-			'<a href="" >Projects</a>' +
-		'</h1>' +
-		
-		'<p id=rm ><a href=JavaScript:displayPage("readme.md",rm); >Project Read Me on GitHub</a></p>' +
-	
-		'<p>This folder contains work of a more ongoing and complex nature.</p>' +	
-		
-		'<p id=ab><a href=JavaScript:displayOverview("test-folder-abc","/index.html",ab); >Test Folder ABC</a><br>' +
-			'Iteration system wide engenders economies of scale, cross-media technology, presentation action items and life cycle replication.' +
-		'</p>' +
-
-		'<p id=de><a href=JavaScript:displayOverview("test-folder-def","/index.html",de); >Test Folder DEF</a><br>' +
-			'Marketing teams input produce cross purposing in view of goal alignments due to knowledge paucity, necessitating workflow education and orientation. Media sourcing as an acquisition strategy is counterproductive in a internet environment in virtual component methodology. Imaging through ideals rather than real world branding, is a perilous undertaking with negative results. Branding strategies generating motion as activity without reproducible results is a ultimately futile effort if left in place.' +
-		'</p>' +
-		
-	'';
-*/
-
 	DS.menu.innerHTML = txt.innerHTML;
 	txt.innerHTML = '';
-	DS.init( 'work-in-hand','work-in-hand-introduction.md', wh );
+	DS.init( 'work-in-hand', 'readme.md', rm );
 	
 </script>
 </body>

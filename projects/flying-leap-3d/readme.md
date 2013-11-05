@@ -1,13 +1,19 @@
 Flying Leap 3D
 ==============
 
-Live Demo #1: http://jaanga.github.io/gestification/projects/flying-leap-3d/r1/flying-leap-3d.html  
+## Live Demos
+
+[Live Demo #1](http://jaanga.github.io/gestification/projects/flying-leap-3d/r1/flying-leap-3d.html )
+
 - The landscape along with the placement of the trees is controlled by an algebraic function. Note the refresh of colors with each reload.
 
-Live Demo #2: http://jaanga.github.io/gestification/projects/flying-leap-3d/castle/load-castle.html
-- A test of loading an OBJ file into Thrree.js. Note the castle - which is the static OBJ file - also refreshes its colors with each reload. 
+[Live Demo #2](http://jaanga.github.io/gestification/projects/flying-leap-3d/castle/load-castle.html)
 
-Live Demo #3: http://jaanga.github.io/gestification/projects/flying-leap-3d/barfolina-pavillion/r2/barfolina-pavillion.html
+- A test of loading an OBJ file into Three.js. 
+- Note the castle - which is the static OBJ file - also refreshes its colors with each reload. 
+
+[Live Demo #3](http://jaanga.github.io/gestification/projects/flying-leap-3d/barfolina-pavillion/r2/barfolina-pavillion.html)
+
 - Worth a visit
 - The entire pavilion - except for the sculpture - is created by procedures. This is the modern way of designing - which we are calling 'archieCode'.
 
@@ -22,16 +28,20 @@ Aning other things we are working on an updated First Person camera controller f
 Leap.js + Three.js: a Leaped first person camera controller
 
 ###Demos: Status and Issues
+
 See the readme in each demo's folder for more details and status of issues
 
 ###Leap Actions
+
 Hand open over Leap device:
+
 * Supports the following FirstPersonControls parameters: moveLeft, moveRight, moveUp, moveUp, moveForward, moveBackword 
 * Supports pitch and yaw via Three.js lat and lon parameters
 * Making fist restricts camera movement to lat and lon only
 * Supports Freeze all interaction toggle via a swipe gesture.
 
 ###New First Person Control Mouse Actions
+
 * The fork supports all the standard Three.js First Person Control functions
 * The fork supports the following additions:
 * Turning the scroll wheel controls the speed of movementSpeed and lookSpeed << This feature is wonderful. Try it!
@@ -40,6 +50,7 @@ Hand open over Leap device:
 * Clicking the scroll wheel toggles Freeze on and off.
 
 ###New First Person Control  Keyboard Commands
+
 	The following new keyboard commands are added to the fork:
 	
 	````
@@ -66,19 +77,24 @@ MIT License
 ###Change Log
 
 2013-10-26 ~ Theo
+
 * Update Readme
 * Fix Castle 3D loading issues
 
 2013-09-02 ~ Theo
+
 * Updated this readme.
 
 2013-08-29 ~ Theo
+
 * barofolina pavillion demo added
 
 2013-08-26 ~ Theo
+
 * Added castle demo
 
 2013-08-24 ~ Theo
+
 * Folders and files added
 * Updates a forked Three.js FirstPersonControls
 * Adds freeze and speed controls via mousewheel

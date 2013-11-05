@@ -21,20 +21,21 @@ The future of meta-communication Wright in the palm of your hand..
 	
 		
 ## AirHand
-		
-[<img src=http://jaanga.github.io/gestification/projects/air-hand/r1/air-hand-r1-h2-360x260.png  border=1 /><br>
+[<img src=http://jaanga.github.io/gestification/projects/air-hand/r1/air-hand-r1-360x249.png  border=1 /><img src=http://jaanga.github.io/gestification/projects/air-hand/r1/air-hand-r1-h2-360x260.png  border=1 /><br>
 AirHand](https://github.com/jaanga/gestification/tree/gh-pages/projects/air-hand)
 
-Can't quite get the point of it? Perhaps we can lend you a hand. We are the second hand store of the future...
+Can't quite get the point of it? Perhaps we can lend you a hand, or a claw or a tentacle? We are the second hand store of the future...
 	
 	
 	
 ## Flying Leap 3D
-		
-[<img src=http://jaanga.github.io/gestification/projects/flying-leap-3d/castle/castle-360x264.png  border=1 /><br>
+[<img src=http://jaanga.github.io/gestification/projects/flying-leap-3d/r1/flying-leap-r1-360x227.png border=1 />
+<img src=http://jaanga.github.io/gestification/projects/flying-leap-3d/barfolina-pavillion/r2/pavilion-360x251.png border=1 />
+<img src=http://jaanga.github.io/gestification/projects/flying-leap-3d/castle/castle-360x264.png border=1 />
+<br>
 Flying Leap 3D](https://github.com/jaanga/gestification/tree/gh-pages/projects/flying-leap-3d)
 
-- Worth a visit
+- Worth a visit. Thresse separate apps.
 - The proposal is to build an app for the Leap Motion device that allows you to 'fly' over various landscapes
 
 
