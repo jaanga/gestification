@@ -15,37 +15,50 @@
 <script src=http://jaanga.github.io/libs/md/showdown.js ></script>
 <script src=http://jaanga.github.io/libs/ado/r1/air-doodle.js ></script>
 <script src=http://jaanga.github.io/libs/ds/r1/doc-simple.js ></script>
+
+	<div id=txt >
+		<h1>
+			<a href=../../ >Jaanga</a> &raquo;<br>
+			<a href=../ >Gestification</a>&nbsp;&raquo;<br>
+			<a href='' >Projects</a>
+		</h1>
+				
+		<p id=intro ><a href=JavaScript:displayPage("projects","projects-introduction.md",intro); >Projects Introduction</a></p>
+			
+		<p id=rm ><a href=JavaScript:displayPage("projects","readme.md",rm); >Project Read Me on GitHub</a></p>
+				
+		<p>This folder contains work of a more ongoing and complex nature.</p>		
+				
+		<h3>Contents</h3>
+				
+		<p><small><i>Clicking an image or link in this menu will start the app.</i></small></p>
+				
+		<p id=ad><a href=JavaScript:displayOverview("air-doodle","/index.html",ad); >
+			<img border=1 src=http://jaanga.github.io/gestification/projects/air-doodle/air-doodle-240x166.png ><br>
+			AirDoodle</a><br>
+			The future of meta-communication available with a flick \'o the wrist.
+		</p>
+
+		<p id=ah><a href=JavaScript:displayOverview("air-hand","/readme.md",ah); >
+			<img border=1 src=http://jaanga.github.io/gestification/projects/air-hand/r1/air-hand-r1-h2-240x160.png ><br>
+			Air Hand</a><br>
+			Can\'t quite get the point of it? Perhaps we can lend you a hand. We are the second hand store of the future...
+		</p>
+				
+		<p id=fl><a href=JavaScript:displayOverview("flying-leap-3d","/index.html",fl); >
+			<img border=1 src=http://jaanga.github.io/gestification/projects/flying-leap-3d/castle/castle-240x164.png ><br>
+			Flying Leap 3D</a><br>
+			Worth a visit<br>
+			The proposal is to build an app for the Leap Motion device that allows you to \'fly\' over various landscapes.
+		</p>
+	</div>
 <script>
-
-	DS.menu.innerHTML = 
-		'<h1>' +
-			'<a href=../../ >Jaanga</a> &raquo;<br>' +
-			'<a href=../ >Gestification</a>&nbsp;&raquo;<br>' +
-			'<a href="" >Projects</a>' +
-		'</h1>' +
-		
-		'<p id=intro ><a href=JavaScript:displayPage("projects","projects-introduction.md",intro); >Projects Introduction</a></p>' +
 	
-		'<p id=rm ><a href=JavaScript:displayPage("projects","readme.md",rm); >Project Read Me on GitHub</a></p>' +
-	
-		'<p>This folder contains work of a more ongoing and complex nature.</p>' +	
-		
-		'<p id=ad><a href=JavaScript:displayOverview("air-doodle","/index.html",ad); >AirDoodle</a><br>' +
-		'The future of meta-communication Wright in the palm of your hand.' +
-		'</p>' +
-
-		'<p id=ah><a href=JavaScript:displayOverview("air-hand","/readme.md",ah); >Air Hand</a><br>' +
-		'Can\'t quite get the point of it? Perhaps we can lend you a hand. We are the second hand store of the future...' +
-		'</p>' +
-		
-		'<p id=fl><a href=JavaScript:displayOverview("flying-leap-3d","/index.html",fl); >Flying Leap 3D</a><br>' +
-		'Worth a visit<br>' +
-		'The proposal is to build an app for the Leap Motion device that allows you to \'fly\' over various landscapes.' +
-		'</p>' +
-	'';
-
-	ADO.init( '../models/ado/rubber-duck-10.js' );
+	DS.menu.innerHTML = txt.innerHTML;
+	txt.innerHTML = '';
 	DS.init( 'projects','projects-introduction.md', intro );
+	
+	ADO.init( '../models/ado/rubber-duck-10.js' );
 </script>
 
 </body>
