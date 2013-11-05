@@ -12,7 +12,7 @@ _Clicking on an image or links in this 'Read Me' will take you to the source cod
 
 ## AirDoodle
 
-[<img src=http://jaanga.github.io/gestification/projects/air-doodle/air-doodle-360x260.png border=1 /><br>
+[<img src=http://jaanga.github.io/gestification/projects/air-doodle/r1/air-doodle-360x260.png border=1 /><br>
 AirDoodle](https://github.com/jaanga/gestification/tree/gh-pages/projects/air-doodle)
 
 [air-doodle]: http://jaanga.github.io/gestification/projects/air-doodle/air-doodle-360x260.png
