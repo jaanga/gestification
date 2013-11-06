@@ -26,7 +26,7 @@ furnished to do so, subject to the following conditions:
 The above copyright notice and this permission notice shall be included in
 all copies or substantial portions of the Software.
 
-The software is provided "as is", without warranty of any kind, express or
+The Software is provided "as is", without warranty of any kind, express or
 implied, including but not limited to the warranties of merchantability,
 fitness for a particular purpose and noninfringement. In no event shall the
 authors or copyright holders be liable for any claim, damages or other
@@ -45,7 +45,7 @@ _We kneel on the shoulders of giants._
 ### Three.js
 [Three.js](http://threejs.org)  
 
-Copyright &copy 2010-2013 three.js authors
+Copyright &copy; 2010-2013 three.js authors
 
 The MIT License
 Permission is hereby granted, free of charge, to any person obtaining a copy

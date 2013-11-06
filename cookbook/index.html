@@ -6,106 +6,120 @@
 <meta name=author content='Theo Armour'>
 </head>
 <body>
-
 <script src=http://js.leapmotion.com/0.2.2/leap.min.js ></script>
 
 <script src=http://mrdoob.github.com/three.js/examples/js/Detector.js ></script>
 <script src=http://mrdoob.github.com/three.js/build/three.min.js ></script>
 <script src=http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js> </script>
+<script src=http://jaanga.github.io/libs/ado/r1/air-doodle.js ></script>
 
 <script src=http://jaanga.github.io/libs/md/showdown.js ></script>
-<script src=http://jaanga.github.io/libs/ado/r1/air-doodle.js ></script>
 <!--
 <script src=http://jaanga.github.io/libs/ds/r1/doc-simple.js ></script>
 -->
 <script src=../../libs/ds/r1/doc-simple.js ></script>
+	<div id=menu >
+		<h1>
+			<a href=../../index.html >Jaanga</a> &raquo; <a href=../index.html >Gestification</a>&nbsp;&raquo; <a href=# >Cookbook</a>
+		</h1>
+
+		<p id=intro ><a href=JavaScript:displayPage("cookbook","introduction.md",intro); >Introducing</a></p>
+
+		<p id=rm ><a href=JavaScript:displayPage("cookbook","readme.md",rm); >Cookbook Read Me on GitHub</a></p>
+				
+		<p><small><i>Clicking an image or link in this menu will start the app.</i></small></p>
+
+		<h3>Start Here</h3>
+				
+
+		<p id=bp ><a href=JavaScript:displayOverview("boilerplate","r1/leap-threejs-boilerplate.html",bp); >
+			<img src=http://jaanga.github.io/gestification/cookbook/boilerplate/r1/leap-threejs-boilerplate-screen-grab-240x180.png /><br>
+			Boilerplate</a><br>A starting-off point file that loads the Three.js and Leap libraries and creates a simple 3D display of hands and pointables.
+		<p>
+
+		<h3>Real-time Hands</h3>
+
+		<p id=jl ><a href=JavaScript:displayOverview("jest-live","r1/jest-live.html",jl); >
+			<img src=http://jaanga.github.io/gestification/cookbook/jest-live/r1/jest-live-screen-grab-240x180.png /><br>
+			jestLive R1</a><br>See your motions in a lively, handy way. Choose the hand you want.
+		</p>
+
+		<p id=jp ><a href=JavaScript:displayOverview("jest-play","bvh/r1/jest-replay-bvh.html",jp); >
+			<img src=http://jaanga.github.io/gestification/cookbook/jest-play/json/r1/jest-record-json-screen-grab-240x180.png /><br>
+			jestPlay R1</a><br>
+			Record and replay Leap Motion JSON and BVH data capture. Much effort here - Nearly ready for prime time.
+		</p>
+
+		<p id=ph ><a href=JavaScript:displayOverview("phalanges","r7/phalanges.html",ph); >
+			<img src=http://jaanga.github.io/gestification/cookbook/phalanges/r7/phalanges-screen-grab-240x180.png /><br>
+			Phalanges R7</a><br>
+			Now at R7. Base code for showing hand and fingers even when data is not available from the Leap device. Much effort here.
+		</p>
+
+		<h3>Creativity</h3>
+
+		<p id=dr ><a href=JavaScript:displayOverview("draw-3d-objects","r2/draw-3d-objects.html",dr); >
+			<img src=http://jaanga.github.io/gestification/cookbook/draw-3d-objects/r1/draw-3d-objects-screen-grab-240x180.png /><br>
+			Draw 3D Objects</a><br>
+			3D printing without a printer. Could be significant - one day.
+		</p>
+
+		<h3>Data Gathering</h3>
+
+		<p id=yg><a href=JavaScript:displayOverview("yougest","r4/index.html",yg); >
+			<img src=http://jaanga.github.io/gestification/cookbook/yougest/r4/index-screen-grab-240x180.png /><br>
+			youGest</a><br>
+			The ultimate Leap Motion data explorer. Much effort here.
+		</p>
+
+		<p id=gt ><a href=JavaScript:displayOverview("gesture-tally","r1/gesture-tally.html",gt); >
+			<img src=http://jaanga.github.io/gestification/cookbook/gesture-tally/r1/gesture-tally-screen-grab-240x180.png /><br>
+			Gesture Tally</a><br>
+			See the swipes. Response to LM forum question. Code example.
+		</p>
+
+		<p id=pn ><a href=JavaScript:displayOverview("pointing-or-not","r1/pointing-or-not.html",pn); >
+			<img src=http://jaanga.github.io/gestification/cookbook/pointing-or-not/r1/pointing-or-not-screen-grab-240x180.png /><br>
+			Pointing or Not</a><br>Are you pointing your finger? Code example.
+		</p>
+
+		<p id=py ><a href=JavaScript:displayOverview("pitch-roll-yaw","r2/pitch-roll-yaw.html",py); >
+			<img src=http://jaanga.github.io/gestification/cookbook/leap-direction-vs-normal/r2/leap-direction-vs-normal-screen-grab-240x180.png /><br>
+			Pitch Roll and Yaw</a><br>pitch, roll and yaw issues demo. Code example.
+		</p>
+
+		<p id=dn ><a href=JavaScript:displayOverview("leap-direction-vs-normal","r2/leap-direction-vs-normal.html",dn); >
+			<img src=http://jaanga.github.io/gestification/cookbook/pitch-roll-yaw/r2/pitch-roll-yaw-screen-grab-240x180.png /><br>
+			Leap Direction vs Normal</a><br>Another pitch, roll and yaw issues demo. Code example.
+		</p>
+
+		<h3>Fun & Games</h3>
+
+		<p id=ty ><a href=JavaScript:displayOverview("touchly","r4/touchly.html",ty); >
+			<img src=http://jaanga.github.io/gestification/cookbook/touchly/r4/touchly-screen-grab-240x180.png /><br>
+			Touchly</a><br>A bubble-popping-like game. Fun.
+		</p>
+
+		<p id=mh ><a href=JavaScript:displayOverview("murgatroyd-heaven","r1/murgatroyd-heaven.html",mh); >
+			<img src=http://jaanga.github.io/gestification/cookbook/murgatroyd-heaven/r1/murgatroyd-heaven-screen-grab-240x180.png /><br>
+			Murgatroyd Heaven </a><br>Not an easy game. Early work.
+		</p>
+
+		<p id=sh ><a href=JavaScript:displayOverview("show-of-hands","r1/show-of-hands.html",sh); >
+			<img src=http://jaanga.github.io/gestification/cookbook/show-of-hands/r1/show-of-hands-screen-grab-240x180.png /><br>
+			Show of Hands</a><br>Use one hand to display seven hands. The prettiest app?
+		</p>
+
+		<p id=hv ><a href=JavaScript:displayOverview("handy-videos","r1/handy-videos.html",hv); >
+			<img src=http://jaanga.github.io/gestification/cookbook/handy-videos/r1/handy-videos-screen-grab-240x180.png /><br>
+			Handy Videos</a><br>Not your mother's video editor. Somewhat insane.
+		</p>
+
+	</div>
 <script>
 
-	DS.menu.innerHTML =
-		'<h1>' +
-			'<a href=../../ >Jaanga</a> &raquo;<br>' +
-			'<a href=../ >Gestification</a>&nbsp;&raquo;<br>' +
-			'<a href=# >Cookbook</a>' +
-		'</h1>' +
-
-		'<p id=intro ><a href=JavaScript:displayPage("cookbook","introduction.md",intro); >Introducing</a></p>' +
-
-		'<p id=rm ><a href=JavaScript:displayPage("cookbook","readme.md",rm); >Cookbook Read Me on GitHub</a></p>' +
-		
-		'<p><small><i>Clicking an image or link in this menu will start the app.</i></small></p>' +
-
-		'<h3>Start Here</h3>' +
-		
-
-		'<p id=bp ><a href=JavaScript:displayOverview("boilerplate/","leap-threejs-boilerplate.html",bp); >' +
-			'<img src=http://jaanga.github.io/gestification/cookbook/boilerplate/r1/leap-threejs-boilerplate-screen-grab-240x180.png /><br>' +
-			'Boilerplate</a><br>A starting-off point file that loads the Three.js and Leap libraries and creates a simple 3D display of hands and pointables.<p>' +
-
-		'<h3>Real-time Hands</h3>' +
-
-		'<p id=jl ><a href=JavaScript:displayOverview("jest-live/","r1/jest-live.html",jl); >' +
-			'<img src=http://jaanga.github.io/gestification/cookbook/jest-live/r1/jest-live-screen-grab-240x180.png /><br>' +
-			'jestLive R1</a><br>See your motions in a lively, handy way. Choose the hand you want.</p>' +
-
-		'<p id=jp ><a href=JavaScript:displayOverview("jest-play/","bvh/r1/jest-replay-bvh.html",jp); >' +
-		'<img src=http://jaanga.github.io/gestification/cookbook/jest-play/json/r1/jest-record-json-screen-grab-240x180.png /><br>' +
-		'jestPlay R1</a><br>' +
-		'Record and replay Leap Motion JSON and BVH data capture. Much effort here - Nearly ready for prime time.</p>' +
-
-		'<p id=ph ><a href=JavaScript:displayOverview("phalanges/","r7/phalanges.html",ph); >' +
-		'<img src=http://jaanga.github.io/gestification/cookbook/phalanges/r7/phalanges-screen-grab-240x180.png /><br>' +
-		'Phalanges R7</a><br>' +
-		'Now at R7. Base code for showing hand and fingers even when data is not available from the Leap device. Much effort here.</p>' +
-
-		'<h3>Creativity</h3>' +
-
-		'<p id=dr ><a href=JavaScript:displayOverview("draw-3d-objects/","r2/draw-3d-objects.html",dr); >' +
-		'<img src=http://jaanga.github.io/gestification/cookbook/draw-3d-objects/r1/draw-3d-objects-screen-grab-240x180.png /><br>' +
-		'Draw 3D Objects</a><br>' +
-		'3D printing without a printer. Could be significant - one day.</p>' +
-
-		'<h3>Data Gathering</h3>' +
-
-		'<p id=yg><a href=JavaScript:displayOverview("yougest/","r4/index.html",yg); >' +
-		'<img src=http://jaanga.github.io/gestification/cookbook/yougest/r4/index-screen-grab-240x180.png /><br>' +
-		'youGest</a><br>' +
-		'The ultimate Leap Motion data explorer. Much effort here.</p>' +
-
-		'<p id=gt ><a href=JavaScript:displayOverview("gesture-tally/","r1/gesture-tally.html",gt); >' +
-		'<img src=http://jaanga.github.io/gestification/cookbook/gesture-tally/r1/gesture-tally-screen-grab-240x180.png /><br>' +
-		'Gesture Tally</a><br>' +
-		'See the swipes. Response to LM forum question. Code example.</p>' +
-
-		'<p id=pn ><a href=JavaScript:displayOverview("pointing-or-not/","r1/pointing-or-not.html",pn); >' +
-		'<img src=http://jaanga.github.io/gestification/cookbook/pointing-or-not/r1/pointing-or-not-screen-grab-240x180.png /><br>' +
-		'Pointing or Not</a><br>Are you pointing your finger? Code example.</p>' +
-
-		'<p id=py ><a href=JavaScript:displayOverview("pitch-roll-yaw/","r2/pitch-roll-yaw.html",py); >' +
-		'<img src=http://jaanga.github.io/gestification/cookbook/leap-direction-vs-normal/r2/leap-direction-vs-normal-screen-grab-240x180.png /><br>' +
-		'Pitch Roll and Yaw</a><br>pitch, roll and yaw issues demo. Code example.</p>' +
-
-		'<p id=dn ><a href=JavaScript:displayOverview("leap-direction-vs-normal/","r2/leap-direction-vs-normal.html",dn); >' +
-		'<img src=http://jaanga.github.io/gestification/cookbook/pitch-roll-yaw/r2/pitch-roll-yaw-screen-grab-240x180.png /><br>' +
-		'Leap Direction vs Normal</a><br>Another pitch, roll and yaw issues demo. Code example.</p>' +
-
-		'<h3>Fun & Games</h3>' +
-
-		'<p id=ty ><a href=JavaScript:displayOverview("touchly/","r4/touchly.html",ty); >' +
-		'<img src=http://jaanga.github.io/gestification/cookbook/touchly/r4/touchly-screen-grab-240x180.png /><br>' +
-		'Touchly</a><br>A bubble-popping-like game. Fun.</p>' +
-
-		'<p id=mh ><a href=JavaScript:displayOverview("murgatroyd-heaven/","r1/murgatroyd-heaven.html",mh); >' +
-		'<img src=http://jaanga.github.io/gestification/cookbook/murgatroyd-heaven/r1/murgatroyd-heaven-screen-grab-240x180.png /><br>' +
-		'Murgatroyd Heaven </a><br>Not an easy game. Early work.</p>' +
-
-		'<p id=sh ><a href=JavaScript:displayOverview("show-of-hands/","r1/show-of-hands.html",sh); >' +
-		'<img src=http://jaanga.github.io/gestification/cookbook/show-of-hands/r1/show-of-hands-screen-grab-240x180.png /><br>' +
-		'Show of Hands</a><br>Use one hand to display seven hands. The prettiest app?</p>' +
-
-		'<p id=hv ><a href=JavaScript:displayOverview("handy-videos/","r1/handy-videos.html",hv); >' +
-		'<img src=http://jaanga.github.io/gestification/cookbook/handy-videos/r1/handy-videos-screen-grab-240x180.png /><br>' +
-		'Handy Videos</a><br>Not your mother\'s video editor. Somewhat insane.</p>' +
-	'';
+	DS.menu.innerHTML = menu.innerHTML;
+	menu.innerHTML = '';
 
 	DS.init( 'cookbook/','introduction.md', intro );
 	

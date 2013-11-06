@@ -29,9 +29,9 @@ Can't quite get the point of it? Perhaps we can lend you a hand, or a claw or a 
 	
 	
 ## Flying Leap 3D
-[<img src=http://jaanga.github.io/gestification/projects/flying-leap-3d/r1/flying-leap-r1-360x227.png border=1 />
-<img src=http://jaanga.github.io/gestification/projects/flying-leap-3d/barfolina-pavillion/r2/pavilion-360x251.png border=1 />
-<img src=http://jaanga.github.io/gestification/projects/flying-leap-3d/castle/castle-360x264.png border=1 />
+[<img src=http://jaanga.github.io/gestification/projects/flying-leap-3d/r1/flying-leap-r1-360x240.png border=1 />
+<img src=http://jaanga.github.io/gestification/projects/flying-leap-3d/barfolina-pavillion/r2/pavilion-360x240.png border=1 />
+<img src=http://jaanga.github.io/gestification/projects/flying-leap-3d/castle/castle-360x260.png border=1 />
 <br>
 Flying Leap 3D](https://github.com/jaanga/gestification/tree/gh-pages/projects/flying-leap-3d)
 

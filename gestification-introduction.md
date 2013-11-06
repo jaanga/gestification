@@ -1,9 +1,20 @@
 Gestification Introduction
 =========================
-<!-- Only show the following when viewed on GitHub -->
+<!-- Only show the following when viewed on GitHub.com -->
 <div style=display:none; >
 You may also view this project as a <a href="http://jaanga.github.io/gestification/" target="_blank">Jaanga app</a>.
 </div>
+
+<!-- Only show the following when viewed on GitHub.io -->
+<iframe src=switch-jaanga-github.html style="border:0px solid black;height:50px;width:500px" ></iframe>
+
+<!--
+<img src=http://jaanga.github.io/gestification/projects/flying-leap-3d/r1/flying-leap-r1-240x160.png border=1 />
+<img src=http://jaanga.github.io/gestification/projects/flying-leap-3d/barfolina-pavillion/r2/pavilion-240x160.png border=1 />
+http://jaanga.github.io/gestification/cookbook/jest-play/json/r1/jest-record-json-screen-grab-240x180.png
+<img src=http://jaanga.github.io/gestification/projects/flying-leap-3d/castle/castle-240x160.png border=1 />
+-->
+
 <table>
 <tr>
 <td>
@@ -11,7 +22,8 @@ You may also view this project as a <a href="http://jaanga.github.io/gestificati
 </td>
 <td></td>
 <td>
-<img src=http://jaanga.github.io/gestification/cookbook/jest-play/json/r1/jest-record-json-screen-grab-240x180.png border=1 title='He&apos;s just an ailing script kiddie' >
+<img src=http://jaanga.github.io/gestification/projects/flying-leap-3d/castle/castle-240x160.png border=1 title='He&apos;s just an ailing script kiddie' >
+
 </td>
 <td></td>
 <td>
@@ -35,19 +47,19 @@ You've arrived at a good place.
 <table>
 <tr>
 <td>
-<img border=1 src=http://jaanga.github.io/gestification/cookbook/yougest/r4/index-screen-grab-240x180.png >
+<img border=1 src=http://jaanga.github.io/gestification/cookbook/yougest/r4/index-screen-grab-240x180.png title='Ha ha! English text with Spanish-style exclamation points' >
 </td>
 <td></td>
 <td>
-<img border=1 src=http://jaanga.github.io/gestification/cookbook/gesture-tally/r1/gesture-tally-screen-grab-240x180.png >
+<img border=1 src=http://jaanga.github.io/gestification/cookbook/gesture-tally/r1/gesture-tally-screen-grab-240x180.png title='Somebody is just kidding.' >
 </td>
 <td></td>
 <td>
-<img border=1 src=http://jaanga.github.io/gestification/cookbook/pointing-or-not/r1/pointing-or-not-screen-grab-240x180.png >
+<img border=1 src=http://jaanga.github.io/gestification/cookbook/pointing-or-not/r1/pointing-or-not-screen-grab-240x180.png title='Oh, I forgot...' >
 </td>
 <td></td>
 <td>
-<img border=1 src=http://jaanga.github.io/gestification/cookbook/pitch-roll-yaw/r2/pitch-roll-yaw-screen-grab-240x180.png >
+<img border=1 src=http://jaanga.github.io/gestification/cookbook/pitch-roll-yaw/r2/pitch-roll-yaw-screen-grab-240x180.png title='This is the work of a script-kiddie' >
 </td>
 </tr>
 <table>
@@ -64,29 +76,19 @@ And each app has source code available under the do-what-pleases-you MIT License
 
 Here's the thing:
 
-Actually there are two places.
+Actually there are two places here.
 
-One place is the _play with the apps_ place. 
+One place is the _play with the apps_ place. These are at the web address that begins: jaanga.github.io
 
-And the other is the _read the source code_ place.
+And the other is the _read the source code_ place. This at the web address that begins: github.com/jaanga.
 
-Which place are you in right now?
 
-Actually, it's not easy to know the answer as both places are GitHub places.
-
-And one place may be the evil twin of the other.
-
-If you mostly see white, then you are in the _play with the apps_  place. To go to the other place click here.
-
-If you scroll up to the top and you see the Octokitty icon then you are in the _read the source code_ place.  To go to the other place click [here](https://github.com/jaanga/gestification/).
-
-And, if you see lots of advertising then you may be in one of those sites that pilfers content. To go to the other place you can clickety-click-click.
 
 <img border=1  src=http://jaanga.github.io/gestification/cookbook/touchly/r4/touchly-screen-grab-240x180.png >
 
 Welcome back from the dark side.
 
-Now, here, there are three sections you can visit.
+Now, here, there are four folders with code examples you can run, view or even edit.
 
 
 The **'[cookbook](https://github.com/jaanga/gestification/tree/gh-pages/cookbook)'** folder contains a number of short, simple apps that you coud use to build bigger apps. Files are generally about 200 or so lines of code.
