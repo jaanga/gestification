@@ -1,8 +1,7 @@
 Three.js - Leap.js - Boilerplate
 ================================
-
-<iframe src=boilerplate/r1/leap-threejs-boilerplate.html width=96% height=300px style=margin:2% >no iframe here</iframe>
-<p id=githubio style=display:none;text-align:center;width:100%; >Start here. Wave your hands to say 'Hello World!'</p>
+<iframe src=boilerplate/r1/leap-threejs-boilerplate.html width=96% height=300px style=margin:2% ></iframe>
+Start here. Wave your hands to say 'Hello World!'
 
 ### Live Demo
 

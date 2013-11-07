@@ -1,7 +1,7 @@
 jestLive
 ========
-<iframe src=jest-live/r1/jest-live.html width=96% height=300px style=margin:2% >no iframe here</iframe>
-<p>Real-time Leap and bones.'</p>
+<iframe src=jest-live/r1/jest-live.html width=96% height=300px style=margin:2% ></iframe>
+Real-time Leap and bones.
 
 
 ### Live Demo
