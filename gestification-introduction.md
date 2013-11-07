@@ -23,7 +23,6 @@ http://jaanga.github.io/gestification/cookbook/jest-play/json/r1/jest-record-jso
 <td></td>
 <td>
 <img src=http://jaanga.github.io/gestification/projects/flying-leap-3d/castle/castle-240x160.png border=1 title='He&apos;s just an ailing script kiddie' >
-
 </td>
 <td></td>
 <td>

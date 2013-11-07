@@ -17,17 +17,15 @@
 <!--
 <script src=http://jaanga.github.io/libs/ds/r1/doc-simple.js ></script>
 -->
-<script src=../../libs/ds/r1/doc-simple.js ></script>
+<script src=../../libs/db/r2/doc-browser.js ></script>
 
 	<div id=txt >
 	
 		<h1>
 			<a href=../../index.html >Jaanga</a> &raquo; <a href=../index.html >Gestification</a>&nbsp;&raquo; <a href='' >Projects</a>
 		</h1>
-<!--				
-		<p id=intro ><a href=JavaScript:displayPage("projects","projects-introduction.md",intro); >Projects Introduction</a></p>
--->			
-		<p id=rm ><a href=JavaScript:displayPage("projects","readme.md",rm); >Project Read Me on GitHub</a></p>
+		
+		<p id=rm ><a href=JavaScript:DS.displayMarkdown("readme.md",rm); >Project Read Me on GitHub</a></p>
 				
 		<p>This folder contains work of a more ongoing and complex nature.</p>		
 				
@@ -35,19 +33,19 @@
 				
 		<p><small><i>Clicking an image or link in this menu will start the app.</i></small></p>
 				
-		<p id=ad><a href=JavaScript:displayOverview("air-doodle","/index.html",ad); >
+		<p id=ad><a href=JavaScript:DS.displayMarkdown("air-doodle/readme.md",ad); >
 			<img border=1 src=http://jaanga.github.io/gestification/projects/air-doodle/r1/air-doodle-240x166.png ><br>
 			AirDoodle</a><br>
 			The future of meta-communication available with a flick \'o the wrist.
 		</p>
 
-		<p id=ah><a href=JavaScript:displayOverview("air-hand","/r1/air-hand-live.html",ah); >
+		<p id=ah><a href=JavaScript:DS.displayMarkdown("air-hand/readme.md",ah); >
 			<img border=1 src=http://jaanga.github.io/gestification/projects/air-hand/r1/air-hand-r1-h2-240x160.png ><br>
 			Air Hand</a><br>
 			Can't quite get the point of it? Perhaps we can lend you a hand. We are the second hand store of the future...
 		</p>
 				
-		<p id=fl><a href=JavaScript:displayOverview("flying-leap-3d","/castle/load-castle.html",fl); >
+		<p id=fl><a href=JavaScript:DS.displayMarkdown("flying-leap-3d/readme.md",fl); >
 			<img border=1 src=http://jaanga.github.io/gestification/projects/flying-leap-3d/castle/castle-240x160.png ><br>
 			Flying Leap 3D</a><br>
 			Worth a visit<br>
@@ -60,7 +58,7 @@
 	
 	DS.menu.innerHTML = txt.innerHTML;
 	txt.innerHTML = '';
-	DS.init( 'projects','readme.md', rm );
+	DS.init( 'https://github.com/jaanga/gestification/blob/gh-pages/','readme.md', rm );
 	
 	ADO.init( '../models/ado/rubber-duck-10.js' );
 </script>
