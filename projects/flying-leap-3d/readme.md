@@ -1,5 +1,8 @@
 Flying Leap 3D
 ==============
+<iframe src=http://jaanga.github.io/gestification/projects/flying-leap-3d/castle/load-castle.html height=300px width=96% style=margin:2% ></iframe>
+Developing guidance control code that uses the Leap device for user input.
+
 
 ## Live Demos
 
@@ -31,7 +34,7 @@ Leap.js + Three.js: a Leaped first person camera controller
 
 See the readme in each demo's folder for more details and status of issues
 
-###Leap Actions
+## Leap Actions
 
 Hand open over Leap device:
 
@@ -49,7 +52,7 @@ Hand open over Leap device:
 * When a mouse button is being pressed, the scroll wheel updates movementSpeed
 * Clicking the scroll wheel toggles Freeze on and off.
 
-###New First Person Control  Keyboard Commands
+### New First Person Control  Keyboard Commands
 
 	The following new keyboard commands are added to the fork:
 	
@@ -69,12 +72,12 @@ Hand open over Leap device:
 	
 	````
 
-###Copyright and License
+## Copyright and License
 Copyright &copy; 2013 Jaanga authors
 
 MIT License
 
-###Change Log
+## Change Log
 
 2013-10-26 ~ Theo
 
