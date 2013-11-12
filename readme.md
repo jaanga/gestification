@@ -4,6 +4,14 @@ Gestification Read Me
 This repository contains numerous cookbook code examples for apps that access the [Leap Motion](http://leapmotion.com) device 
 and display data received from the device in some 3D fashion with the help of [Leap.js](http://js.leapmotion.com/) and [Three.js](http://threejs.org).
 
+## View this Read Me via GitHub
+
+GitHub Pages: <http://jaanga.github.io/gestification/index.html>
+
+GitHub Source: <https://github.com/jaanga/gestification/>
+
+## Notes
+
 The mission is to build apps that are 3D in every aspect - all interaction, movement is inworld 3D in your browser. 
 
 With all of the apps in this repository, notice that your pointer or hands will get bigger and smaller as you move them in and out of the screen. 
