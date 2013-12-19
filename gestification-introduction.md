@@ -1,5 +1,5 @@
-Gestification Introduction
-=========================
+Gestification Overview
+======================
 <!-- Only show the following when viewed on GitHub.com -->
 <div style=display:none; >
 You may also view this project as a <a href="http://jaanga.github.io/gestification/" target="_blank">Jaanga app</a>.
@@ -41,9 +41,9 @@ src=http://jaanga.github.io/gestification/cookbook/gesture-tally/r1/gesture-tall
 </tr>
 </table>
 
-You have a [Leap Motion](http://leapmotion.com) device.  
+Do you have a [Leap Motion](http://leapmotion.com) device?
 
-You're looking for cool apps with lots of JavaScript source code.  
+Are you looking for cool Leap-enabled apps with lots of JavaScript source code?
 
 <b style="color:red" title="Yay! Yippee! Hooray!"><i>&iexcl;&iexcl;&iexcl;Bingo!!!</i></b>
 
@@ -75,7 +75,7 @@ JavaScript web-apps from Jaanga for the awesome [Leap Motion](http://leapmotion.
 
 Gestification has lots of live demos that all run in your browser. Just click and go. It's as easy as watching TV.
 
-And each app has source code available under the do-what-you-pleases [MIT License](http://en.wikipedia.org/wiki/MIT_License).
+And each app has source code available under the do-what-you-please [MIT License](http://en.wikipedia.org/wiki/MIT_License).
 
 <table>
 <tr>
@@ -131,11 +131,11 @@ Welcome back from the dark side.
 
 Now, here, there are four folders with code examples you can run, view or even edit.
 
-The **'[Cookbook](https://github.com/jaanga/gestification/tree/gh-pages/cookbook)'** folder contains a number of short, simple apps that you coud use to build bigger apps. Files are generally about 200 or so lines of code.
+The **'[Cookbook](https://github.com/jaanga/gestification/tree/gh-pages/cookbook)'** folder contains a number of short, simple apps that you could use to build bigger apps. Files are generally about 200 or so lines of code.
 
 The **'[Projects](https://github.com/jaanga/gestification/tree/gh-pages/projects)'** folder contains work that probably has start and finish dates and tends to be more complicated stuff.
 
-The **'[Events Timely Things](https://github.com/jaanga/gestification/tree/gh-pages/events-timely)'** folder contains work prepared for an event, as a one-off probablt to help somebody or to respond to a specific query, or work that has been superseded such as fun home page graphics.
+The **'[Events Timely Things](https://github.com/jaanga/gestification/tree/gh-pages/events-timely)'** folder contains work prepared for an event, as a one-off probably to help somebody or to respond to a specific query, or work that has been superseded such as fun home page graphics.
 
 The **'[Work-in-Hand](https://github.com/jaanga/gestification/tree/gh-pages/work-in-hand)'** folder contains more experimental work where the final outcome is more up in the air.
 

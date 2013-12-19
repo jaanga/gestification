@@ -7,7 +7,7 @@
 		
 		doodle = document.body.appendChild( document.createElement( 'div' ) );
 		doodle.style.cssText = 'bottom: 0; font: 600 12pt monospace; left: 0; margin: auto; position: absolute; right: 0; text-align: center; width: 50% ';
-		doodle.innerHTML = '<p title="This feature requires a Leap Motion device.">This page has ' +
+		doodle.innerHTML = '<p title="This feature requires a Leap Motion device.">This page has an ' +
 		'<a href="http://jaanga.github.io/gestification/projects/air-doodle/" target="_blank">airDoodle</a></p>';
 		
 		//data = document.body.appendChild( document.createElement( 'div' ) );

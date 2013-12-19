@@ -1,18 +1,19 @@
 Gestification Read Me
 =====================
 
+## Concept
 This repository contains numerous cookbook code examples for apps that access the [Leap Motion](http://leapmotion.com) device 
 and display data received from the device in some 3D fashion with the help of [Leap.js](http://js.leapmotion.com/) and [Three.js](http://threejs.org).
 
 ## View this Read Me via GitHub
 
-GitHub Pages: <http://jaanga.github.io/gestification/index.html>
+As a GitHub Page: <http://jaanga.github.io/gestification/index.html>
 
-GitHub Source: <https://github.com/jaanga/gestification/>
+As GitHub source code: <https://github.com/jaanga/gestification/>
 
 ## Notes
 
-The mission is to build apps that are 3D in every aspect - all interaction, movement is inworld 3D in your browser. 
+The mission is to build apps that are 3D in every aspect - all interaction, movement is in-world 3D in your browser. 
 
 With all of the apps in this repository, notice that your pointer or hands will get bigger and smaller as you move them in and out of the screen. 
 You can move your pointer around, behind and under things. 
@@ -53,13 +54,13 @@ See airDoodle
 
 See airHand
 
-Creating tools that hlp generated realistic looking hands, claws or appendages whose movements may be ispayed in 3D in rel-time, recorded for later use 
+Creating tools that help generated realistic looking hands, claws or appendages whose movements may be displayed in 3D in real-time, recorded for later use 
 or used in conjunction with other character animation tools and processes .
 
 ### Guidance Controls
 Creating tools that allow you to navigate through 3D spaces using the motion of hands. 
 Steering wheels, tillers and rudders, joy sticks and consoles all come to mind as existing methods.
-Now that there is a device that allows the full six degrees of freddom, what new paradigms will be craeted?
+Now that there is a device that allows the full six degrees of freedom, what new paradigms will be created?
 
 ### Games
 Simulation and reality...
@@ -93,6 +94,11 @@ See [Copyright, License and Credits](https://github.com/jaanga/gestification/blo
 <r>
 
 ## Change Log
+
+2013-12-19 ~ Theo
+
+* many text edits
+* spell checks
 
 2013-11-07 ~ Theo
 
