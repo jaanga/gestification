@@ -6,7 +6,7 @@ airDoodle is what happens when the whitespace behind a web page is filled with a
 
 ## Live Demo
 
-[airDoodle](http://jaanga.github.io/gestification/projects/air-doodle/air-doodle-1.html)
+[airDoodle](http://jaanga.github.io/gestification/projects/air-doodle/index.html)
 
 Earlier version
 [airDoodle](http://jaanga.github.io/gestification/projects/air-doodle/air-doodle-1.html)
