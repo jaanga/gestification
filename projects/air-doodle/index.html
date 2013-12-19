@@ -45,9 +45,9 @@
 		
 		scene = new THREE.Scene();
 		if ( ! Detector.webgl ) {
-			renderer = new THREE.CanvasRenderer( { antialias: true } );
+			renderer = new THREE.CanvasRenderer();
 		} else {
-			renderer = new THREE.WebGLRenderer( { antialias: true } );
+			renderer = new THREE.WebGLRenderer( { alpha: 1, antialias: true, clearColor: 0xffffff } );
 		}
 		renderer.setSize( window.innerWidth, window.innerHeight );
 		renderer.shadowMapEnabled = true;

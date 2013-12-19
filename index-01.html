@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang=en>
+<head>
+<title>Gestification Jaanga</title>
+<meta charset=utf-8>
+<meta name=author content='Theo Armour'>
+</head>
+<body>
+<script src=http://jaanga.github.io/libs/md/showdown.js ></script>
+<script>
+// to add
+// menu highlighting
+// hash linking
+
+	var DS = DS || {};
+	DS.converter = new Showdown.converter();
+
+	document.body.style.cssText = 'font: bold 12pt monospace; margin: 0; overflow: hidden;';
+	DS.menu = document.body.appendChild( document.createElement( 'div' ) );
+	DS.menu.innerHTML = '<h1><a href=../ >Jaanga</a> &raquo;<br>' +
+		'<a href="" >Gestification</a></h1>' +
+
+		'<p><i><small>Apps for Leap Motion devices that may come in handy.<br>Do keep your fingers crossed...</small></i></p>' +
+
+		'<p><a href=JavaScript:displayPage("readme.md"); >Introduction</a><br>' +
+			'<a href=JavaScript:displayPage("copyright-license-credits.md") >License & Credits</a></p>' +
+		'<br>' +
+
+		'<p><a href=JavaScript:displayOverview("cookbook"); >Cookbook</a></p>' +
+		'<p><a href=JavaScript:displayOverview("projects"); >Projects</a></p>' +
+		'<p><a href=JavaScript:displayOverview("work-in-hand"); >Work-in-hand</a></p>' +
+		'<br>' +
+
+		'<p style=color:red; ><br><i>2013-10-29: Gestification is currently under heavy construction right now. Many things are broken...</i></p>' +
+		'<p style=color:red; ><i>If you are having issues, the easiest DS is to visit the source code site: ' +
+			'<a href="https://github.com/jaanga/gestification/" target="_blank">jaanga/gestification</a></i></p>' +
+	'';	
+
+	DS.border = 'border: 3px double #eee; ';
+	// DS.borderNo = 'border: black groove 0px; ';
+	DS.height = ' height: ' + (window.innerHeight * 0.45) + 'px;';
+	DS.height2 = ' height: ' + (window.innerHeight * 0.35) + 'px;';
+	DS.heightFull = ' height: ' + (window.innerHeight * 0.90) + 'px;';
+	DS.left = ' left: 25%;';
+	DS.left2 = ' left: 85%;';
+	// DS.overHide = 'overflow: hidden;';
+	DS.overScroll = 'overflow-y: scroll;';
+	DS.padding = 'padding: 0px 20px 0px 20px;';
+	DS.position = 'position: absolute;';
+	DS.top = ' top: ' + (window.innerHeight * 0.05) + 'px;';
+	DS.top2 = ' top: ' + (window.innerHeight * 0.60) + 'px;';
+	
+	DS.horzMnu = 'left: 0; width: 18%;';
+	
+	DS.widthIfr = 'left: 380px; width: ' + (window.innerWidth - 380 - 230) + 'px;' ;
+	DS.horzIfr = 'left: 25%; margin: auto; right: 20%; width: 55%;' ;
+	
+	DS.widthRdm = 'left: 380px; margin: auto; right: 230px; ';
+	DS.horzRdm = 'left: 25%; margin: auto; right: 20%; ';
+	
+	DS.widthLnk = 'right: 10px; width: 200px; ';
+	DS.horzLnk = 'right: 0; width: 18%; ';
+	
+
+	DS.menu.style.cssText = DS.border + DS.heightFull + DS.padding + DS.position + DS.top + DS.horzMnu;
+	
+	DS.ifr = document.body.appendChild( document.createElement( 'iframe' ) );
+	DS.ifr.frameBorder = 0;
+	DS.ifrStyle = DS.border + DS.height + DS.overScroll + DS.position + DS.top + DS.horzIfr;
+
+	DS.readme = document.body.appendChild( document.createElement( 'div' ) );
+	DS.readmeStyle = DS.border + DS.height2 + DS.overScroll + DS.padding + DS.position + DS.top2 + DS.horzRdm;
+	DS.readmeStyleFull = DS.border + DS.heightFull + DS.overScroll + DS.padding + DS.position + DS.top + DS.horzRdm;
+
+	DS.runApp = document.body.appendChild( document.createElement( 'div' ) );
+	DS.runApp.style.cssText = DS.position + DS.top + DS.horzLnk;
+
+	DS.viewSource = document.body.appendChild( document.createElement( 'div' ) );
+	DS.viewSource.style.cssText = DS.position + DS.top2 + DS.horzLnk;
+
+/*
+	if ( !location.hash ) {
+		DS.ifr.src = 'projects/home-page/r2/introduction.html';
+	} else {
+		DS.ifr.src = location.hash.substr(1);
+	}
+*/
+	displayPage( 'readme.md' );
+
+	function displayPage( fname ) {
+		DS.ifr.src = DS.viewSource.innerHTML = '';
+		DS.ifr.style.cssText = 'display: none;';
+
+		DS.readme.innerHTML = DS.converter.makeHtml( requestFile( fname ) );
+		DS.readme.style.cssText = DS.readmeStyleFull;
+
+		DS.runApp.innerHTML = '<h2><a href="https://github.com/jaanga/gestification/" target="_blank">' +
+			'View<br> source code<br> on GitHub<br>in <br> new tab</a></h2>';
+		DS.viewSource.innerHTML = '';
+	}
+
+	function displayOverview( folder ) {
+
+		DS.ifr.src = folder + '/index.html';
+		DS.ifr.style.cssText = DS.ifrStyle;
+
+		DS.readme.innerHTML = DS.converter.makeHtml( requestFile( folder + '/readme.md' ) );
+		DS.readme.style.cssText = DS.readmeStyle;
+
+		DS.runApp.innerHTML = '<h2><a href="' + folder + '/index.html" target="_blank">Run<br>viewer/browser<br>HTML app<br>in<br>new tab</a></h2>';
+		DS.viewSource.innerHTML = '<h2><a href="https://github.com/jaanga/gestification/tree/gh-pages/' + folder +
+			'/" target="_blank">View<br> source code<br> on GitHub<br>in <br> new tab</a></h2>';
+	}
+
+	function requestFile( fname ) {
+		var xmlHttp = null;
+		xmlHttp = new XMLHttpRequest();
+		xmlHttp.open( 'GET', fname, false );
+		xmlHttp.send( null );
+		return xmlHttp.responseText;
+	}
+</script>
+</body>
+</html>
