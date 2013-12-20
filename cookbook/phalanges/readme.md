@@ -1,5 +1,7 @@
-Phalanges
-=========
+Phalanges Read Me
+=================
+
+Cropped iframe view of Phalanges:
 <iframe src=phalanges/r7/phalanges.html width=96% height=300px style=margin:2% ></iframe>
 Phalanges, using Leap.js, parses incoming Leap Motion data then, using Three.js, creates and updates 3D objects 
 that mirror the live motion of hands and fingers on screen in real-time.

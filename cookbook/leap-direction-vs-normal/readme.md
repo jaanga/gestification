@@ -1,5 +1,7 @@
-Leap Direction vs Normal
-========================
+Leap Direction vs Normal Read Me
+================================
+
+Cropped iframe view of Leap Direction vs Normal
 <iframe src=leap-direction-vs-normal/r2/leap-direction-vs-normal.html width=96% height=300px style=margin:2% ></iframe>
 Another pitch, roll and yaw issues demo. Code example.
 

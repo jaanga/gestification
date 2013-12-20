@@ -1,5 +1,7 @@
-youGest
-=======
+youGest Read Me
+===============
+
+Cropped iframe view of youGest:
 <iframe src=yougest/r4/index.html width=96% height=300px style=margin:2% ></iframe>
 Displays incoming Leap Motion data both as numbers and as Three.js 3D objects that update in rel-time
 

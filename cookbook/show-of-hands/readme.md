@@ -1,5 +1,7 @@
-Show of Hands
-=============
+Show of Hands Read Me
+=====================
+
+Cropped iframe view of Show of Hands:
 <iframe src=show-of-hands/r1/show-of-hands.html width=96% height=300px style=margin:2% ></iframe>
 A first attempt at skinning <a href="http://leapmotion.com" target="_blank">Leap Motion</a> data.
 

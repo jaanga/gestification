@@ -1,5 +1,7 @@
-jestPlay
-========
+jestPlay Read Me
+================
+
+Cropped iframe view of jestPlay:
 <iframe src=jest-play/bvh/r1/jest-replay-bvh.html width=96% height=300px style=margin:2% ></iframe>
 <p>Suite of Apps to Record and Replay Leap Device Data Files</p>
 

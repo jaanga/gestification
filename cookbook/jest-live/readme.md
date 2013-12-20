@@ -1,5 +1,7 @@
-jestLive
-========
+jestLive Read Me
+================
+
+Cropped iframe view of jestLive
 <iframe src=jest-live/r1/jest-live.html width=96% height=300px style=margin:2% ></iframe>
 Real-time Leap and bones.
 
