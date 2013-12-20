@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang=en>
+<head>
+<title>FGx Plane Spotter R1</title>
+<meta charset=utf-8>
+</head>
+<body>
+
+<script src=http://mrdoob.github.com/three.js/build/three.min.js></script>
+<script src=http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js></script>
+<script src=http://mrdoob.github.com/three.js/examples/js/libs/stats.min.js></script>
+<!--
+<script src=http://mrdoob.github.com/three.js/examples/js/controls/FirstPersonControls.js></script>
+
+<script src='../../../../git-repos/three.js/build/three.min.js'></script>
+<script src='../../../../git-repos/three.js/examples/js/controls/TrackballControls.js'></script>
+<script src='../../../../git-repos/three.js/examples/js/libs/stats.min.js'></script>
+<script src='../../../../git-repos/three.js/examples/js/controls/FirstPersonControls.js'></script>
+-->
+<script src=first-person-controls-theo.js></script>
+<script>
+
+	var FGx = FGx || {};
+
+	FGx.clock = new THREE.Clock();
+	FGx.delta = 0;
+	
+	//FGx.fileName = 'places-2000.csv';
+	//FGx.fileName = '../../../fgx.github.io/data/apt1000-icao-ks.csv';
+	FGx.fileName = '../data/apt1000-icao.csv';
+	FGx.startTime = new Date();
+	FGx.tileZoom = 7;
+	FGx.tileXLng;
+	FGx.tileYLat;
+
+	FGx.elevZoom = 4;
+	FGx.elevTileXLng;
+	FGx.elevTileYLat;
+
+//	just a reminder
+//	FGx.ulLat
+//	FGx.lrLat
+//	FGx.ulLng
+//	FGx.lrLng;
+
+	FGx.mapType = 4;
+	FGx.mapTypes = [
+		['Google Maps',''],
+		['Google Maps Terrain',''],
+		['Google Maps Satellite',''],
+		['Google Maps Hybrid',''],
+		['Open Street Map','http://b.tile.openstreetmap.org/'],
+		['Open Cycle Map', 'http://c.tile.opencyclemap.org/cycle/'],
+		['MapQuest OSM', 'http://otile3.mqcdn.com/tiles/1.0.0/osm/'],
+		['MapQuest Satellite', 'http://otile3.mqcdn.com/tiles/1.0.0/sat/'],
+		['Stamen terrain background','http://tile.stamen.com/terrain-background/']
+	];
+	FGx.exaggeration = 5;
+
+	FGx.uniColors = [
+		'20 0 0','32 0 0','44 0 0','56 0 0','68 0 0','80 0 0','92 0 0','104 0 0','116 0 0','128 0 0','140 0 0','152 0 0','164 0 0','176 0 0','188 0 0','200 0 0','210 8 3','218 24 9','226 40 15','234 56 21','242 72 27','250 88 33','255 104 39','255 120 45','255 136 51','255 152 57','255 168 63','255 184 69','255 200 75','255 216 81','255 232 87','255 242 0','255 248 93','255 255 99','197 243 0','139 222 0','0 220 0','100 228 0','0 242 0','35 255 20','96 255 20','134 255 20','157 255 20','177 255 20','200 255 20','200 255 106','200 255 154','200 255 192','200 255 237','0 0 0','227 255 255','210 255 255','193 255 255','0 0 128'
+	];
+
+	FGx.uniElevations = [
+		6000,5000,4500,4000,3500,3000,2500,2000,1900,1800,1700,1600,1500,1400,1300,1200,1100,1000,950,900,850,800,750,700,650,600,550,500,450,400,350,300,250,200,180,160,140,120,100,90,80,70,60,50,40,30,20,10,5,0,-5,-200,-400,-500
+	];
+
+	FGx.places = [];
+	FGx.startPlace = 1281; // San Francisco ~ but see below
+	//FGx.startPlace = 13228; // San Francisco ~ but see below
+	FGx.elevationsImage;
+	FGx.terrain;
+
+	init();
+	animate();
+
+	function init() {
+		var renderer, scene, camera, controls, stats, info, mesh;
+		var light, geometry, material, texture, css;
+
+		css = document.body.appendChild( document.createElement('style') );
+		css.innerHTML = 'body { font: 600 12pt monospace; margin: 0; overflow: hidden; text-align: center; }' +
+			'h1 a {text-decoration: none; }' +
+		'';
+
+		var data = requestFile( FGx.fileName );
+		var lines = data.split(/\r\n|\n/);
+		var length = lines.length - 2;
+		var line, sep = ',';
+
+		for ( var i = 1; i < length; i++ ) {
+			lines[i] = lines[i].replace(/["']/g, ""); // better to delete in original files
+			line = lines[i].split( sep );
+			if ( line[5] > 0 ) { FGx.places.push( line ); }
+		}
+//		FGx.startPlace = parseInt( Math.random() * FGx.places.length, 10 );
+
+		FGx.info = info = document.body.appendChild( document.createElement( 'div' ) );
+		info.style.cssText = 'border: 0px solid red; position: absolute; top: 0px; width: 100% ';
+
+		info.innerHTML = info.txt = '<h1 title="FlightGear for amateurs" >FGx Plane Spotter R1 ~ ' +
+			'<a href=# title="Get help and info" onclick=help.style.display="block"; ><large>&#x24D8;</large></a></h1>' +
+			'<div style=height{900px; >Camera lat: <input type="text" id="inpLat" value="' + FGx.places[ FGx.startPlace][2] +'" size=8 /> ' +
+				'lng: <input type="text" id="inpLng" value="' + FGx.places[ FGx.startPlace][3] +'" size=8 /> ' +
+				'<button onclick="initElevations( inpLat.value, inpLng.value );" title="Click Go to update camera longitude and latitude" >Go</button> || ' +
+				'<select title="Choose one of ' + FGx.places.length + ' icao listings" id=selPlace onchange="initElevations( FGx.places[this.selectedIndex][2], FGx.places[this.selectedIndex][3]);' +
+					'inpLat.value = FGx.places[this.selectedIndex][2]; inpLng.value = FGx.places[this.selectedIndex][3]; " ></select> ~ ' +
+				'<select title="Are we there yet?" id=selZoom onchange="FGx.tileZoom=this.selectedIndex+7; initElevations( FGx.places[ selPlace.selectedIndex ][2], FGx.places[selPlace.selectedIndex][3] );"></select> ' +
+				'<select title="Select the amount of vertical distortion" id=selExagg onchange="FGx.exaggeration = this.selectedIndex; initElevations( FGx.places[ selPlace.selectedIndex ][2], FGx.places[selPlace.selectedIndex][3] );"></select> ' +
+				'<select title="Select the 2D overlay" id=selMapType onchange="FGx.mapType=this.selectedIndex; initElevations( FGx.places[selPlace.selectedIndex ][2], FGx.places[selPlace.selectedIndex ][3] );"><select>' +
+				'<br><br>' +
+				'<a href="" >Trackball Controller</a> &#10070; <a href="JavaScript:getFirstPersonController();" title="Happy flying!" >First Person Controller</a>' +
+				'  &#10070; <input id=chkPlacards type="checkbox" onchange=togglePlacards(); > Placards' +
+			'</div><br>' +
+			'<div id=touch style=display:none;height:' + window.innerHeight + 'px;width:100%; ></div>' +
+			'<div id=help onclick=help.style.display="none"; style=display:none;background-color:#ccc;opacity:0.7;left:0;margin:auto;padding:20px;position:absolute;right:0;top:200px;width:60%; >' +
+				'FGx Plane Spotter<br><br>' +
+				'<i>Note: Works only in Google Chrome and Firefox.</i><br>' +
+				'<p>Trackball General Controls:<br>' +
+					'&bull; Rotate globe: Left mouse / press 1 finger<br>' +
+					'&bull; Zoom in current level: Mousewheel / two fingers<br>' +
+					'&bull; Drag globe: Right mouse / press 2 fingers<br>' +
+				'</p>' +
+				'&#10070; ' +
+				'<p>First Person General Controls:<br>' +
+					'&bull; WASD/cursor keys: four directions<br>' +
+					'&bull; RF/Page Up PageDn: move up / down<br>' +
+					'&bull; Mouse wheel only: speed up/slow down / down<br>' +
+					'&bull; Spacebar/mousewheel click: pause<br>' +
+					'&bull; Mouse/trackpad: update heading<br>' +
+				'</p>' +
+
+				'<a href="https://github.com/fgx/fgx-plane-spotter/" target="_blank">Source code</a><br>' +
+				'<small>credits: <a href="http://threejs.org" target="_blank">three.js</a> - ' +
+				'<a href="http://khronos.org/webgl/" target="_blank">webgl</a> - ' +
+				'<a href="http://fgx.github.io" target="_blank">fgx</a><br>' +
+				'copyright &copy; 2013 fgx authors ~ GPL 2 license</small><br><br>' +
+				'<i>Click anywhere in this message to hide...</i>' +
+			'</div>' +
+		'';
+
+		for ( var option, i = 0, len = FGx.places.length; i < len; i++ ) {			
+			selPlace.appendChild( document.createElement( 'option' ) );
+			selPlace.children[i].text = FGx.places[i][0];
+			selPlace.children[i].title = FGx.places[i][1];
+		}
+		selPlace.selectedIndex = FGx.startPlace;
+
+		for ( var option, i = 7; i < 13; i++ ) {
+			selZoom.appendChild( document.createElement( 'option' ) );
+			selZoom.children[i - 7].text = 'Zoom level ' + i;
+		}
+		selZoom.selectedIndex = FGx.tileZoom - 7;
+
+		for ( var option, i = 0; i < 10; i++ ) {
+			selExagg.appendChild( document.createElement( 'option' ) );
+			selExagg.children[i].text ='Exaggeration scale ' + ( i + 1 ) + ':1';
+		}
+		selExagg.selectedIndex = FGx.exaggeration;
+
+		for ( var option, i = 0, len = FGx.mapTypes.length; i < len; i++ ) {
+			selMapType.appendChild( option = document.createElement( 'option' ) );
+			selMapType.children[i].text = FGx.mapTypes[i][0];
+		}
+		selMapType.selectedIndex = FGx.mapType;
+
+		FGx.renderer = renderer = new THREE.WebGLRenderer( { alpha: 1, antialias: true, clearColor: 0xffffff }  );
+		renderer.shadowMapEnabled = true;
+
+		renderer.setSize( window.innerWidth, window.innerHeight );
+
+		document.body.appendChild( renderer.domElement );
+		FGx.scene = scene = new THREE.Scene();
+
+		FGx.camera = camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
+		camera.position.set( 0, 600, 400 );
+		FGx.controls = controls = new THREE.TrackballControls( camera, renderer.domElement );
+
+		FGx.stats = stats = new Stats();
+		stats.domElement.style.cssText = 'position: absolute; top: 0px; zIndex: 100; ';
+		document.body.appendChild( stats.domElement );
+
+		light = new THREE.AmbientLight( 0x888888 );
+		// ambientLight.color.setHSL( 0.1, 0.5, 0.5 );
+		scene.add( light );
+
+		// light = new THREE.DirectionalLight( 0xffffff, 0.25 );
+		// light.position.set( 5000, 5000, 5000 ).normalize();
+		// light.castShadow = true;
+		// scene.add( light );
+
+		light = new THREE.DirectionalLight( 0xffffff, 0.5 );
+		light.position.set( 5000, 5000, 5000 );
+		light.castShadow = true;
+
+		light.shadowMapWidth = 2048;
+		light.shadowMapHeight = 2048;
+		light.shadowCameraNear = 3000;
+		light.shadowCameraFar = 15000;
+		light.shadowCameraFov = 1000;
+// light.shadowCameraVisible = true;
+		scene.add( light );
+
+		geometry = new THREE.AxisHelper( 100 );
+		scene.add( geometry );
+
+		geometry = new THREE.PlaneGeometry( 1000, 1000, 1, 1 );
+		geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - 0.5 * Math.PI ) );
+		material = new THREE.MeshNormalMaterial( {opacity: 0.5, transparent: true });
+		mesh = new THREE.Mesh( geometry, material );
+		mesh.position.y = -2;
+		scene.add( mesh );
+
+		initElevations( FGx.places[ FGx.startPlace ][ 2 ], FGx.places[ FGx.startPlace ][ 3 ] );
+	}
+
+	function initElevations( lat, lng ) {
+		if ( FGx.placards && FGx.placards.children.length > 0) { 
+			chkPlacards.checked = false;
+			FGx.scene.remove( FGx.placards );
+			FGx.placards.children.length = 0;
+		}	
+//console.log('chrome test',lat,lng );
+		FGx.startTime = new Date();
+		var  tileZoom = FGx.tileZoom, elevZoom = FGx.elevZoom;
+		//if ( !FGx.elevationsImage ) {
+			FGx.elevationsImage = document.createElement('img' )
+		//}
+		lat = parseFloat( lat );
+		lng = parseFloat ( lng );
+
+		FGx.tileYLat = lat2tile( lat, tileZoom );
+		FGx.tileXLng = long2tile( lng, tileZoom );
+
+		FGx.elevTileYLat = lat2tile( lat, elevZoom );
+		FGx.elevTileXLng = long2tile( lng, elevZoom );
+
+		FGx.elevationsImage.onload = initCanvas;
+		FGx.elevationsImage.src = "../../fgx-globe/cookbook/unicam/topo-" + elevZoom + "-" + FGx.elevTileYLat + "-" + FGx.elevTileXLng + ".png";
+//console.log( lng, lat, FGx.tileXLng, FGx.tileYLat, FGx.elevTileXLng, FGx.elevTileYLat )
+	}
+
+	function initCanvas() {
+		var mesh = FGx.terrain, tileZoom = FGx.tileZoom, elevZoom = FGx.elevZoom;
+		var tileXLng = FGx.tileXLng, mapType = FGx.mapType, tileYLat = FGx.tileYLat;
+		var elevationsImage = FGx.elevationsImage;
+		if ( FGx.terrain ) {
+			FGx.scene.remove( FGx.terrain );
+		}
+
+		FGx.ulLat = tile2lat( tileYLat, tileZoom );
+		FGx.lrLat = tile2lat( tileYLat + 1, tileZoom );
+		FGx.ulLng = tile2lng( tileXLng, tileZoom );
+		FGx.lrLng = tile2lng( tileXLng + 1, tileZoom );
+// console.log( 'tileZoom', tileZoom, 'lats', FGx.ulLat, lrLat, 'lngs', ulLng, lrLng  );
+
+		var deltaLats = Math.abs( FGx.ulLat - FGx.lrLat );
+		var deltaLngs = Math.abs( FGx.ulLng - FGx.lrLng );
+		var pixelsLat = parseInt( deltaLats * 120, 10 );
+		var pixelsLng = parseInt( deltaLngs * 120, 10 );
+// console.log( 'deltaLats', deltaLats.toFixed(3), 'deltaLngs', deltaLngs, 'pixelsLat', pixelsLat, 'pixelsLng', pixelsLng );
+
+		var elevUlLat = tile2lat( FGx.elevTileYLat, elevZoom );
+		var elevUlLng = tile2lng( FGx.elevTileXLng, elevZoom );
+// console.log( 'elevUlLat', elevUlLat, 'elevUlLng', elevUlLng );
+
+		var elevDeltaLats = elevUlLat - FGx.ulLat;
+		var elevDeltaLngs = elevUlLng - FGx.ulLng;
+// console.log( 'elevDeltaLats', elevDeltaLats, 'elevDeltaLngs', elevDeltaLngs);
+
+		var elevDeltaPixelsLat = Math.abs( elevDeltaLats * 120 );
+		var elevDeltaPixelsLng = Math.abs( elevDeltaLngs * 120 );
+// console.log( 'elevDeltaPixelsLat', elevDeltaPixelsLat, 'elevDeltaPixelsLng', elevDeltaPixelsLng );
+
+		geometry = new THREE.PlaneGeometry( 1000, 1000, pixelsLng - 1, pixelsLat - 1);
+		geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
+// material = new THREE.MeshNormalMaterial({ side: THREE.DoubleSide });
+
+// to be simplified...
+		if ( FGx.mapType === 0 ) {
+			var mapTexture = THREE.ImageUtils.loadTexture( "http://mt1.google.com/vt/x=" + tileXLng + "&y="+ tileYLat + "&z=" + tileZoom );
+		} else if ( FGx.mapType === 1 ) {
+			var mapTexture = THREE.ImageUtils.loadTexture( "http://mt1.google.com/vt/lyrs=t&x=" + tileXLng + "&y="+ tileYLat + "&z=" + tileZoom );
+		} else if ( FGx.mapType === 2 ) {
+			var mapTexture = THREE.ImageUtils.loadTexture( "http://mt1.google.com/vt/lyrs=s&x=" + tileXLng + "&y="+ tileYLat + "&z=" + tileZoom );
+		} else if ( FGx.mapType === 3 ) {
+			var mapTexture = THREE.ImageUtils.loadTexture( "http://mt1.google.com/vt/lyrs=y&x=" + tileXLng + "&y="+ tileYLat + "&z=" + tileZoom );
+		} else {
+			var mapTexture = THREE.ImageUtils.loadTexture( FGx.mapTypes[ FGx.mapType ][1] + tileZoom + "/" + tileXLng + "/" + tileYLat + ".png" );
+		}
+
+		material = new THREE.MeshPhongMaterial( {map: mapTexture, side: THREE.DoubleSide, color: 0xffffff, ambient: 0xffffff, specular: 0x888888, shininess: 200, shading: THREE.SmoothShading} );
+		// material.color.setHSL( 0.5, 0.8, 0.5 );
+
+		var elevationsCanvas = document.createElement( 'canvas' );
+		elevationsCanvas.width = elevationsImage.naturalWidth;
+		elevationsCanvas.height = elevationsImage.naturalHeight;
+
+		var elevationsCtx = elevationsCanvas.getContext("2d");
+		elevationsCtx.drawImage( elevationsImage, 0, 0 );
+		var elevationsImgData = elevationsCtx.getImageData( elevDeltaPixelsLng, elevDeltaPixelsLat, pixelsLng, pixelsLat );
+
+		var zoomCanvas = document.createElement( 'canvas' );
+		zoomCanvas.width = pixelsLng;
+		zoomCanvas.height = pixelsLat;
+
+		var zoomCtx = zoomCanvas.getContext("2d");
+		zoomCtx.putImageData( elevationsImgData, 0, 0 );
+		var zoomImgData = zoomCtx.getImageData( 1, 0, pixelsLng, pixelsLat);
+		var color, id, len = zoomImgData.data.length / 4;
+		var scale = 0.01 * FGx.exaggeration;
+
+		for ( var i = 0; i < len; i++ ) {
+			color = zoomImgData.data[ 4 * i] + ' ' + zoomImgData.data[ 4 * i + 1] + ' '  + zoomImgData.data[ 4 * i + 2];
+			id =  FGx.uniColors.indexOf( color );
+			geometry.vertices[ i ].y = scale * FGx.uniElevations[ id ];
+		}
+
+		FGx.terrain = mesh = new THREE.Mesh( geometry, material );
+		mesh.receiveShadow = true;
+		mesh.castShadow = true;
+		mesh.geometry.computeFaceNormals();
+		mesh.geometry.computeVertexNormals();
+		mesh.geometry.verticesNeedUpdate = true;
+		FGx.scene.add( mesh );
+
+		var loader = new THREE.JSONLoader();
+		
+		loader.load( '../../fgx-aircraft/data/seymour/seymour.js', function( geometry ) { 
+			geometry.applyMatrix( new THREE.Matrix4().multiplyScalar( 3 ) );
+			FGx.seymour = geometry;
+		} );
+console.log( 'Load time:', new Date() - FGx.startTime );
+	}
+
+	function animate() {
+		requestAnimationFrame( animate );
+		var delta = FGx.clock.getDelta()
+		FGx.controls.update( delta );
+		FGx.renderer.render( FGx.scene, FGx.camera );
+		FGx.stats.update();
+		FGx.delta += delta;
+		if ( FGx.delta > 3 ) {
+			getCrossfeed();
+			FGx.delta = 0;
+		}
+	}
+	
+
+
+	function requestFile( fname ) {
+		var xmlHttp = new XMLHttpRequest();
+		xmlHttp.open( 'GET', fname, false );
+		xmlHttp.send( null );
+		return xmlHttp.responseText;
+	}
+
+	function cos(a){ return Math.cos(a); }
+//	function sin(a){ return Math.sin(a); }
+	function pow(a,b){ return Math.pow(a,b); }
+
+// http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames#Tile_servers
+	function lat2tile( lat, zoom ) {
+		var pi = Math.PI;
+		return ( Math.floor(( 1 - Math.log( Math.tan( lat * pi / 180) + 1 / cos( lat * pi / 180)) / pi ) / 2 * pow(2, zoom)) );
+	}
+
+	function long2tile( lon, zoom ) {
+		return (Math.floor((lon + 180 ) / 360 * pow( 2, zoom )));
+	}
+
+	function tile2lng( x, z ) {
+		return ( x / pow( 2, z ) * 360 - 180 );
+	}
+
+	function tile2lat(y,z) {
+		var pi = Math.PI;
+		var n = pi - 2 * pi * y / pow( 2, z );
+		return ( 180 / pi * Math.atan( 0.5 * ( Math.exp(n) - Math.exp(-n))) );
+	}
+
+	function getFirstPersonController() {
+		touch.style.display = 'block';
+
+		var camera, controls;
+		FGx.camera = camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
+		camera.position.set( 0, 100, 500 );
+
+		FGx.controls = controls = new THREE.FirstPersonControls( camera );
+		controls.lookSpeedDefault = controls.lookSpeed = 0.025; // 0.0125;
+
+		controls.lookSpeedDefault = controls.lookSpeed = 0.025; // 0.0125;
+
+		controls.lookSpeedMin = 0.04;
+		controls.lookSpeedMax = 0.09;
+
+		controls.movementSpeedDefault = controls.movementSpeed = 100;
+		controls.movementSpeedMin = 1;
+		controls.movementSpeedMax = 1000;
+
+		//controls.heightSpeed = true;
+		//controls.heightCoef = 0.5;
+		//controls.heightMin = 1.0;
+		//controls.heightMax = 18.0;
+
+		controls.noFly = false;
+		controls.lookVertical = true;
+		controls.constrainVertical = true;
+		controls.verticalMin = 1.5;
+		controls.verticalMax = 2.0;
+		this.autoSpeedFactor = 0.0;
+		controls.lon = -40;
+	}
+	
+	function getCrossfeed() {
+		FGx.crossfeed = JSON.parse( requestFile( 'http://crossfeed.fgx.ch/flights.json' ) ); 	
+		if ( FGx.aircraft && FGx.aircraft.children.length > 0) { 
+			FGx.scene.remove( FGx.aircraft );
+			FGx.aircraft.children.length = 0;
+		}	
+		var deltaLats = Math.abs( FGx.ulLat - FGx.lrLat );
+		var deltaLngs = Math.abs( FGx.ulLng - FGx.lrLng );	
+		var f, mesh, x, y, z;
+		
+		FGx.aircraft = new THREE.Object3D;
+		FGx.scene.add( FGx.aircraft );	
+		material = new THREE.MeshNormalMaterial();
+		for ( var i = 0, iLen = FGx.crossfeed.flights.length; i < iLen; i++ ) {
+			f = FGx.crossfeed.flights[i];
+			if ( f.lat < FGx.ulLat && f.lat > FGx.lrLat && f.lon > FGx.ulLng  && f.lon < FGx.lrLng ) {
+// console.log( f )
+				mesh = new THREE.Mesh( FGx.seymour, material );
+				x = 500 + 1000 * ( f.lon - FGx.lrLng  ) / deltaLngs;
+				z = -500 + 1000 * ( FGx.ulLat - f.lat) / deltaLats;
+				y = 0.1 * f.alt_ft;
+				mesh.position.set( x, y, z );
+				mesh.rotation.y = Math.PI *  f.hdg / 180;
+				FGx.aircraft.add( mesh );
+				
+				var texture = canvasText ( f.callsign );
+				var spriteMaterial = new THREE.SpriteMaterial( { map: texture, useScreenCoordinates: false, opacity: 1 } );
+				sprite = new THREE.Sprite( spriteMaterial );
+				sprite.position.set(  x, y + 20, z );
+				sprite.scale.set( 50, 10, 1 );
+				FGx.aircraft.add( sprite );				
+			}
+		}	
+	}	
+
+	function togglePlacards() {
+		if ( FGx.placards && FGx.placards.children.length > 0) { 
+			FGx.scene.remove( FGx.placards );
+			FGx.placards.children.length = 0;
+			return;
+		}
+	
+		var p, mesh, x, y, z;
+		var deltaLats = Math.abs( FGx.ulLat - FGx.lrLat );
+		var deltaLngs = Math.abs( FGx.ulLng - FGx.lrLng );
+		FGx.terrain.geometry.computeBoundingBox();
+		
+		FGx.placards = new THREE.Object3D;
+		FGx.scene.add( FGx.placards );
+		geometry = new THREE.CubeGeometry( 1, 1, 1 );
+		material = new THREE.MeshBasicMaterial( { color: 0xff0000, opacity: 0.5, transparent: true });
+		for ( var i = 0, iLen = FGx.places.length; i < iLen; i++ ) {
+			p = FGx.places[i];
+			if ( p[2] < FGx.ulLat && p[2] > FGx.lrLat && p[3] > FGx.ulLng  && p[3] < FGx.lrLng ) {
+				mesh = new THREE.Mesh( geometry, material );
+				x = 500 + 1000 * ( p[3] - FGx.lrLng  ) / deltaLngs;
+				z = -500 + 1000 * ( FGx.ulLat - p[2] ) / deltaLats;
+				y = 0.5 * FGx.terrain.geometry.boundingBox.max.y;
+				mesh.position.set( x, y, z );
+				mesh.scale.y = 1.5 * y;
+				FGx.placards.add( mesh );
+
+				var texture = canvasText ( p[0] );
+				var spriteMaterial = new THREE.SpriteMaterial( { map: texture, useScreenCoordinates: false, opacity: 1 } );
+				sprite = new THREE.Sprite( spriteMaterial );
+				sprite.position.set(  x, FGx.terrain.geometry.boundingBox.max.y, z );
+				sprite.scale.set( 50, 10, 1 );
+				FGx.placards.add( sprite );
+			}
+		}
+	}
+
+	function canvasText( text ) {
+		var image = document.createElement( 'canvas' );
+		image.width = 50; // 480
+		image.height = 20; //204
+		var imageContext = image.getContext( '2d' );
+		imageContext.lineWidth = 1 ;
+		imageContext.strokeStyle = '#000000';
+		imageContext.strokeRect(0, 0, 50, 20);
+		imageContext.font = '12px sans-serif';
+		imageContext.fillText( text, 5, 15 );
+		var texture = new THREE.Texture( image );
+		texture.needsUpdate = true;
+		return texture;
+	}
+</script>
+</body>
+</html>

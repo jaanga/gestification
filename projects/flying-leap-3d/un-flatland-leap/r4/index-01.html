@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang=en>
+<head>
+<title>unFlatLand R4</title>
+<meta charset=utf-8>
+</head>
+<body>
+<script src=http://mrdoob.github.com/three.js/build/three.min.js></script>
+<script src=http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js></script>
+<script src=http://mrdoob.github.com/three.js/examples/js/libs/stats.min.js></script>
+<script>
+
+	var UF = UF || {};
+	UF.fileName = places-2000.csv
+	UF.tileZoom = 7
+	UF.startTime = new Date();
+	var tileZoom = 7; // 6;
+	var tileXLng; // 20;
+	var tileYLat; // 49;
+
+	var elevZoom = 4;
+	var elevTileXLng;
+	var elevTileYLat;
+	
+	var exaggeration = 5;
+	var mapType = 4;
+	var mapTypes;
+
+	var pi = Math.PI, pi2 = 0.5 * Math.PI;
+	// var d2r = pi / 180, r2d = 180 / pi;  // degrees & radians
+	function v(x,y,z){ return new THREE.Vector3(x,y,z); }
+	function cos(a){ return Math.cos(a); }
+	function sin(a){ return Math.sin(a); }
+	function pow(a,b){ return Math.pow(a,b); }
+/* 
+// http://en.wikipedia.org/wiki/Spherical_coordinate_system
+	function latlon2xyz( lat, lon, radius ) {
+		var rc =  radius * cos( lat );
+		return  new THREE.Vector3(
+			rc * cos( lon),
+			radius * sin( lat ),
+			rc * sin( lon)
+		);
+	}
+*/
+
+// http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames#Tile_servers
+	function lat2tile( lat, zoom ) {
+		return ( Math.floor(( 1 - Math.log( Math.tan( lat * pi / 180) + 1 / cos( lat * pi / 180)) / pi ) / 2 * pow(2, zoom)) );
+	}
+
+	function long2tile( lon, zoom ) {
+		return (Math.floor((lon + 180 ) / 360 * pow( 2, zoom )));
+	}
+
+	function tile2lng( x, z ) {
+		return ( x / pow( 2, z ) * 360 - 180 );
+	}
+
+	function tile2lat(y,z) {
+		var n = pi - 2 * pi * y / pow( 2, z );
+		return ( 180 / pi * Math.atan( 0.5 * ( Math.exp(n) - Math.exp(-n))) );
+	}
+
+	var uniColors = [
+		'20 0 0','32 0 0','44 0 0','56 0 0','68 0 0','80 0 0','92 0 0','104 0 0','116 0 0','128 0 0','140 0 0','152 0 0','164 0 0','176 0 0','188 0 0','200 0 0','210 8 3','218 24 9','226 40 15','234 56 21','242 72 27','250 88 33','255 104 39','255 120 45','255 136 51','255 152 57','255 168 63','255 184 69','255 200 75','255 216 81','255 232 87','255 242 0','255 248 93','255 255 99','197 243 0','139 222 0','0 220 0','100 228 0','0 242 0','35 255 20','96 255 20','134 255 20','157 255 20','177 255 20','200 255 20','200 255 106','200 255 154','200 255 192','200 255 237','0 0 0','227 255 255','210 255 255','193 255 255','0 0 128'
+	];
+
+	var uniElevations = [
+		6000,5000,4500,4000,3500,3000,2500,2000,1900,1800,1700,1600,1500,1400,1300,1200,1100,1000,950,900,850,800,750,700,650,600,550,500,450,400,350,300,250,200,180,160,140,120,100,90,80,70,60,50,40,30,20,10,5,0,-5,-200,-400,-500
+	];
+
+	var renderer, scene, camera, controls, stats, info, mesh;
+	var places, elevationsImage;
+
+	init();
+	animate();
+
+	function init() {
+		var light, geometry, material, texture, css;
+
+		css = document.body.appendChild( document.createElement('style') );
+		css.innerHTML = 'body { font: 600 12pt monospace; margin: 0; overflow: auto; text-align: center; }' ;
+		
+		places = requestFile( 'places-2000.csv' );
+		var lines = places.split(/\r\n|\n/);
+		var length = lines.length - 1;
+		var sep = ';';
+		places = [];
+		for ( var i = 1; i < length; i++ ) {
+			lines[i] = lines[i].replace(/["']/g, ""); // better to delete in original files
+			places.push( lines[i].split( sep ) );
+		}		
+
+		info = document.body.appendChild( document.createElement( 'div' ) );
+		info.style.cssText = 'position: absolute; top: 0px; width: 100% ';
+		
+		info.innerHTML = '<h1>unFlatLand R4</h1>' +
+			'<p>Camera lat: <input type="text" id="inpLat" value="37.6" size=8 /> ' +
+			'lng: <input type="text" id="inpLng" value="-122.3" size=8 /> ' +
+			'<button onclick="initElevations( inpLat.value, inpLng.value );">Go</button> || ' +
+			
+			'<select id=selPlace onchange="initElevations( places[this.selectedIndex][1], places[this.selectedIndex][2]);' + 
+				'inpLat.value = places[this.selectedIndex][1]; inpLng.value = places[this.selectedIndex][2]; " ></select> ~ ' +				
+			'<select id=selExagg onchange="exaggeration = this.selectedIndex; initElevations( places[ selPlace.selectedIndex ][1], places[selPlace.selectedIndex][2] );"></select> ' +
+			'<select id=selMapType onchange="mapType=this.selectedIndex; initElevations( places[selPlace.selectedIndex ][1], places[selPlace.selectedIndex ][2] );"><select>' +
+		'</p>';
+
+		for (var option, i = 0; i < places.length; i++) {
+			option = document.createElement( 'option' )
+			selPlace.appendChild( option );
+			option.innerText = places[i][0];
+		}
+		selPlace.selectedIndex = 1619;
+		
+		var exaggerations = ['Exaggeration scale 1:1:', 'Exaggeration scale 2:1', 'Exaggeration scale 3:1', 'Exaggeration scale 4:1', 'Exaggeration scale 5:1', 'Exaggeration scale 6:1', 'Exaggeration scale 7:1', 'Exaggeration scale 8:1', 'Exaggeration scale 9:1', 'Exaggeration scale 10:1'];
+		
+		for (var option, i = 0; i < exaggerations.length; i++) {
+			option = document.createElement( 'option' )
+			selExagg.appendChild( option );
+			option.innerText = exaggerations[i];
+		}
+		selExagg.selectedIndex = exaggeration;
+		
+		mapTypes = [ 
+			['Google Maps',''],
+			['Google Maps Terrain',''],
+			['Google Maps Satellite',''],
+			['Google Maps Hybrid',''],
+			['Open Street Map','http://b.tile.openstreetmap.org/'], 
+			['Open Cycle Map', 'http://c.tile.opencyclemap.org/cycle/'],
+			['MapQuest OSM', 'http://otile3.mqcdn.com/tiles/1.0.0/osm/'], 
+			['MapQuest Satellite', 'http://otile3.mqcdn.com/tiles/1.0.0/sat/'], 
+			['Stamen terrain background','http://tile.stamen.com/terrain-background/']
+		];
+
+		for (var option, i = 0; i < mapTypes.length; i++) {
+			option = document.createElement( 'option' )
+			selMapType.appendChild( option );
+			option.innerText = mapTypes[i][0];
+		}
+
+		selMapType.selectedIndex = mapType;
+		
+		renderer = new THREE.WebGLRenderer( { alpha: 1, antialias: true, clearColor: 0xffffff }  );
+		renderer.shadowMapEnabled = true;
+		renderer.setSize( window.innerWidth, window.innerHeight );
+
+		document.body.appendChild( renderer.domElement );
+		scene = new THREE.Scene();
+
+		camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 10000 );
+		camera.position.set( 0, 600, 400 );
+		controls = new THREE.TrackballControls( camera, renderer.domElement );
+
+		stats = new Stats();
+		stats.domElement.style.cssText = 'position: absolute; top: 0px; zIndex: 100; ';
+		document.body.appendChild( stats.domElement );
+		
+		ambientLight = new THREE.AmbientLight( 0x888888 );
+		// ambientLight.color.setHSL( 0.1, 0.5, 0.5 );
+		scene.add( ambientLight );		
+
+		pointLight = new THREE.DirectionalLight( 0xffffff, 0.25 );
+		pointLight.position.set( 5000, 5000, 5000 ).normalize();
+		pointLight.castShadow = true;
+		scene.add( pointLight );
+
+		light = new THREE.SpotLight( 0xffffff, 0.5 );
+		light.position.set( 5000, 5000, 5000 );
+		light.castShadow = true;
+
+		light.shadowMapWidth = 2048;
+		light.shadowMapHeight = 2048;
+		light.shadowCameraNear = 3000;
+		light.shadowCameraFar = 15000;
+		light.shadowCameraFov = 1000;
+// light.shadowCameraVisible = true;
+		scene.add( light );
+
+		geometry = new THREE.AxisHelper( 100 );
+		scene.add( geometry );
+
+		geometry = new THREE.PlaneGeometry( 1000, 1000, 1, 1 );
+		geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - pi2 ) );
+		material = new THREE.MeshNormalMaterial( {opacity: 0.5, transparent: true });
+		pmesh = new THREE.Mesh( geometry, material );
+		pmesh.position.y = -2;
+		scene.add( pmesh );
+
+		initElevations( places[ selPlace.selectedIndex ][ 1 ], places[ selPlace.selectedIndex ][ 2 ] );
+	}
+
+	function initElevations( lat, lng ) {
+		startTime = new Date();
+		if ( !elevationsImage ) {
+			elevationsImage = document.createElement('img' ) 
+			elevationsImage.onload = initCanvas;
+		}
+		lat = parseFloat( lat );
+		lng = parseFloat ( lng );
+		
+		tileYLat = lat2tile( lat, tileZoom );
+		tileXLng = long2tile( lng, tileZoom );
+		
+		elevTileYLat = lat2tile( lat, elevZoom );
+		elevTileXLng = long2tile( lng, elevZoom );
+
+		elevationsImage.src = "../unicam/topo-" + elevZoom + "-" + elevTileYLat + "-" + elevTileXLng + ".png";
+// console.log( lng, lat, tileXLng, tileYLat, elevTileXLng, elevTileYLat )
+	}
+
+	function initCanvas() {
+		if ( mesh ) {
+			scene.remove( mesh );
+		}
+		var ulLat, lrLat, ulLng, lrLng;
+		ulLat = tile2lat( tileYLat, tileZoom );
+		lrLat = tile2lat( tileYLat + 1, tileZoom );
+		ulLng = tile2lng( tileXLng, tileZoom );
+		lrLng = tile2lng( tileXLng + 1, tileZoom );
+// console.log( 'tileZoom', tileZoom, 'lats', ulLat, lrLat, 'lngs', ulLng, lrLng  );
+
+		var deltaLats = Math.abs( ulLat - lrLat );
+		var deltaLngs = Math.abs( ulLng - lrLng );
+		var pixelsLat = parseInt( deltaLats * 120, 10 );
+		var pixelsLng = parseInt( deltaLngs * 120, 10 );
+console.log( 'deltaLats', deltaLats.toFixed(3), 'deltaLngs', deltaLngs, 'pixelsLat', pixelsLat, 'pixelsLng', pixelsLng );
+
+		var elevUlLat = tile2lat( elevTileYLat, elevZoom );
+		var elevUlLng = tile2lng( elevTileXLng,elevZoom );
+// console.log( 'elevUlLat', elevUlLat, 'elevUlLng', elevUlLng );
+
+		var elevDeltaLats = elevUlLat - ulLat;
+		var elevDeltaLngs = elevUlLng - ulLng;
+// console.log( 'elevDeltaLats', elevDeltaLats, 'elevDeltaLngs', elevDeltaLngs);
+
+		var elevDeltaPixelsLat = Math.abs( elevDeltaLats * 120 );
+		var elevDeltaPixelsLng = Math.abs( elevDeltaLngs * 120 );
+// console.log( 'elevDeltaPixelsLat', elevDeltaPixelsLat, 'elevDeltaPixelsLng', elevDeltaPixelsLng );
+
+		geometry = new THREE.PlaneGeometry( 1000, 1000, pixelsLng - 1, pixelsLat - 1);
+		geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
+// material = new THREE.MeshNormalMaterial({ side: THREE.DoubleSide });
+			
+		if ( mapType === 0 ) {
+			var mapTexture = THREE.ImageUtils.loadTexture( "http://mt1.google.com/vt/x=" + tileXLng + "&y="+ tileYLat + "&z=" + tileZoom );
+		} else if ( mapType === 1 ) {
+			var mapTexture = THREE.ImageUtils.loadTexture( "http://mt1.google.com/vt/lyrs=t&x=" + tileXLng + "&y="+ tileYLat + "&z=" + tileZoom );
+		} else if ( mapType === 2 ) {
+			var mapTexture = THREE.ImageUtils.loadTexture( "http://mt1.google.com/vt/lyrs=s&x=" + tileXLng + "&y="+ tileYLat + "&z=" + tileZoom );
+		} else if ( mapType === 3 ) {
+			var mapTexture = THREE.ImageUtils.loadTexture( "http://mt1.google.com/vt/lyrs=y&x=" + tileXLng + "&y="+ tileYLat + "&z=" + tileZoom );
+		} else {
+			var mapTexture = THREE.ImageUtils.loadTexture( mapTypes[ mapType ][1] + tileZoom + "/" + tileXLng + "/" + tileYLat + ".png" );
+		}
+		
+		material = new THREE.MeshPhongMaterial( {map: mapTexture, side: THREE.DoubleSide, color: 0xffffff, ambient: 0xffffff, specular: 0x888888, shininess: 200, shading: THREE.SmoothShading} );
+		// material.color.setHSL( 0.5, 0.8, 0.5 );
+
+		var elevationsCanvas = document.createElement( 'canvas' );
+		elevationsCanvas.width = elevationsImage.naturalWidth;
+		elevationsCanvas.height = elevationsImage.naturalHeight;
+		
+		var elevationsCtx = elevationsCanvas.getContext("2d");
+		elevationsCtx.drawImage( elevationsImage, 0, 0 );
+		var elevationsImgData = elevationsCtx.getImageData( elevDeltaPixelsLng, elevDeltaPixelsLat, pixelsLng, pixelsLat );
+
+		var zoomCanvas = document.createElement( 'canvas' );
+		zoomCanvas.width = pixelsLng;
+		zoomCanvas.height = pixelsLat;
+
+		var zoomCtx = zoomCanvas.getContext("2d");
+		zoomCtx.putImageData( elevationsImgData, 0, 0 );
+		var zoomImgData = zoomCtx.getImageData( 1, 0, pixelsLng, pixelsLat);
+		var color, id, len = zoomImgData.data.length / 4;
+		var scale = 0.01 * exaggeration;
+// console.log( len) 
+		for (var i = 0; i < len; i++) {
+			color = zoomImgData.data[ 4 * i] + ' ' + zoomImgData.data[ 4 * i + 1] + ' '  + zoomImgData.data[ 4 * i + 2];
+			id =  uniColors.indexOf( color );
+			geometry.vertices[ i ].y = scale * uniElevations[ id ];
+		}
+	
+		mesh = new THREE.Mesh( geometry, material );
+		mesh.receiveShadow = true;
+		mesh.castShadow = true;
+		mesh.geometry.computeFaceNormals();
+		mesh.geometry.computeVertexNormals();
+		mesh.geometry.verticesNeedUpdate = true;
+		scene.add( mesh );
+		
+console.log( 'Load time:', new Date() - startTime );
+	}
+
+	function animate() {
+		requestAnimationFrame( animate );
+		controls.update();
+		renderer.render( scene, camera );
+		stats.update();
+	}
+	
+	function requestFile( fname ) {
+		var xmlHttp = new XMLHttpRequest();
+		xmlHttp.open( 'GET', fname, false );
+		xmlHttp.send( null );
+		return xmlHttp.responseText;
+	}
+	
+</script>
+</body>
+</html>

@@ -6,27 +6,34 @@ Developing guidance control code that uses the Leap device for user input.
 
 ## Live Demos
 
-[Live Demo #1](http://jaanga.github.io/gestification/projects/flying-leap-3d/r1/flying-leap-3d.html )
+Live Demo #4: [unFlatland Leap]( http://jaanga.github.io/gestification/projects/flying-leap-3d/fgx-plane-spotter-leap/latest.html )
 
-- The landscape along with the placement of the trees is controlled by an algebraic function. Note the refresh of colors with each reload.
 
-[Live Demo #2](http://jaanga.github.io/gestification/projects/flying-leap-3d/castle/load-castle.html)
+Live Demo #4: [unFlatland Leap]( http://jaanga.github.io/gestification/projects/flying-leap-3d/un-flatland-leap/latest.html )
+
+
+Live Demo #3: [Barfolina Pavillion](http://jaanga.github.io/gestification/projects/flying-leap-3d/barfolina-pavillion/r2/barfolina-pavillion.html)
+
+- Worth a visit
+- The entire pavilion - except for the sculpture - is created by procedures. This is the modern way of designing - which we are calling 'archieCode'.
+
+Live Demo #2: [Castle](http://jaanga.github.io/gestification/projects/flying-leap-3d/castle/load-castle.html)
 
 - A test of loading an OBJ file into Three.js. 
 - Note the castle - which is the static OBJ file - also refreshes its colors with each reload. 
 
-[Live Demo #3](http://jaanga.github.io/gestification/projects/flying-leap-3d/barfolina-pavillion/r2/barfolina-pavillion.html)
+Live Demo #1: [Flying Leap 3D](http://jaanga.github.io/gestification/projects/flying-leap-3d/r1/flying-leap-3d.html )
 
-- Worth a visit
-- The entire pavilion - except for the sculpture - is created by procedures. This is the modern way of designing - which we are calling 'archieCode'.
+- The landscape along with the placement of the trees is controlled by an algebraic function. Note the refresh of colors with each reload.
+
 
 Built for Nicolás Berríos of Iquique, Chile
 
 The proposal is to build an app for the Leap Motion device that allows you to 'fly' over [Iquique harbor](http://goo.gl/Tq4F59). 
 But how to fly using just one hand? These demos are testing grounds for learning how to fly 
-- and, more importantly, for us to learn good ways of tehing people how to fly. 
+- and, more importantly, for us to learn good ways of teaching people how to fly. 
 
-Aning other things we are working on an updated First Person camera controller for Three.js.
+Other things we are working on an updated First Person camera controller for Three.js.
 
 Leap.js + Three.js: a Leaped first person camera controller
 

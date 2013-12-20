@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang=en>
+<head>
+<title>FGx Plane Spotter Read Me</title>
+<meta charset=utf-8>
+</head>
+<body>
+<script src=http://fgx.github.io/sd/showdown.js ></script>
+<script>
+	var RMV = RMV || {};
+	RMV.converter = new Showdown.converter();
+	
+	RMV.css = document.body.appendChild( document.createElement('style') );
+	RMV.css.innerHTML = 'body { font: bold 12pt monospace; margin: 0; overflow: hidden; }';	
+
+	RMV.basic = 'border: 3px double #eee; overflow-x: hidden; overflow-y: auto; padding: 10px; position: absolute; ';
+	RMV.height = ' height: ' + (window.innerHeight * 0.88) + 'px;';
+	RMV.horizontal = ' left: 0; margin: auto; max-width: 900px; min-width: 700px; right: 0; width: 100%; ';
+	RMV.top = ' top: 60px;';	
+	
+	RMV.readme = document.body.appendChild( document.createElement( 'div' ) );
+	RMV.readme.style.cssText = RMV.basic + RMV.height + RMV.horizontal + RMV.top ;
+	
+	RMV.requestFile = function( fname ) {
+		var xmlHttp = new XMLHttpRequest();
+		xmlHttp.open( 'GET', fname, false );
+		xmlHttp.send( null );
+		return xmlHttp.responseText;
+	};	
+	
+	RMV.readme.innerHTML = RMV.converter.makeHtml( RMV.requestFile( 'readme.md' ) );
+</script>
+</body>
+</html>
