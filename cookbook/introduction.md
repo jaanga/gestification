@@ -5,11 +5,11 @@ If you've not done so already, kindly have a glance at:
 
 * [Gestification Read Me](../index.html)
 
-* If you have a Leap device, note the four words at the bottom of the page
+* If you have a Leap device, note the five words at the bottom of the page
 
 * Issue: Apps are from Venus. Code is from Mars.
   
- This app is part of various experiments that attempt to reduce the mental dichotomy that exists between app and code.
+ This app is part of various experiments that attempt to reduce the mental dichotomy that exists between apps and code.
  
  An intended feature of this app is the ability to run apps and and view details in the same window 
  while browsing from one project to another as easily as changing channels on a television.
