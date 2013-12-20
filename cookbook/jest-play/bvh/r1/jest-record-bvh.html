@@ -65,7 +65,7 @@
 		document.body.appendChild( stats.domElement );
 
 		scene = new THREE.Scene();
-		renderer = new THREE.WebGLRenderer( { antialias: true }  );
+		renderer = new THREE.WebGLRenderer( { alpha: 1, antialias: true, clearColor: 0xffffff } );
 		renderer.setSize( 0.49 * window.innerWidth, window.innerHeight - 120 );
 		renderer.domElement.style.cssText = 'outline: 1px solid #000;';
 		renderer.shadowMapEnabled = true;

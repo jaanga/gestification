@@ -31,7 +31,7 @@
 	function init() {
 		var geometry, material, mesh, css;
 
-		renderer = new THREE.WebGLRenderer( { antialias: true }  );
+		renderer = new THREE.WebGLRenderer( { alpha: 1, antialias: true, clearColor: 0xffffff } );
 		renderer.shadowMapEnabled = true;
 		renderer.setSize( window.innerWidth, window.innerHeight );
 

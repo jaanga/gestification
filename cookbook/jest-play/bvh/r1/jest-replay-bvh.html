@@ -72,7 +72,7 @@
 		textarea.value = 'text here...';
 
 		scene = new THREE.Scene();
-		renderer = new THREE.WebGLRenderer( { antialias: true }  );
+		renderer = new THREE.WebGLRenderer( { alpha: 1, antialias: true, clearColor: 0xffffff } );
 		renderer.setSize( 0.53 * window.innerWidth, window.innerHeight - 120 );
 		renderer.shadowMapEnabled = true;
 		document.body.appendChild( renderer.domElement );
