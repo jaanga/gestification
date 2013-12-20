@@ -1,10 +1,12 @@
-Gesstification index.html
-=========================
-<iframe src=http://jaanga.github.io//gestification/events-timely/home-page/r1/index.html height=500px width=96% style=margin:2% ></iframe>
+Gesstification Home Page R1 Read Me
+===================================
+
+Cropped iframe view of Gesstification Home Page R1:
+<iframe src=home-page/r1/index.html height=500px width=96% style=margin:2% ></iframe>
 
 ## Live Demo
 
-[Gestification Home Page up to 2013-11-03]( http://jaanga.github.io//gestification/events-timely/home-page/r1/index.html )
+[Gestification Home Page up to 2013-11-03]( home-page/r1/index.html )
 
 ## Copyright and License
 Copyright &copy; 2013 Jaanga authors

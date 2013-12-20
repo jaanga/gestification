@@ -1,11 +1,12 @@
-Presentation to San Francisco WebGL MeetUp 2013-08-22
-=====================================================
-<iframe src=http://jaanga.github.io/gestification/events-timely/webgl-2013-08-22/index.html height=500px width=96% style=margin:2% ></iframe>
+Presentation to San Francisco WebGL MeetUp 2013-08-22 Read Me
+=============================================================
+
+<iframe src=webgl-2013-08-22/index.html height=500px width=96% style=margin:2% ></iframe>
 
 
 ## Live Demo
 
-[Presentation to San Francisco WebGL MeetUp 2013-08-22]( http://jaanga.github.io/gestification/events-timely/webgl-2013-08-22/index.html )
+[Presentation to San Francisco WebGL MeetUp 2013-08-22]( webgl-2013-08-22/index.html )
 
 ## References
 

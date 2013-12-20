@@ -62,9 +62,8 @@
 		// MDU.headsUp.innerHTML = MDU.headsUpAbout;			
 		
 // Three.js Basics
-		renderer = new THREE.WebGLRenderer( { antialias: true } );
+		renderer = new THREE.WebGLRenderer( { alpha: 1, antialias: true, clearColor: 0xffffff } );
 		renderer.setSize( window.innerWidth, window.innerHeight );
-		// renderer.setClearColor(0xffffff, 1);
 		renderer.shadowMapEnabled = true;
 		document.body.appendChild( renderer.domElement );
 		renderer.domElement.style.cssText = 'left: 0; position: absolute; top: 0; width: 100%;';
