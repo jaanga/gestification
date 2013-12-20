@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang=en>
 <head>
-<title>unFlatLand R4.1</title>
+<title>unFlatLand R4.1 ~ Leap</title>
 <meta charset=utf-8>
 </head>
 <body>
@@ -93,7 +93,7 @@
 		UF.info = info = document.body.appendChild( document.createElement( 'div' ) );
 		info.style.cssText = 'border: 0px solid red; position: absolute; top: 0px; width: 100% ';
 
-		info.innerHTML = info.txt = '<h1 title="The fastest, smallest, sweetest 3D map you ever did see" >unFlatLand R4.1 ~ ' +
+		info.innerHTML = info.txt = '<h1 title="The fastest, smallest, sweetest 3D map you ever did see" >unFlatLand R4.1 ~ Leap ~ ' +
 			'<a href=# title="Get help and info" onclick=help.style.display="block"; ><large>&#x24D8;</large></a></h1>' +
 			'<div style=height{900px; >Camera lat: <input type="text" id="inpLat" value="' + UF.places[ UF.startPlace][1] +'" size=8 /> ' +
 				'lng: <input type="text" id="inpLng" value="' + UF.places[ UF.startPlace][2] +'" size=8 /> ' +
@@ -519,7 +519,7 @@ console.log( 'Load time:', new Date() - UF.startTime );
 					controls.moveRight = false;
 				}
 			} else {
-				controls.  = false;
+				controls.unFly  = false;
 				controls.moveForward = false;
 				controls.moveLeft = false;
 				controls.moveRight = false;

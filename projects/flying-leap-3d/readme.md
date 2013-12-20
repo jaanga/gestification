@@ -6,10 +6,10 @@ Developing guidance control code that uses the Leap device for user input.
 
 ## Live Demos
 
-Live Demo #4: [unFlatland Leap]( http://jaanga.github.io/gestification/projects/flying-leap-3d/fgx-plane-spotter-leap/latest.html )
+Live Demo #5: [FGx Plane Spotter ~ Leap]( http://jaanga.github.io/gestification/projects/flying-leap-3d/fgx-plane-spotter-leap/latest.html )
 
 
-Live Demo #4: [unFlatland Leap]( http://jaanga.github.io/gestification/projects/flying-leap-3d/un-flatland-leap/latest.html )
+Live Demo #4: [unFlatland ~ Leap]( http://jaanga.github.io/gestification/projects/flying-leap-3d/un-flatland-leap/latest.html )
 
 
 Live Demo #3: [Barfolina Pavillion](http://jaanga.github.io/gestification/projects/flying-leap-3d/barfolina-pavillion/r2/barfolina-pavillion.html)
