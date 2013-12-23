@@ -1,114 +1,18 @@
 <!doctype html>
 <html lang=en>
 <head>
-<title></title>
-<meta charset=utf-8>
-<meta name=author content='Theo Armour'>
+<title>jestLive</title>
+<meta http-equiv='refresh' content='0;url="r1/air-hand-live.html' />
 </head>
 <body>
-<script src = http://js.leapmotion.com/0.2.2/leap.min.js ></script>
-<script src = http://mrdoob.github.com/three.js/examples/js/Detector.js ></script>
-<script src = http://mrdoob.github.com/three.js/build/three.min.js ></script>
-<script src = http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js> </script>
-<script>
-	var renderer, scene, camera, controls;
-	var airDoodle;
 
-	init();
-	animate();
 
-	function init() {
-		var css, light, geometry, material, mesh;
-		
-		css = document.body.appendChild( document.createElement('style') );
-		css.innerHTML = 'body { font: 600 12pt monospace; margin: 0; overflow: hidden;  }' +
-		'';
-		
-		var info = document.body.appendChild( document.createElement( 'div' ) );
-		info.style.cssText = 'left: 0;  margin: auto; max-width: 900px; position: absolute; right: 0; ';
-		info.innerHTML = '<h1>airDoodle</h1>' +
-			'<p>An airDoodle is what happens when the whitespace behind a web page is filled with real-time animated 3D objects.</p>' +	
-			'<p>These objects do not distract. airDoodles appear only when you want them to appear.</p>' +
-			'<p>Who loves it when people want things to appear? Teachers, advertisers and search engine specialist and many others...</p>' +
-			'<p>An AirDoodle:</p>' +
-			'<ul>' +
-			'<li>Does not interfere with regular content. </li>' +
-			'<li>Only appears when you want it to appear. </li>' +
-			'<li>Only loads if you have the appropriate hardware</li>' +
-			'<li>And you really want the airDoodle to appear - even if only for a brief moment - because you have not seen what\'s there yet...</li>' +
-			
-		'';
+<!--
 
-		var doodle = document.body.appendChild( document.createElement( 'div' ) );
-		doodle.style.cssText = 'bottom: 0; left: 0; margin: auto; position: absolute; right: 0; text-align: center; width: 50% ';
-		doodle.innerHTML = '<p title="This feature requires a Leap Motion device.">This page has an airDoodle</p>';
-		
-		scene = new THREE.Scene();
-		if ( ! Detector.webgl ) {
-			renderer = new THREE.CanvasRenderer();
-		} else {
-			renderer = new THREE.WebGLRenderer( { alpha: 1, antialias: true, clearColor: 0xffffff } );
-		}
-		renderer.setSize( window.innerWidth, window.innerHeight );
-		renderer.shadowMapEnabled = true;
-		document.body.appendChild( renderer.domElement );
-		
-		camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 5000 );
-		camera.position.set( -500, 500, 500 );
-		controls = new THREE.TrackballControls( camera, renderer.domElement );
-		controls.target.set( 0, 100, 0 );
+This file redirects to current folder and file
 
-// Lights
-		light = new THREE.AmbientLight( 0x888888 );
-		scene.add( light );
+-->
 
- 		light = new THREE.DirectionalLight( 0xffffff, 1 );
-		light.position.set( 0, 2000, 0 );
-		light.castShadow = true;
-		light.shadowMapWidth = light.shadowMaHeight = 1024;
 
-		var d = 300;
-		light.shadowCameraLeft = -d;
-		light.shadowCameraRight = d;
-		light.shadowCameraTop = d;
-		light.shadowCameraBottom = -d;
-
-		light.shadowCameraNear = 1500;
-		light.shadowCameraFar = 2500;
-//		light.shadowCameraVisible = true;
-		scene.add( light );		
-
-		loader = new THREE.JSONLoader();
-		loader.load( 'pumpkin.js', function ( geometry, materials ) {
-			airDoodle = new THREE.Mesh( geometry, new THREE.MeshFaceMaterial( materials ) );
-			airDoodle.castShadow = true;
-			//airDoodle.receiveShadow = true;
-			airDoodle.visible = false;
-			airDoodle.scale.set( 100, 100, 100 )
-			scene.add( airDoodle );		
-		} );	
-	}
-
-	Leap.loop( function( frame ) {
-		var hand;	
-		if ( frame.hands.length > 0) {
-			hand = frame.hands[0];
-			airDoodle.position.set( hand.stabilizedPalmPosition[0], hand.stabilizedPalmPosition[1], hand.stabilizedPalmPosition[2] );
-			airDoodle.rotation.set( hand.pitch(), -hand.yaw(), hand.roll() );
-			airDoodle.visible = true;
-//				data.innerHTML = 'Hand X:' + hand.stabilizedPalmPosition[0].toFixed(0) + ' Y:' +  hand.stabilizedPalmPosition[1].toFixed(0) + ' Z:' + hand.stabilizedPalmPosition[2].toFixed(0) + '<br>' +
-//				airDoodle.visible + ' ' + airDoodle.position.x + ' '  + airDoodle.position.y + ' '  + airDoodle.position.z + ' ' 
-//			'';
-		} else {
-			airDoodle.visible = false;
-		}
-	});	
-
-	function animate() {
-		requestAnimationFrame( animate );
-		controls.update();
-		renderer.render( scene, camera );
-	}		
-</script>
 </body>
 </html>

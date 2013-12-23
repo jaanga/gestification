@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang=en>
+<head>
+<title>airDoodle Demo</title>
+<meta charset=utf-8>
+</head>
+<body>
+<script src = http://js.leapmotion.com/0.3.0-beta2/leap.min.js ></script>
+<script src = http://mrdoob.github.io/three.js/examples/js/Detector.js ></script>
+<script src = http://mrdoob.github.io/three.js/build/three.min.js ></script>
+<script src = http://mrdoob.github.io/three.js/examples/js/controls/TrackballControls.js > </script>
+<script src = http://jaanga.github.io/libs/ado/r1/air-doodle.js ></script>
+<script>
+	var css = document.body.appendChild( document.createElement('style') );
+	css.innerHTML = 'body {font: 400 12pt inconsolata, monospace; margin: auto; overflow: hidden; width: 100%;}' +
+		'a { color: #f00; text-decoration: none;}  ' +
+		'h1 {font-size: 48pt; font-weight: 800;}' +
+		'#grayarea { background-color: oldlace; opacity: 0.7; padding: 3px 18px; outline: 2px solid silver;}' +
+	'';
+
+	var info = document.body.appendChild( document.createElement( 'div' ) );
+	info.style.cssText = 'left: 0; margin: auto; position: absolute; right: 0; width: 50%; ';
+	info.innerHTML = 
+		'<div style=text-align:right; ><h2>Getting Started Examples Tutorials API</h2></div>' +
+		'<h2><a href=# >Leap.js</a></h2>' +
+		'<h1 title="The Leap Motion presence on Gitub">welcome to Leap.js!</h1>' +
+		'<h2>To obtain the latest Leap.js...</h2>' +
+		
+		'<div id=grayarea>' +
+		'<h3>For your browser</h3>' + 
+		'<p><b>For production</b></p>' +
+		'<p><a href="http://js.leapmotion.com/0.3.0-beta2/leap.min.js" title="View the minimized code">&lt;script src=\/\/js.leapmotion.com/0.3.0-beta2/leap.min.js>&lt;/script></a></p>' +
+		'<p><b>For development</b></p>' +
+		'<p><a href="http://js.leapmotion.com/0.3.0-beta2/leap.js" title="View the source code">&lt;script src=\/\/js.leapmotion.com/0.3.0-beta2/leap.js>&lt;/script></a></p>' +
+		'</div>' +
+		'<br>' +
+		'<div id=grayarea>' +
+		'<h3>For Node.js</h3>' +
+		'<p><b>Install from npm</b></p>' +
+		'<p>$ npm install leapjs -v0.3.0-beta2</p>' +
+		'<p><b>Or add to your package.json</b></b>' +
+		'<p>"leapjs": "0.3.0-beta2"</p>' +
+		'</div>' +
+		
+		'<h2>Please join us on github!</h2>' +
+		'<a href="https://github.com/leapmotion/leapjs">https://github.com/leapmotion/leapjs</a><br>' +
+		'<h5 style=text-align:right; title="All rights reserved.">copyright &copy 2013 Leap Motion<h5>' +
+		'<div id=data></div>' +
+	'';
+	
+	var sample = document.body.appendChild( document.createElement( 'div' ) );
+	sample.style.cssText = 'bottom: 0; font: bold 96pt sans-serif; left: 0; height: 200px; margin: auto; opacity: 0.05; position: absolute; right: 0; text-align: center; top: 0; width: 50%; ' +
+		'transform:rotate(-7deg); -ms-transform:rotate(-7deg); /* IE 9 */  -webkit-transform:rotate(-7deg); /* Safari and Chrome */ ';
+	sample.innerHTML = 'sample';
+		
+	ADO.init( '../../../models/ado/WrightFlyer-pb-jw.js' );
+
+</script>
+</body>
+</html>
