@@ -183,6 +183,8 @@
 		FGx.scene.add( camera );
 		FGx.controls = controls = new THREE.TrackballControls( camera, renderer.domElement );
 
+		THREE.ImageUtils.crossOrigin = 'anonymous';
+
 		FGx.stats = stats = new Stats();
 		stats.domElement.style.cssText = 'position: absolute; top: 0px; zIndex: 100; ';
 		document.body.appendChild( stats.domElement );
