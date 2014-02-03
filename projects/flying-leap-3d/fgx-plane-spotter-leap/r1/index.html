@@ -27,7 +27,7 @@
 
 	FGx.clock = new THREE.Clock();
 	FGx.delta = 0;
-	
+
 	//FGx.fileName = 'places-2000.csv';
 	//FGx.fileName = '../../../fgx.github.io/data/apt1000-icao-ks.csv';
 	FGx.fileName = '../data/apt1000-icao.csv';
@@ -142,7 +142,7 @@
 			'</div>' +
 		'';
 
-		for ( var option, i = 0, len = FGx.places.length; i < len; i++ ) {			
+		for ( var option, i = 0, len = FGx.places.length; i < len; i++ ) {
 			selPlace.appendChild( document.createElement( 'option' ) );
 			selPlace.children[i].text = FGx.places[i][0];
 			selPlace.children[i].title = FGx.places[i][1];
@@ -173,8 +173,8 @@
 			FGx.renderer = renderer = new THREE.WebGLRenderer( { alpha: 1, antialias: true, clearColor: 0xffffff }  );
 		}
 		renderer.shadowMapEnabled = true;
-		renderer.setSize( window.innerWidth, window.innerHeight );		
-		
+		renderer.setSize( window.innerWidth, window.innerHeight );
+
 		document.body.appendChild( renderer.domElement );
 		FGx.scene = scene = new THREE.Scene();
 
@@ -224,11 +224,11 @@
 	}
 
 	function initElevations( lat, lng ) {
-		if ( FGx.placards && FGx.placards.children.length > 0) { 
+		if ( FGx.placards && FGx.placards.children.length > 0) {
 			chkPlacards.checked = false;
 			FGx.scene.remove( FGx.placards );
 			FGx.placards.children.length = 0;
-		}	
+		}
 //console.log('chrome test',lat,lng );
 		FGx.startTime = new Date();
 		var  tileZoom = FGx.tileZoom, elevZoom = FGx.elevZoom;
@@ -294,7 +294,7 @@
 			var mapTexture = THREE.ImageUtils.loadTexture( FGx.mapTypes[ FGx.mapType ][1] + tileZoom + "/" + tileXLng + "/" + tileYLat + ".png" );
 		}
 
-//		material = new THREE.MeshNormalMaterial({ side: THREE.DoubleSide });	
+//		material = new THREE.MeshNormalMaterial({ side: THREE.DoubleSide });
 		material = new THREE.MeshPhongMaterial( {map: mapTexture, side: THREE.DoubleSide, color: 0xffffff, ambient: 0xffffff, specular: 0x888888, shininess: 200, shading: THREE.SmoothShading} );
 		// material.color.setHSL( 0.5, 0.8, 0.5 );
 
@@ -315,16 +315,16 @@
 		var zoomImgData = zoomCtx.getImageData( 1, 0, pixelsLng, pixelsLat);
 		var color, id, len = zoomImgData.data.length / 4;
 		var scale = 0.01 * FGx.exaggeration;
-		
+
 		geometry = new THREE.PlaneGeometry( 1000, 1000, pixelsLng - 1, pixelsLat - 1);
 		geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
-	
+
 		for ( var i = 0; i < len; i++ ) {
 			color = zoomImgData.data[ 4 * i] + ' ' + zoomImgData.data[ 4 * i + 1] + ' '  + zoomImgData.data[ 4 * i + 2];
 			id =  FGx.uniColors.indexOf( color );
 			geometry.vertices[ i ].y = scale * FGx.uniElevations[ id ];
 		}
-		
+
 		FGx.terrain = mesh = new THREE.Mesh( geometry, material );
 		mesh.receiveShadow = true;
 		mesh.castShadow = true;
@@ -334,20 +334,20 @@
 		FGx.scene.add( mesh );
 
 		var loader = new THREE.JSONLoader();
-		
-		loader.load( '../data/seymour.js', function( geometry ) { 
+
+		loader.load( '../data/seymour.js', function( geometry ) {
 			geometry.applyMatrix( new THREE.Matrix4().multiplyScalar( 3 ) );
 			FGx.seymour = geometry;
 		} );
 
-		loader.load( '../data/21.js', function( geometry ) { 
+		loader.load( '../data/21.js', function( geometry ) {
 			geometry.applyMatrix( new THREE.Matrix4().makeRotationY( -Math.PI / 2 ) );
 			material = new THREE.MeshNormalMaterial();
 			FGx.myPlane = new THREE.Mesh( geometry, material );
 			FGx.myPlane.position.set( -2, 1, -3 );
-			FGx.camera.add( FGx.myPlane );			
-		} );		
-		
+			FGx.camera.add( FGx.myPlane );
+		} );
+
 console.log( 'Load time:', new Date() - FGx.startTime );
 	}
 
@@ -363,7 +363,7 @@ console.log( 'Load time:', new Date() - FGx.startTime );
 			FGx.delta = 0;
 		}
 	}
-	
+
 	function requestFile( fname ) {
 		var xmlHttp = new XMLHttpRequest();
 		xmlHttp.open( 'GET', fname, false );
@@ -371,7 +371,7 @@ console.log( 'Load time:', new Date() - FGx.startTime );
 		return xmlHttp.responseText;
 	}
 
-	function v(x,y,z){ return new THREE.Vector3(x,y,z); } 	
+	function v(x,y,z){ return new THREE.Vector3(x,y,z); }
 	function cos(a){ return Math.cos(a); }
 //	function sin(a){ return Math.sin(a); }
 	function pow(a,b){ return Math.pow(a,b); }
@@ -428,22 +428,22 @@ console.log( 'Load time:', new Date() - FGx.startTime );
 		controls.verticalMax = 2.0;
 		this.autoSpeedFactor = 0.0;
 		controls.lon = -40;
-		
+
 		FGx.camera.add( FGx.myPlane );
 	}
-	
+
 	function getCrossfeed() {
-		FGx.crossfeed = JSON.parse( requestFile( 'http://crossfeed.fgx.ch/flights.json' ) ); 	
-		if ( FGx.aircraft && FGx.aircraft.children.length > 0) { 
+		FGx.crossfeed = JSON.parse( requestFile( 'http://crossfeed.fgx.ch/flights.json' ) );
+		if ( FGx.aircraft && FGx.aircraft.children.length > 0) {
 			FGx.scene.remove( FGx.aircraft );
 			FGx.aircraft.children.length = 0;
-		}	
+		}
 		var deltaLats = Math.abs( FGx.ulLat - FGx.lrLat );
-		var deltaLngs = Math.abs( FGx.ulLng - FGx.lrLng );	
+		var deltaLngs = Math.abs( FGx.ulLng - FGx.lrLng );
 		var f, mesh, x, y, z;
-		
+
 		FGx.aircraft = new THREE.Object3D;
-		FGx.scene.add( FGx.aircraft );	
+		FGx.scene.add( FGx.aircraft );
 		material = new THREE.MeshNormalMaterial();
 		for ( var i = 0, iLen = FGx.crossfeed.flights.length; i < iLen; i++ ) {
 			f = FGx.crossfeed.flights[i];
@@ -456,29 +456,29 @@ console.log( 'Load time:', new Date() - FGx.startTime );
 				mesh.position.set( x, y, z );
 				mesh.rotation.y = Math.PI *  f.hdg / 180;
 				FGx.aircraft.add( mesh );
-				
+
 				var texture = canvasText ( f.callsign );
 				var spriteMaterial = new THREE.SpriteMaterial( { map: texture, useScreenCoordinates: false, opacity: 1 } );
 				sprite = new THREE.Sprite( spriteMaterial );
 				sprite.position.set(  x, y + 20, z );
 				sprite.scale.set( 50, 10, 1 );
-				FGx.aircraft.add( sprite );				
+				FGx.aircraft.add( sprite );
 			}
-		}	
-	}	
+		}
+	}
 
 	function togglePlacards() {
-		if ( FGx.placards && FGx.placards.children.length > 0) { 
+		if ( FGx.placards && FGx.placards.children.length > 0) {
 			FGx.scene.remove( FGx.placards );
 			FGx.placards.children.length = 0;
 			return;
 		}
-	
+
 		var p, mesh, x, y, z;
 		var deltaLats = Math.abs( FGx.ulLat - FGx.lrLat );
 		var deltaLngs = Math.abs( FGx.ulLng - FGx.lrLng );
 		FGx.terrain.geometry.computeBoundingBox();
-		
+
 		FGx.placards = new THREE.Object3D;
 		FGx.scene.add( FGx.placards );
 		geometry = new THREE.CubeGeometry( 1, 1, 1 );
@@ -518,14 +518,14 @@ console.log( 'Load time:', new Date() - FGx.startTime );
 		texture.needsUpdate = true;
 		return texture;
 	}
-	
+
 	var oFrame;
-	
+
 	Leap.loop( { enableGestures: true }, function( frame ) {
 		var hand, pitchAng, yawAng;
 		var controls = FGx.controls;
 		var camera = FGx.camera;
-		
+
 		if ( controls.mouseDragOn ) { return;}
 
 		oFrame = oFrame || frame;
@@ -550,7 +550,7 @@ console.log( 'Load time:', new Date() - FGx.startTime );
 					yawAng = THREE.Math.clamp( yawAng, 0.1, 1000 );
 				}
 				controls.mouseX = yawAng;
-				
+
 				pitchAng = -900 * Math.atan2( hand.direction[1] , -hand.direction[2] );
 				controls.mouseY = pitchAng;
 			//} else {
@@ -560,16 +560,16 @@ console.log( 'Load time:', new Date() - FGx.startTime );
 			if ( frame.pointables.length > 1 ) {
 				var point = v( hand.stabilizedPalmPosition[0], hand.stabilizedPalmPosition[1], hand.stabilizedPalmPosition[2] )
 				var distance = camera.position.distanceTo( v( 0, -50, 0));
-/*		
+/*
 				if ( distance < 200  ) {
-// console.log( point, distance );						
+// console.log( point, distance );
 					controls.lookSpeed = 0.015;
 					controls.movementSpeed = 10;
 				} else {
 					controls.lookSpeed = controls.lookSpeedDefault;
 					controls.movementSpeed = controls.movementSpeedDefault;
 				}
-*/			
+*/
 				if (hand.stabilizedPalmPosition[2] < 0 ) {
 					controls.moveForward = true;
 					controls.moveBackward = false;
@@ -601,7 +601,7 @@ console.log( 'Load time:', new Date() - FGx.startTime );
 				controls.moveUp = false;
 				controls.moveDown = false;
 			}
-			
+
 			//info2 = 'hand.x: ' + hand.stabilizedPalmPosition[0].toFixed(0) + ' hand.y: ' + hand.stabilizedPalmPosition[1].toFixed(0) + ' hand.z: ' + hand.stabilizedPalmPosition[2].toFixed(0) + '<br>' +
 			//	'pitchAng: ' + pitchAng.toFixed(2) + ' yawAng: ' + yawAng.toFixed(2) + '<br>' +
 			//	'';
@@ -609,20 +609,20 @@ console.log( 'Load time:', new Date() - FGx.startTime );
 		} else {
 			//info2 = '';
 		}
-		
+
 		var tmp = ( controls.freeze ) ? 'class=red' : '';
 /*
-		info.innerHTML = info.txt + 
-			'freeze: <scan ' + tmp + '>' + controls.freeze + '</scan> lookSpeed: ' + controls.lookSpeed.toFixed(3) + 
-			' movementSpeed:  ' + controls.movementSpeed + 
+		info.innerHTML = info.txt +
+			'freeze: <scan ' + tmp + '>' + controls.freeze + '</scan> lookSpeed: ' + controls.lookSpeed.toFixed(3) +
+			' movementSpeed:  ' + controls.movementSpeed +
 			' mouseX: ' + controls.mouseX.toFixed() + ' mouseY: ' + controls.mouseY.toFixed() + '<br>' +
-			'camX: ' + camera.position.x.toFixed(1) + ' - camY: ' + camera.position.y.toFixed(1) + ' - camZ: ' + camera.position.z.toFixed(0) + 
+			'camX: ' + camera.position.x.toFixed(1) + ' - camY: ' + camera.position.y.toFixed(1) + ' - camZ: ' + camera.position.z.toFixed(0) +
 			' - con.autoSpeedFactor: ' + controls.autoSpeedFactor.toFixed(3) + ' - con.actualMoveSpeed: ' + controls.actualMoveSpeed.toFixed(2) + '<br>' +
 			info2;
-*/			
-	});		
-	
-	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }		
+*/
+	});
+
+	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }
 </script>
 </body>
 </html>
