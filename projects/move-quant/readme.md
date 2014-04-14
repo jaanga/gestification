@@ -11,16 +11,21 @@ There is an `iframe` here. It is not visible when viewed on github.com/fgx. To v
 
 ## Concept
 
-From email of Vinil T C of April 8, 2014
+From email of [Vinil T C]( http://cmcvellore.res.in/Bioengineering/people/students/vinil/index.html ) of April 8, 2014
 
 ### Mission
-Quantify the amount of movement imparted by a neuroprosthesis for patients with spinal cord injury or stroke while artifically stimulating forearm flexor and extensor muscle groups for getting the graping movement in fingers and wrist. 
+Quantify the amount of movement imparted by a neuroprosthesis for patients with spinal cord injury or stroke 
+while artifically stimulating forearm flexor and extensor muscle groups for getting the graping movement in fingers and wrist.  
 Use the Leap Motion device to track the movements on each fingers, and wrist.
 
 ###Vision
 
 
 ## Features
+To Jest Replay JSON adds
+
+* XYZ readout
+* limited replay speed adjustment
 
 
 
@@ -35,7 +40,7 @@ Use the Leap Motion device to track the movements on each fingers, and wrist.
 You have two ways of viewing the Move Quant files:
 
 * Web page hosted on GitHub: [jaanga.github.io]( http://jaanga.github.io/gestification/projects/move-quant/ "view the files as apps." ) <input value="<< You are now probably here." size=28 style="font:bold 12pt monospace;border-width:0;" >  
-* Source code on GitHub: [github.com/jaanga]( https://github.com/jaanga/gestification/projects/move-quant/ "View the files as source code." ) <scan style=display:none ><< You are now probably here.</scan>
+* Source code on GitHub: [github.com/jaanga]( https://github.com/jaanga/gestification/tree/gh-pages/projects/move-quant "View the files as source code." ) <scan style=display:none ><< You are now probably here.</scan>
 
 
 ### System Requirements
