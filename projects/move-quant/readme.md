@@ -3,21 +3,25 @@ Move Quant Read Me
 
 ### Live Demo
 
-xxx xxx
-<iframe src="http://jaanga.github.io/index.html" width=100% height=500px class='overview' >
+<iframe src="http://jaanga.github.io/gestification/projects/move-quant/move-quant-replay/latest/" width=100% height=500px class='overview' >
 There is an `iframe` here. It is not visible when viewed on github.com/fgx. To view, please go to fgx.github.io. See 'Project Links' just below.
 </iframe>
-
+[Move Quant Replay - latest]( http://jaanga.github.io/gestification/projects/move-quant/move-quant-replay/latest/ )
 
 
 ## Concept
 
+From email of Vinil T C of April 8, 2014
+
 ### Mission
+Quantify the amount of movement imparted by a neuroprosthesis for patients with spinal cord injury or stroke while artifically stimulating forearm flexor and extensor muscle groups for getting the graping movement in fingers and wrist. 
+Use the Leap Motion device to track the movements on each fingers, and wrist.
 
 ###Vision
 
 
 ## Features
+
 
 
 ## Road Map
@@ -28,10 +32,10 @@ There is an `iframe` here. It is not visible when viewed on github.com/fgx. To v
 
 ## Project Links
 
-You have two ways of viewing the Jaanga files:
+You have two ways of viewing the Move Quant files:
 
-* Web page hosted on GitHub: [jaanga.github.io]( http://jaanga.github.io/ "view the files as apps." ) <input value="<< You are now probably here." size=28 style="font:bold 12pt monospace;border-width:0;" >  
-* Source code on GitHub: [github.com/jaanga]( https://github.com/jaanga/ "View the files as source code." ) <scan style=display:none ><< You are now probably here.</scan>
+* Web page hosted on GitHub: [jaanga.github.io]( http://jaanga.github.io/gestification/projects/move-quant/ "view the files as apps." ) <input value="<< You are now probably here." size=28 style="font:bold 12pt monospace;border-width:0;" >  
+* Source code on GitHub: [github.com/jaanga]( https://github.com/jaanga/gestification/projects/move-quant/ "View the files as source code." ) <scan style=display:none ><< You are now probably here.</scan>
 
 
 ### System Requirements
