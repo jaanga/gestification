@@ -33,9 +33,12 @@ var jsonData, replaySpeed = 50;
 			'input, button { font: 600 12pt monospace; }';
 
 		arr = [ 'select file','leapmotion-01.json', 'leapmotion-02.json', 'leapmotion-03.json' ];
+
 		info = document.body.appendChild( document.createElement( 'div' ) );
-		info.innerHTML = info.txt = '<h1 style="display: inline;">' + document.title +
-			'<a href=# onclick=toggleInfo() > &#x24D8; </a> </h1>' +
+		info.innerHTML = info.txt = '<h1 style="display: inline;">' + 
+				document.title +
+				' <a id=aHelp href=# onclick=help.style.display="block"; >&#x24D8;</a>' +
+			'</h1> ' +
 			'Replay pre-recorded Leap device JSON data.<br>' +
 			'Select sample: <select id=selItem onchange=requestFile("../../json-samples/"+this.value); ></select> - or: ' +
 			'<input type=file onchange="readFile(this)"> ' +
@@ -45,6 +48,8 @@ var jsonData, replaySpeed = 50;
 			'<button type=button onclick="play.checked=false;if (--data.index < 0) data.index = data.length-1; var frame = new Leap.Frame(data[data.index]);playLoop(frame);" >Previous frame</button> - ' +
 			'Replay speed:<input id=inpSpeed > ' + 
 		'';
+
+
 
 		var select = document.getElementById('selItem');
 		for (var option, i = 0; i < arr.length; i++) {
@@ -117,25 +122,38 @@ var jsonData, replaySpeed = 50;
 			scene.add( mesh );
 			fingers.push( mesh );
 		}
+
+		addHelp();
 	}
 
-	function toggleInfo() {
-		help = info.appendChild( document.createElement( 'div' ) );
-		help.innerHTML = '<div onclick=help.style.display=\'none\'; ' +
-			'style=background-color:#ccc;left:0;opacity:0.85;margin:auto;padding:15px;position:absolute;right:0;text-align:left;width:50%; >' +
-			'jestReplay JSON enables you to replay Leap device JSON data.<br><br>' +
-			'At any time, you can use your pointing device to pan, zoom and rotate the Leap display on the right.<br><br>' +
-			'To replay a file, either select a sample file (saved on the GitHub server) or press the \'Choose File\' button to select a file that is in your computer drive. ' +
-			'Once the selected file is loaded and visible in the left panel, check \'Play\' to see the action.<br><br>' +
-			'<a href="https://github.com/jaanga/gestification/tree/gh-pages/cookbook/jest-play" target="_blank">Source code.</a><br>' +
-			'<small>credits: <a href="http://threejs.org" target="_blank">three.js</a> - ' +
-			'<a href="http://leapmotion.com" target="_blank">leap motion</a> - ' +
-			'<a href="http://khronos.org/webgl/" target="_blank">webgl</a> - ' +
-			'<a href="http://jaanga.github.io" target="_blank">jaanga</a><br>' +
-			'copyright &copy; 2014 jaanga authors ~ mit license</small<br>' +
-			'<br><br><i>Click anywhere in this message to hide...</i>' +
-			'<br><br><i>Then - because there\'s a bug - reload the page!</i>' +
+	function addHelp() {
+		help = document.body.appendChild( document.createElement( 'div' ) );
+		help.style.cssText = 'display: none; background-color: #ccc; left: 50px; opacity: 0.9; padding: 20px; ' +
+			'bottom: 0; left: 0; height: 370px; margin: auto; position: absolute; right: 0; top: 0; width: 500px; zIndex:10; ';
+		help.innerHTML =
+			'<div onclick=help.style.display="none"; >' +
+				'<h3>' + document.title + '</h3>' +
+				'Replay Leap Motion device JSON data.<br><br>' +
+				'At any time, you may use your pointing device to pan, zoom and rotate the Leap display on the right.<br><br>' +
+				'To replay a file, either select a sample file (saved on the GitHub server) or press the \'Choose File\' button to select a file that is in your computer drive. ' +
+				'Once the selected file is loaded and visible in the left panel, check \'Play\' to see the action.<br><br>' +
+/*
+				'<h4>Issues include the following:</h4>' +
+				'<ul>' +
+					'<li></li>' +
+					'<li></li>' +
+				'</ul>' +
+*/
+				'<a href="https://github.com/jaanga/terrain-viewer/tree/gh-pages/un-flatland" target="_blank">Source code</a><br>' +
+				'<small>credits: <a href="http://threejs.org" target="_blank">three.js</a> - ' +
+				'<a href="http://khronos.org/webgl/" target="_blank">webgl</a> - ' +
+				'<a href="http://jaanga.github.io" target="_blank">jaanga</a><br>' +
+				'copyright &copy; 2014 Jaanga authors ~ MIT license</small><br><br>' +
+				'<i>Click anywhere in this message to hide...</i>' +
 		'</div>';
+		aHelp.style.cssText += 'text-decoration: none; ';
+		aHelp.title = 'Get help and information';
+		//aHelp.onclick = 'help.style.display="block";';
 	}
 
 	function requestFile( fname ) {
@@ -220,7 +238,7 @@ var jsonData, replaySpeed = 50;
 						'<td>&nbsp; z: ' + pointable.direction[2].toFixed(1) + '</td>' +
 
 						'</tr><tr>' +
-						'<td>velocity x: ' + pointable.tipVelocity[0].toFixed(1) + '</td>' +
+						'<td>velocity &nbsp;x: ' + pointable.tipVelocity[0].toFixed(1) + '</td>' +
 						'<td>&nbsp; y: ' + pointable.tipVelocity[1].toFixed(1) + '</td>' +
 						'<td>&nbsp; z: ' + pointable.tipVelocity[2].toFixed(1) + '</td>' +
 						'</tr>'+ '</tr><td> </td><tr>';

@@ -11,21 +11,35 @@ There is an `iframe` here. It is not visible when viewed on github.com/fgx. To v
 
 ## Concept
 
-From email of [Vinil T C]( http://cmcvellore.res.in/Bioengineering/people/students/vinil/index.html ) of April 8, 2014
 
 ### Mission
-Quantify the amount of movement imparted by a neuroprosthesis for patients with spinal cord injury or stroke 
-while artifically stimulating forearm flexor and extensor muscle groups for getting the graping movement in fingers and wrist.  
-Use the Leap Motion device to track the movements on each fingers, and wrist.
+
+From email of [Vinil T C]( http://cmcvellore.res.in/Bioengineering/people/students/vinil/index.html ) of April 8, 2014
+
+>    Use the Leap Motion device to track the movements of wrists and fingers.
+>    Quantify the amount of movement imparted by a neuroprosthesis for patients with spinal cord injury or stroke 
+>
+>    To be used in conjunction with devices that artifically stimulate forearm flexor and extensor muscle groups 
+>    for getting the graping movement in fingers and wrist.  
+
+![fes_setup_labeld]( images/fes_setup_labeld.jpg )
+_Image of neuroprosthesis supplied by Vinil T C_
 
 ###Vision
 
 
 ## Features
-To Jest Replay JSON adds
+To the basic [Jest Replay JSON]( https://github.com/jaanga/gestification/tree/gh-pages/cookbook/jest-play) script, this app adds adds:  
 
-* XYZ readout
-* limited replay speed adjustment
+* Frame ID 
+* Limited replay speed adjustment
+
+For wrists and fingers:  
+
+* XYZ position readout
+* Direction vector
+* Velocity vector 
+
 
 
 ## Road Map
@@ -33,6 +47,27 @@ To Jest Replay JSON adds
 
 ## Issues /Bugs
 
+
+## Background
+
+Vinil T C says:
+
+>    I am currently studing for a masters ( MS) in Bioengineering at [Christian Medical College]( http://en.wikipedia.org/wiki/Christian_Medical_College_%26_Hospital ), Vellore, India. Our department works closely with Physical Medicine and Rehabilitation unit. 
+>    The Rehabilitation Institute at CMC is one of the best Rehabilitation centers in India. 
+>    In our group we have clinicians, therapists, bioengineers working together towards implementing various rehabilitation needs for patients with various motor disabilities. 
+
+>    I am basically interested in upper limb assistive technologies.
+>    My current project is a upper limb neuroprosthesis based on [Functional Electrical Stimulation]( http://en.wikipedia.org/wiki/Functional_electrical_stimulation ) 
+>    for regaining grasp in patients with spinal cord injury or stroke - particularly  for C5-C6 SPI patients.
+
+>    The device is a combination of 16 channel electrical stimulators with matching multi electrode arrays. 
+>    This electrode array is fixed on forearm. With the user interface of the stimulator , you can control current for reach of the electrode and there by injucting current through some combination of electrodes. I can regenerate the grasping action; (Extension of wrist+Flexion of Fingers)
+
+>    I plan to use the Leap Motion device to help with quantifying the movements of wrists and fingers.
+>    I need to get coordinates on each fingers and wrist at different time instants and, by manipulating that data, calculating the displacement of the fingers and wrist.
+
+>    My department Student profile link <http://cmcvellore.res.in/Bioengineering/people/students/vinil/index.html>
+>    A short discription about my work <http://cmcvellore.res.in/Bioengineering/people/students/vinil/vtc_res.html>
 
 ## Project Links
 
@@ -62,6 +97,14 @@ Bugs on browsers other than Chrome need not be reported until such time as the w
 This repository contains files that are  at an early and volatile stage. Not all licensing requirements may have been fully met let alone identified. It is the intension of the authors to play fair and all such requirements will either be met or the feature in question will turned off.
 
 ### Change Log
+
+2014-04-16 ~ Theo
+
+* Direction and velocity added
+* Replay speed adjistment aded
+* Frame ID added
+
+
 
 2014-04-14 ~ Theo
 
