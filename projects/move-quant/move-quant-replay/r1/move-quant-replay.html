@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang=en>
+<head>
+<title>Hand Motion Quantifier</title>
+<meta charset=utf-8>
+</head>
+<body>
+<script src = http://js.leapmotion.com/leap-0.4.3.min.js ></script>
+<script src = http://mrdoob.github.com/three.js/examples/js/Detector.js ></script>
+<script src = http://mrdoob.github.com/three.js/build/three.min.js ></script>
+<script src = http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js ></script>
+<script src = http://mrdoob.github.com/three.js/examples/js/libs/stats.min.js ></script>
+<script>
+	var renderer, scene, camera, controls, stats;
+	var clock = new THREE.Clock();
+	clock.previousTime = 100000;
+	var reader = new FileReader();
+	var textarea;
+	var data, palm, fingers = [];
+	var info, help, play;
+
+var jsonData, replaySpeed = 50;
+
+	init();
+	animate();
+
+	function init() {
+		var css, light, geometry, material, mesh;
+
+		css = document.body.appendChild( document.createElement('style') );
+		css.innerHTML = 'body { font: 600 12pt monospace; overflow: hidden; }' +
+			'h1 a {text-decoration: none;}' +
+			'input, button { font: 600 12pt monospace; }';
+
+		arr = [ 'select file','leapmotion-01.json', 'leapmotion-02.json', 'leapmotion-03.json' ];
+		info = document.body.appendChild( document.createElement( 'div' ) );
+		info.innerHTML = info.txt = '<h1 style="display: inline;">' + document.title +
+			'<a href=# onclick=toggleInfo() > &#x24D8; </a> </h1>' +
+			'Replay pre-recorded Leap device JSON data.<br>' +
+			'Select sample: <select id=selItem onchange=requestFile("../../json-samples/"+this.value); ></select> - or: ' +
+			'<input type=file onchange="readFile(this)"> ' +
+			'<input type=checkbox onclick=dataReplay(); id=play >Play - ' +
+			'<button type=button onclick="play.checked=false;dataReplay();data.index=0;var frame = new Leap.Frame(data[0]);playLoop(frame);" >First frame</button> - ' +
+			'<button type=button onclick="play.checked=false;if (++data.index >= data.length) data.index = 0;var frame = new Leap.Frame(data[data.index]);playLoop(frame);" >Next frame</button> - ' +
+			'<button type=button onclick="play.checked=false;if (--data.index < 0) data.index = data.length-1; var frame = new Leap.Frame(data[data.index]);playLoop(frame);" >Previous frame</button> - ' +
+			'Replay speed:<input id=inpSpeed > ' + 
+		'';
+
+		var select = document.getElementById('selItem');
+		for (var option, i = 0; i < arr.length; i++) {
+			option = document.createElement( 'option' );
+			option.innerText = arr[i];
+			select.appendChild( option );
+
+		}
+		select.selectedIndex = 0;
+		info.txt = info.innerHTML;
+		play = document.getElementById('play');
+
+		
+		inpSpeed.type = 'range';
+		inpSpeed.min = 1;
+		inpSpeed.max = 100;
+		inpSpeed.step = 1;
+		inpSpeed.title = inpSpeed.value = replaySpeed;
+		inpSpeed.onchange = function() { inpSpeed.title = replaySpeed = parseFloat( this.value); 
+			var duration = data[ data.length - 1 ].timestamp - data[0].timestamp;
+			clock.step = 0.00000005  * replaySpeed  * duration / data.length;
+		};
+/*
+		textarea = document.body.appendChild( document.createElement( 'textarea' ) );
+		textarea.style.cssText = 'height: ' + (window.innerHeight - 125) + 'px; width: ' +  0.49 * window.innerWidth + 'px; ';
+		textarea.placeholder = 'Leap device JSON data will appear here once you have loaded a file...';
+*/
+
+		dataOut = document.body.appendChild( document.createElement( 'div' ) );
+		dataOut.style.cssText = 'left: 0; height: ' + (window.innerHeight - 125) + 'px;  margin: 10px; position: absolute; width: ' +  0.45 * window.innerWidth + 'px; ';
+		dataOut.innerHTML = 'Leap device JSON data will appear here once you have loaded a file...';
+
+		stats = new Stats();
+		stats.domElement.style.cssText = 'position: absolute; right: 0; top: 0px; zIndex: 100; ';
+		document.body.appendChild( stats.domElement );
+
+		renderer = new THREE.WebGLRenderer( { alpha: 1, antialias: true, clearColor: 0xffffff }  );
+		renderer.setSize( 0.49 * window.innerWidth, window.innerHeight - 120 );
+		renderer.domElement.style.cssText = 'outline: 1px solid #000; margin: 10px; position: absolute; right: 0;';
+		document.body.appendChild( renderer.domElement );
+		scene = new THREE.Scene();
+
+		camera = new THREE.PerspectiveCamera( 40, (0.45 * window.innerWidth) / (window.innerHeight - 150) , 1, 5000 );
+		camera.position.set( 0, 500, 500 );
+		controls = new THREE.TrackballControls( camera, renderer.domElement );
+
+		geometry = new THREE.AxisHelper( 80 );
+		scene.add( geometry );
+
+		geometry = new THREE.PlaneGeometry( 600, 600, 1, 1 );
+		geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
+		material = new THREE.MeshBasicMaterial( {color: Math.random() * 0xffffff, side: THREE.DoubleSide } );
+		mesh = new THREE.Mesh( geometry, material );
+		mesh.position.set( 0, -100, 0 );
+		scene.add( mesh );
+
+		geometry = new THREE.CubeGeometry( 100, 20, 80 );
+		material = new THREE.MeshNormalMaterial();
+		palm = new THREE.Mesh( geometry, material );
+		palm.castShadow = true;
+		palm.receiveShadow = true;
+		scene.add( palm );
+
+		geometry = new THREE.CubeGeometry( 16, 12, 20 );
+		material = new THREE.MeshNormalMaterial();
+		for (var j = 0; j < 5; j++) {
+			mesh = new THREE.Mesh( geometry, material );
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			scene.add( mesh );
+			fingers.push( mesh );
+		}
+	}
+
+	function toggleInfo() {
+		help = info.appendChild( document.createElement( 'div' ) );
+		help.innerHTML = '<div onclick=help.style.display=\'none\'; ' +
+			'style=background-color:#ccc;left:0;opacity:0.85;margin:auto;padding:15px;position:absolute;right:0;text-align:left;width:50%; >' +
+			'jestReplay JSON enables you to replay Leap device JSON data.<br><br>' +
+			'At any time, you can use your pointing device to pan, zoom and rotate the Leap display on the right.<br><br>' +
+			'To replay a file, either select a sample file (saved on the GitHub server) or press the \'Choose File\' button to select a file that is in your computer drive. ' +
+			'Once the selected file is loaded and visible in the left panel, check \'Play\' to see the action.<br><br>' +
+			'<a href="https://github.com/jaanga/gestification/tree/gh-pages/cookbook/jest-play" target="_blank">Source code.</a><br>' +
+			'<small>credits: <a href="http://threejs.org" target="_blank">three.js</a> - ' +
+			'<a href="http://leapmotion.com" target="_blank">leap motion</a> - ' +
+			'<a href="http://khronos.org/webgl/" target="_blank">webgl</a> - ' +
+			'<a href="http://jaanga.github.io" target="_blank">jaanga</a><br>' +
+			'copyright &copy; 2014 jaanga authors ~ mit license</small<br>' +
+			'<br><br><i>Click anywhere in this message to hide...</i>' +
+			'<br><br><i>Then - because there\'s a bug - reload the page!</i>' +
+		'</div>';
+	}
+
+	function requestFile( fname ) {
+		dataPlay = false;
+		xmlhttp = new XMLHttpRequest();
+		xmlhttp.open( 'GET', fname, true );
+		xmlhttp.onreadystatechange = callbackFile;
+		xmlhttp.send( null );
+		callbackCount = 0;
+	}
+
+
+	function callbackFile() {
+		if ( xmlhttp.readyState == 4  ) {
+			jsonData = xmlhttp.responseText;
+//			textarea.value = data;
+		} else {
+// console.log('waiting...');
+		}
+	}
+
+	function readFile(that){
+		if ( that.files && that.files[0]){
+			var reader = new FileReader();
+			reader.onload = function (e) {
+				jsonData = e.target.result;
+			};
+			reader.readAsText(that.files[0]);
+		}
+	}
+
+	function playLoop( frame ) {
+		var hand, direction, len, finger, pointable, txt;
+		if ( frame.hands.length > 0) {
+			hand = frame.hands[0];
+			palm.position.set( hand.stabilizedPalmPosition[0], hand.stabilizedPalmPosition[1], hand.stabilizedPalmPosition[2] );
+			direction = v( hand.direction[0], hand.direction[1], hand.direction[2] );  // best so far
+			palm.lookAt( direction.add( palm.position ) );
+			roll = Math.atan2( hand.palmNormal[0], hand.palmNormal[1] );
+			palm.rotation.z = roll;
+			palm.visible = true;
+
+			txt = 'frame: ' + data.index + '<br>' +
+				'<table><tr>' +
+				'<td>palm</td>' +
+				'</tr><tr>' +
+				'<td>position &nbsp;x: ' + hand.stabilizedPalmPosition[0].toFixed(1) + '</td>' +
+				'<td>&nbsp; y:' + hand.stabilizedPalmPosition[1].toFixed(1) + '</td>' +
+				'<td>&nbsp; z:' + hand.stabilizedPalmPosition[2].toFixed(1) + '</td>' +
+				'</tr><tr>' +
+				'<td>direction x: ' + hand.direction[0].toFixed(1) + '</td>' +
+				'<td>&nbsp; y:' + hand.direction[1].toFixed(1) + '</td>' +
+				'<td>&nbsp; z:' + hand.direction[2].toFixed(1) + '</td>' +
+				'</tr>';
+
+		} else {
+			palm.visible = false;
+		}
+
+		len = frame.pointables.length
+		if ( len > 0) {
+			palm.hasFingers = true;
+			for (var i = 0; i < 5; i++) {
+				finger = fingers[i];
+				if ( i < len ) {
+					pointable = frame.pointables[i];
+					finger.position.set( pointable.stabilizedTipPosition[0], pointable.stabilizedTipPosition[1], pointable.stabilizedTipPosition[2] );
+					direction = v( pointable.direction[0], pointable.direction[1], pointable.direction[2]);  // best so far
+					finger.lookAt( direction.add( finger.position ) );
+					finger.scale.z = 0.05 * pointable.length;
+					finger.visible = true;
+					txt += '<tr>' +
+						'<td>finger ' + [i] + '</td>' +
+						'</tr><tr>' +
+						'<td>position &nbsp;x: ' + finger.position.x.toFixed(1) + '</td>' +
+						'<td>&nbsp; y: ' + finger.position.y.toFixed(1) + '</td>' +
+						'<td>&nbsp; z: ' + finger.position.z.toFixed(1) + '</td>' +
+						'</tr><tr>' +
+						'<td>direction x: ' + pointable.direction[0].toFixed(1) + '</td>' +
+						'<td>&nbsp; y: ' + pointable.direction[1].toFixed(1) + '</td>' +
+						'<td>&nbsp; z: ' + pointable.direction[2].toFixed(1) + '</td>' +
+						'</tr>';
+
+				} else {
+					fingers[i].visible = false;
+				}
+			}
+		} else if ( palm.hasFingers ) {
+			for (var i = 0; i < 5; i++) {
+				fingers[i].visible = false;
+			}
+			palm.hasFingers = false;
+		}
+		dataOut.innerHTML = '<h2>' + txt + '</table></h2>';
+	}
+
+	function dataReplay() {
+		if ( !jsonData ) { alert('Please first load a file.'); play.checked = false; return; }
+		data = JSON.parse( jsonData );
+		data.replay = true;
+		data.index = 0;
+
+		var duration = data[ data.length - 1 ].timestamp - data[0].timestamp;
+
+		clock.step = 0.00000001 * replaySpeed  * duration / data.length;
+// console.log( duration / data.length, clock.step );
+		clock.previousTime = 0;
+	};
+
+	function animate() {
+		requestAnimationFrame( animate );
+		controls.update();
+		renderer.render( scene, camera );
+		stats.update();
+		if ( play.checked && clock.getElapsedTime() - clock.previousTime > clock.step ) {
+			var frame = new Leap.Frame( data[ data.index ] );
+			playLoop(frame);
+			if ( ++data.index >= data.length ) data.index = 0;
+			clock.previousTime = clock.getElapsedTime();
+		}
+	}
+
+	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }
+</script>
+</body>
+</html>
