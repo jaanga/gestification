@@ -8,5 +8,5 @@
 
 ****
 
-[Source Code on GitHub]( https://github.com/jaanga/gestification/projects/move-quant/ )  
+[Source Code on GitHub]( https://github.com/jaanga/gestification/tree/gh-pages/projects/move-quant )  
 [Copyright and License]( https://github.com/jaanga/jaanga.github.io/blob/master/jaanga-copyright-and-mit-license.md )
