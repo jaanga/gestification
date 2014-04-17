@@ -60,7 +60,7 @@ var jsonData, replaySpeed = 50;
 		
 		inpSpeed.type = 'range';
 		inpSpeed.min = 1;
-		inpSpeed.max = 100;
+		inpSpeed.max = 200;
 		inpSpeed.step = 1;
 		inpSpeed.title = inpSpeed.value = replaySpeed;
 		inpSpeed.onchange = function() { inpSpeed.title = replaySpeed = parseFloat( this.value); 
@@ -188,8 +188,8 @@ var jsonData, replaySpeed = 50;
 				'</tr><tr>' +
 				'<td>direction x: ' + hand.direction[0].toFixed(1) + '</td>' +
 				'<td>&nbsp; y:' + hand.direction[1].toFixed(1) + '</td>' +
-				'<td>&nbsp; z:' + hand.direction[2].toFixed(1) + '</td>' +
-				'</tr>';
+				'<td>&nbsp; z:' + hand.direction[2].toFixed(1) + '<br></td>' +
+				'</tr>' + '</tr><td> </td><tr>';
 
 		} else {
 			palm.visible = false;
@@ -210,14 +210,20 @@ var jsonData, replaySpeed = 50;
 					txt += '<tr>' +
 						'<td>finger ' + [i] + '</td>' +
 						'</tr><tr>' +
-						'<td>position &nbsp;x: ' + finger.position.x.toFixed(1) + '</td>' +
+						'<td cols=18 >position &nbsp;x: ' + finger.position.x.toFixed(1) + '</td>' +
 						'<td>&nbsp; y: ' + finger.position.y.toFixed(1) + '</td>' +
 						'<td>&nbsp; z: ' + finger.position.z.toFixed(1) + '</td>' +
+
 						'</tr><tr>' +
 						'<td>direction x: ' + pointable.direction[0].toFixed(1) + '</td>' +
 						'<td>&nbsp; y: ' + pointable.direction[1].toFixed(1) + '</td>' +
 						'<td>&nbsp; z: ' + pointable.direction[2].toFixed(1) + '</td>' +
-						'</tr>';
+
+						'</tr><tr>' +
+						'<td>velocity x: ' + pointable.tipVelocity[0].toFixed(1) + '</td>' +
+						'<td>&nbsp; y: ' + pointable.tipVelocity[1].toFixed(1) + '</td>' +
+						'<td>&nbsp; z: ' + pointable.tipVelocity[2].toFixed(1) + '</td>' +
+						'</tr>'+ '</tr><td> </td><tr>';
 
 				} else {
 					fingers[i].visible = false;
