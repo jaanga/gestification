@@ -1,19 +1,19 @@
 Three.js - Leap.js - Boilerplate Read Me
 ========================================
 
-Cropped iframe view of Three.js - Leap.js - Boilerplate:
-<iframe src=latest/ width=96% height=300px style=margin:2% >
-[There is an `iframe` here. It is not visible when viewed on github.com/fgx. To view, please go to <http://jaanga.github.io/gestification/cookbook/boilerplate/latest/>. See 'Project Links' just below. ]
-</iframe>
-Start here. Wave your hands to say 'Hello World!'
-
 ### Live Demo
 
-[Three.js - Leap.js - Boilerplate (latest)](http://jaanga.github.io/gestification/cookbook/boilerplate/latest/ )
+<iframe src=latest/index.html width=96% height=400px style=margin:2% >
+[There is an `iframe` here that is not visible when viewed on github.com. To view, please go to <http://jaanga.github.io/gestification/cookbook/boilerplate/latest/>.]
+</iframe>
+_Cropped iframe view of Three.js - Leap.js - Boilerplate. Wave your hands to say 'Hello World!'_
+
+Full screen: [Three.js - Leap.js - Boilerplate (latest)](http://jaanga.github.io/gestification/cookbook/boilerplate/latest/ )
 
 ### Description
 
-This HTML/JavaScript file provides a minimum amount of code that loads the Three.js and Leap libraries and creates a simple display of hands and finger (or 'pointables' as Leap calls them) moving in 3D. 
+This HTML/JavaScript file provides a minimum amount of code that loads the Three.js and Leap libraries 
+and creates a simple display of one hand and its fingers moving in 3D. 
 
 
 ### References
