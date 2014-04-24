@@ -12,7 +12,7 @@
 <script>
 // copyright (c) 2014-04-24 ~ Theo Armour ~ MIT Licence
 	var renderer, scene, camera, controls, stats;
-	var info, palm, fingers = [];
+	var palm, phalanges = [];
 
 	init();
 	animate();
@@ -25,15 +25,15 @@
 			'h1 a { text-decoration: none;} ' +
 		'';
 
-		info = document.body.appendChild( document.createElement( 'div' ) );
+		var info = document.body.appendChild( document.createElement( 'div' ) );
 		info.style.cssText = 'left: 0; margin: auto; position: absolute; right: 0; width: 50%; ';
 		info.innerHTML = info.txt = '<h1>' + 
-			document.title + ' ~ ' +
-			'<a href=# onclick=toggleInfo() >&#x24D8;</a>' +
+				document.title + ' ~ ' +
+				'<a href=# onclick=toggleInfo() >&#x24D8;</a>' +
 			'</h1>' +
-			'<p>Show one hand and five fingers to start</p>' +
+			'<p>Show one hand and five phalanges to start</p>' +
 			'<div id=data ></div>' +
-		'</p>';
+		'';
 
 // Three.js basics
 		scene = new THREE.Scene();
@@ -75,14 +75,14 @@
 
 // ground plane
 		material = new THREE.MeshLambertMaterial( {color: 0xaaaaaa } );
-		geometry = new THREE.CubeGeometry( 600, 10, 300 );
+		geometry = new THREE.BoxGeometry( 600, 10, 300 );
 		mesh = new THREE.Mesh( geometry, material );
 		mesh.castShadow = true;
 		mesh.receiveShadow = true;
 		scene.add( mesh );
 
 // palm
-		geometry = new THREE.CubeGeometry( 80, 20, 80 );
+		geometry = new THREE.BoxGeometry( 80, 20, 80 );
 		geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 0, 30 ) );
 		material = new THREE.MeshNormalMaterial();
 		palm = new THREE.Mesh( geometry, material );
@@ -90,14 +90,14 @@
 		palm.receiveShadow = true;
 		scene.add( palm );
 
-// fingers
-		geometry = new THREE.CubeGeometry( 16, 12, 1 );
+// phalanges
+		geometry = new THREE.BoxGeometry( 16, 12, 1 );
 		for ( var i = 0; i < 15; i++) {
 			mesh = new THREE.Mesh( geometry, material );
 			mesh.castShadow = true;
 			mesh.receiveShadow = true;
 			scene.add( mesh );
-			fingers.push( mesh );
+			phalanges.push( mesh );
 		}
 	}
 
@@ -119,7 +119,7 @@
 	}
 
 	Leap.loop( function( frame ) {
-		var hand, finger, point, length;
+		var hand, phalanx, point, length;
 		if ( frame.hands.length ) {
 			hand = frame.hands[0];
 			palm.position.set( hand.stabilizedPalmPosition[0], hand.stabilizedPalmPosition[1], hand.stabilizedPalmPosition[2] );
@@ -130,14 +130,15 @@
 		
 		for (var i = 0, iLen = frame.pointables.length; i < iLen; i++) {
 			for ( var j = 0; j < 3; j++) {
-				finger = fingers[ 3 * i + j];
+				phalanx = phalanges[ 3 * i + j];
 				point = frame.pointables[i].positions[j];
-				finger.position.set( point[0], point[1], point[2] );
-				point = frame.pointables[i].positions[ j + 1 ]
-				length = finger.position.distanceTo( v( point[0], point[1], point[2] ) );
-				finger.lookAt( v( point[0], point[1], point[2] ) );
-				finger.scale.set( 1, 1, length );
-				finger.translateZ( 0.5 * length );
+				phalanx.position.set( point[0], point[1], point[2] );
+				point = frame.pointables[i].positions[ j + 1 ];
+				point = new THREE.Vector3( point[0], point[1], point[2] );
+				phalanx.lookAt( point );
+				length = phalanx.position.distanceTo( point );
+				phalanx.translateZ( 0.5 * length );
+				phalanx.scale.set( 1, 1, length );
 			}
 		}
 	});
@@ -148,8 +149,6 @@
 		controls.update();
 		stats.update();
 	}
-
-	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }
 </script>
 </body>
 </html>
