@@ -2,15 +2,14 @@ Three.js - Leap.js - Boilerplate Read Me
 ========================================
 
 Cropped iframe view of Three.js - Leap.js - Boilerplate:
-<iframe src=r2/leap-threejs-boilerplate.html width=96% height=300px style=margin:2% >
-There is an `iframe` here. It is not visible when viewed on github.com/fgx. To view, please go to fgx.github.io. See 'Project Links' just below.
-
+<iframe src=latest/ width=96% height=300px style=margin:2% >
+[There is an `iframe` here. It is not visible when viewed on github.com/fgx. To view, please go to <http://jaanga.github.io/gestification/cookbook/boilerplate/latest/>. See 'Project Links' just below. ]
 </iframe>
 Start here. Wave your hands to say 'Hello World!'
 
 ### Live Demo
 
-[Three.js - Leap.js - Boilerplate](http://jaanga.github.io/gestification/cookbook/boilerplate/latest/ )
+[Three.js - Leap.js - Boilerplate (latest)](http://jaanga.github.io/gestification/cookbook/boilerplate/latest/ )
 
 ### Description
 
