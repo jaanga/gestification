@@ -12,7 +12,7 @@
 <script>
 // copyright (c) 2014-04-24 ~ Theo Armour ~ MIT Licence
 	var renderer, scene, camera, controls, stats;
-	var palm, phalanges = [];
+	var info, palm, phalanges = [];
 
 	init();
 	animate();
@@ -25,7 +25,7 @@
 			'h1 a { text-decoration: none;} ' +
 		'';
 
-		var info = document.body.appendChild( document.createElement( 'div' ) );
+		info = document.body.appendChild( document.createElement( 'div' ) );
 		info.style.cssText = 'left: 0; margin: auto; position: absolute; right: 0; width: 50%; ';
 		info.innerHTML = info.txt = '<h1>' + 
 				document.title + ' ~ ' +
