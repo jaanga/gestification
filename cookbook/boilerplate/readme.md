@@ -7,7 +7,7 @@ Start here. Wave your hands to say 'Hello World!'
 
 ### Live Demo
 
-[Three.js - Leap.js - Boilerplate](http://jaanga.github.io/gestification/cookbook/boilerplate/r1/leap-threejs-boilerplate.html)
+[Three.js - Leap.js - Boilerplate](http://jaanga.github.io/gestification/cookbook/boilerplate/latest/ )
 
 ### Description
 
