@@ -4,7 +4,8 @@ Three.js - Leap.js - Boilerplate Read Me
 ### Live Demo
 
 <iframe src=latest/index.html width=96% height=400px style=margin:2% >
-[There is an `iframe` here that is not visible when viewed on github.com. To view, please go to <http://jaanga.github.io/gestification/cookbook/boilerplate/latest/>.]
+[There is an `iframe` here that is not visible when viewed on github.com. 
+To view, please see Project Links below.]
 </iframe>
 _Cropped iframe view of Three.js - Leap.js - Boilerplate. Wave your hands to say 'Hello World!'_
 
@@ -12,7 +13,8 @@ Full screen: [Three.js - Leap.js - Boilerplate (latest)](http://jaanga.github.io
 
 ### Description
 
-This HTML/JavaScript file provides a minimum amount of code that loads the Three.js and Leap libraries 
+This HTML/JavaScript file provides a minimum amount of code that loads the [Three.js](http://threejs.org) 
+and [Leap Motion]( https://developer.leapmotion.com/leapjs/welcome ) libraries 
 and creates a simple display of one hand and its fingers moving in 3D. 
 
 
@@ -38,7 +40,7 @@ Here's a link to the YouTube video:
 
 You have two ways of viewing the Jaanga files:
 
-* Web page hosted on GitHub: [jaanga.github.io]( http://jaanga.github.io/gestification/cookbook/boilerplate/ ) "view the files as apps." ) <input value="<< You are now probably here." size=28 style="font:bold 12pt monospace;border-width:0;" >  
+* Web page hosted on GitHub: [jaanga.github.io]( http://jaanga.github.io/gestification/cookbook/boilerplate/ "view the files as apps." ) <input value="<< You are now probably here." size=28 style="font:bold 12pt monospace;border-width:0;" >  
 * Source code on GitHub: [github.com/jaanga]( https://github.com/jaanga/gestification/tree/gh-pages/cookbook/boilerplate "View the files as source code." ) <scan style=display:none ><< You are now probably here.</scan>
 
 
