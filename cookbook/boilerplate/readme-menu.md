@@ -6,7 +6,7 @@
 </p>
 
 <br>
-[Demo (latest)]( /latest/)
+[Demo (latest)]( http://jaanga.github.io/gestification/cookbook/boilerplate/latest/ )
 
 <br>
 [Source Code on GitHub]( https://github.com/jaanga/gestification/tree/gh-pages/cookbook/boilerplate )
