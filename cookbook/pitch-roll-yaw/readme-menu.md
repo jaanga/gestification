@@ -9,7 +9,7 @@
 [Demo (latest)]( http://jaanga.github.io/gestification/cookbook/pitch-roll-yaw/latest/ )
 
 <br>
-[Source Code on GitHub]( https://github.com/jaanga/gestification/tree/gh-pages/cookbook/piych-roll-yaw/ )
+[Source Code on GitHub]( https://github.com/jaanga/gestification/tree/gh-pages/cookbook/pitch-roll-yaw/ )
 
 <br>
 
