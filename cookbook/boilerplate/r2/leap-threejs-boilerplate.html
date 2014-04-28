@@ -76,7 +76,7 @@
 		scene.add( new THREE.ArrowHelper( v(0, 0, 1), v(0, 0, 0), 30, 0x0000cc) );
 
 // ground plane
-		material = new THREE.MeshBasicMaterial( {color: 0xaaaaaa } );
+		material = new THREE.MeshLambertMaterial( {color: 0xaaaaaa } );
 		geometry = new THREE.CubeGeometry( 600, 10, 300 );
 		mesh = new THREE.Mesh( geometry, material );
 		mesh.position.set( 0, -10, 0 );
@@ -124,7 +124,7 @@
 			palm.position.set( hand.stabilizedPalmPosition[0], hand.stabilizedPalmPosition[1], hand.stabilizedPalmPosition[2] );
 			direction = v( hand.direction[0], hand.direction[1], hand.direction[2] );  // best so far
 			palm.lookAt( direction.add( palm.position ) );
-			palm.rotation.z = -hand.roll() ;
+			palm.rotation.z = -hand.roll();
 			//palm.rotation.set( hand.pitch(), -hand.yaw(), hand.roll() );
 			palm.visible = true;
 
@@ -134,7 +134,7 @@
 			palm.visible = false;
 		}
 
-		len = frame.pointables.length
+		len = frame.pointables.length;
 		if ( len > 0) {
 			var pointable;
 			palm.hasFingers = true;

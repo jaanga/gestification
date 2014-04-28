@@ -1,16 +1,16 @@
 ﻿<!doctype html>
 <html lang=en >
 <head>
-<title>boilerplate r3</title>
+<title>boilerplate r4</title>
 <meta charset=utf-8 >
 </head>
 <body>
-<script src=http://js.leapmotion.com/leap-0.6.0-beta1.js ></script>
+<script src=http://js.leapmotion.com/leap-0.6.0-beta2.js ></script>
 <script src=http://mrdoob.github.io/three.js/build/three.min.js ></script>
 <script src=http://mrdoob.github.io/three.js/examples/js/controls/TrackballControls.js ></script>
 <script src=http://mrdoob.github.io/three.js/examples/js/libs/stats.min.js ></script>
 <script>
-// copyright (c) 2014-04-24 ~ Theo Armour ~ MIT License
+// copyright (c) 2014-04-27 ~ Theo Armour ~ MIT License
 	var renderer, scene, camera, controls, stats;
 	var info, palm, phalanges = [];
 
@@ -83,7 +83,7 @@
 
 // palm
 		geometry = new THREE.BoxGeometry( 80, 20, 80 );
-		geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 0, 30 ) );
+		geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 0, -30 ) );  // to to +30 if using pitch roll & yaw
 		material = new THREE.MeshNormalMaterial();
 		palm = new THREE.Mesh( geometry, material );
 		palm.castShadow = true;
@@ -123,12 +123,15 @@
 		if ( frame.hands.length ) {
 			hand = frame.hands[0];
 			palm.position.set( hand.stabilizedPalmPosition[0], hand.stabilizedPalmPosition[1], hand.stabilizedPalmPosition[2] );
-			palm.rotation.set( hand.pitch(), -hand.yaw(), hand.roll() );
+//			palm.rotation.set( hand.pitch(), -hand.yaw(), hand.roll() );
+			direction = new THREE.Vector3( hand.direction[0], hand.direction[1], hand.direction[2] );  // best so far
+			palm.lookAt( direction.add( palm.position ) );
+			palm.rotation.z = -hand.roll();
 
 			data.innerHTML = 'Hand X:' + hand.stabilizedPalmPosition[0].toFixed(0) + ' Y:' +  hand.stabilizedPalmPosition[1].toFixed(0) + ' Z:' + hand.stabilizedPalmPosition[2].toFixed(0);
 		}
-		
-		for (var i = 0, iLen = frame.pointables.length; i < iLen; i++) {
+		iLen = ( frame.pointables.length < 5 ) ? frame.pointables.length : 5;
+		for (var i = 0; i < iLen; i++) {
 			for ( var j = 0; j < 3; j++) {
 				phalanx = phalanges[ 3 * i + j];
 				point = frame.pointables[i].positions[j];

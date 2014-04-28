@@ -67,6 +67,11 @@ This repository contains files that are  at an early and volatile stage. Not all
 
 ### Change Log
 
+2014-04-27 ~ Theo
+
+* R4 fixes issues when more than five pointables are seen
+* Palm uses lookAt instead of Pitch Roll and Yaw
+
 2014-04-24 ~ Theo
 
 * R3 first commit
