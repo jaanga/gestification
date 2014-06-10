@@ -67,6 +67,13 @@ This repository contains files that are  at an early and volatile stage. Not all
 
 ### Change Log
 
+2014-06-10 ~ 
+
+* Issue: Palm is not moving as anticipated in Z-direction ( in/out of screen ) 
+	* Fix: Change from hand.stabilizedalmPosition[] to hand.palmPosition[]
+	* RTFM: "Smoothing and stabilization is performed in order to make this value more suitable for interaction with 2D content."
+		* This boilerplate is for 3D
+
 2014-04-27 ~ Theo
 
 * R4 fixes issues when more than five pointables are seen

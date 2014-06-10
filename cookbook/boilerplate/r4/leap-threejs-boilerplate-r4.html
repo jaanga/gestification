@@ -122,7 +122,7 @@
 		var hand, phalanx, point, length;
 		if ( frame.hands.length ) {
 			hand = frame.hands[0];
-			palm.position.set( hand.stabilizedPalmPosition[0], hand.stabilizedPalmPosition[1], hand.stabilizedPalmPosition[2] );
+			palm.position.set( hand.palmPosition[0], hand.palmPosition[1], hand.palmPosition[2] );
 //			palm.rotation.set( hand.pitch(), -hand.yaw(), hand.roll() );
 			direction = new THREE.Vector3( hand.direction[0], hand.direction[1], hand.direction[2] );  // best so far
 			palm.lookAt( direction.add( palm.position ) );

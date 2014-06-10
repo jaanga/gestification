@@ -6,11 +6,10 @@
 </p>
 
 <br>
-[Demo (latest)]( http://jaanga.github.io/gestification/cookbook/boilerplate/latest/ )
+	[Demo (latest)]( http://jaanga.github.io/gestification/cookbook/boilerplate/latest/ )
 
 <br>
-[Source Code on GitHub]( https://github.com/jaanga/gestification/tree/gh-pages/cookbook/boilerplate )
-
+	[Source Code on GitHub]( https://github.com/jaanga/gestification/tree/gh-pages/cookbook/boilerplate )
 <br>
 
 <br>
