@@ -128,7 +128,7 @@
 			palm.lookAt( direction.add( palm.position ) );
 			palm.rotation.z = -hand.roll();
 
-			data.innerHTML = 'Hand X:' + hand.stabilizedPalmPosition[0].toFixed(0) + ' Y:' +  hand.stabilizedPalmPosition[1].toFixed(0) + ' Z:' + hand.stabilizedPalmPosition[2].toFixed(0);
+			data.innerHTML = 'Hand X:' + hand.palmPosition[0].toFixed(0) + ' Y:' +  hand.palmPosition[1].toFixed(0) + ' Z:' + hand.palmPosition[2].toFixed(0);
 		}
 		iLen = ( frame.pointables.length < 5 ) ? frame.pointables.length : 5;
 		for (var i = 0; i < iLen; i++) {
