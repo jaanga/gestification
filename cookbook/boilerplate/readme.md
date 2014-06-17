@@ -11,6 +11,13 @@ _Cropped iframe view of Three.js - Leap.js - Boilerplate. Wave your hands to say
 
 Full screen: [Three.js - Leap.js - Boilerplate (latest)](http://jaanga.github.io/gestification/cookbook/boilerplate/latest/ )
 
+### Update 2014-06-17
+
+User jacobischwartz reports issues running the boilerplate on a Mac. We are investigating. 
+
+A big issue is that Theo-Armour does not currently have a Mac for testing. So until he gets one, any help very much appreciated.
+
+
 ### Description
 
 This HTML/JavaScript file provides a minimum amount of code that loads the [Three.js](http://threejs.org) 
