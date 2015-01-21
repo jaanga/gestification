@@ -1,4 +1,4 @@
-Three.js - Leap.js - Boilerplate Read Me
+Three.js - Leap.js - Template Read Me
 ========================================
 
 ### Live Demo
@@ -74,7 +74,17 @@ This repository contains files that are  at an early and volatile stage. Not all
 
 ### Change Log
 
-2014-06-10 ~ 
+2015-01-20 ~ Theo
+
+* R5 added
+* Loads latest leap.js 
+	* http://js.leapmotion.com/leap-0.6.3.js
+	* http://js.leapmotion.com/leap-plugins-0.1.8.js
+* Uses objectification tricks exposed in the Leap sample.html file
+* Much nicer operation overall
+ 
+
+2014-06-10 ~ Theo
 
 * Issue: Palm is not moving as anticipated in Z-direction ( in/out of screen ) 
 	* Fix: Change from hand.stabilizedalmPosition[] to hand.palmPosition[]

@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang=en >
+<head>
+<title>youGest ~ Leap.js API Data Display ~ R5</title>
+<meta charset=utf-8 >
+</head>
+<body>
+<script src="http://js.leapmotion.com/leap-0.6.3.js"></script>
+
+<script src=http://mrdoob.github.com/three.js/build/three.min.js></script>
+<script src=http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js></script>
+<script src=http://mrdoob.github.com/three.js/examples/js/libs/stats.min.js></script>
+<script>
+// Theo Armour ~ 2013-08-07 ~ MIT License
+
+	var renderer, scene, camera, controls;
+
+	var statusFrame;
+	var statuses = [];
+	var interactionBox;
+	var frameCubes = [];
+	var gesture = 'none';
+
+	var palms = [];
+	var sphereCenters = [];
+	var fingerTips = [];
+	var fingerJoints = [];
+	var fingerBase;
+	// var fingerCount = 0;
+
+	var swipes = [];
+	var circles = [];
+	var keyTaps =[];
+	var screenTaps = [];
+
+	init();
+	animate();
+
+	function init() {
+		var css, light, geometry, material, mesh;
+
+		css = document.body.appendChild( document.createElement('style') );
+		css.innerHTML = 'body { color: #777; font: 400 12pt monospace; margin: 0; overflow: hidden; }' ;
+
+		renderer = new THREE.WebGLRenderer( { alpha: 1, antialias: true, clearColor: 0xffffff } );
+		renderer.shadowMapEnabled = true;
+		renderer.setSize( window.innerWidth, window.innerHeight );
+
+		document.body.appendChild( renderer.domElement );
+		scene = new THREE.Scene();
+
+		camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 2000 );
+		camera.position.set( 0, 250, 700 );
+		controls = new THREE.TrackballControls( camera, renderer.domElement );
+		controls.target.set( 0, 200, 0 );
+
+
+		stats = new Stats();
+		stats.domElement.style.cssText = 'position: absolute;right: 0; top: 0; zIndex: 100; ';
+		document.body.appendChild( stats.domElement );
+
+		//setHeadsUp();
+		headsUpAbout = '<p style="margin: 0; text-align: right;">[X]</p>' +
+			'<h1>youGest R4</h1>' +
+			'<p>View data coming in from your <a href="http://leapmotion.com" target="_blank">Leap Motion</a> device both as numbers and as 3D objects.</p>' +
+			'<p>Wiggle your hands and fingers over the device to view the data.</p>' +
+			'<p>Move your finger over the \'?\' for more help.</p>' +
+			'<p>See also the Leap Motion JavaScript <a href="http://js.leapmotion.com/api/v0.2.0/docs" target="_blank">API</a> ' +
+			'and <a href="http://js.leapmotion.com/examples" target="_blank">Examples</a> for more details.</p>' +
+			'<p>Tested on Chrome. Broken on Firefox, Safari and IE.</p>' +
+			'<p>Report bugs, view source code on <a href="https://github.com/jaanga/gestification/tree/gh-pages/yougest" target="_blank">GitHub</a>.</p>' +
+			'<p style=font-size:8pt; >Copyright &copy 2013 Jaanga authors. MIT License</small></p>' +
+		'';
+		//headsUp.innerHTML = headsUpAbout;
+
+		statusFrame = document.body.appendChild( document.createElement( 'div' ) );
+		statusFrame.style.cssText = 'position: absolute; right: 35%; top: 0; width: 32%; ';
+		statusFrame.innerHTML = '<p>Frame</p>';
+
+		var status = document.body.appendChild( document.createElement( 'div' ) );
+		status.style.cssText = 'position: absolute; right: 0; top: 0; width: 28% ';
+		status.innerHTML = '<p></p>';
+		statuses.push( status );
+
+		status = document.body.appendChild( document.createElement( 'div' ) );
+		status.style.cssText = 'position: absolute; left: 5px; top: 0; width: 28% ';
+		status.innerHTML = '<p></p>';
+		statuses.push( status );
+
+		light = new THREE.AmbientLight( 0x444444 );
+		scene.add( light );
+/*
+		light = new THREE.SpotLight( 0xffffff, 1.5 );
+		light.position.set( 0, 1500, 0 );
+		light.castShadow = true;
+
+		light.shadowMapWidth = 1024;
+		light.shadowMapHeight = 1024;
+		light.shadowCameraNear = 1100;
+		light.shadowCameraFar = 1700;
+		light.shadowCameraFov = 30;
+		scene.add( light );
+ light.shadowCameraVisible = true;
+ */
+ 		light = new THREE.DirectionalLight( 0xffffff, 1 );
+		light.position.set( 0, 1500, 0 );
+		scene.add( light );
+		light.castShadow = true;
+		light.shadowMapWidth = 2048;
+		light.shadowMaHeight = 2048;
+		var d = 200;
+		light.shadowCameraLeft = -d;
+		light.shadowCameraRight = d;
+		light.shadowCameraTop = d * 2;
+		light.shadowCameraBottom = -d * 2;
+
+		light.shadowCameraNear = 1000;
+		light.shadowCameraFar = 1600;
+// light.shadowCameraVisible = true;
+
+		geometry = new THREE.AxisHelper( 500 );
+		scene.add( geometry );
+
+// ground plane
+		geometry = new THREE.BoxGeometry( 500, 20, 300 );
+		// geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
+		material = new THREE.MeshLambertMaterial( {color: Math.random() * 0x888888} );
+		mesh = new THREE.Mesh( geometry, material );
+		mesh.position.y = -10;
+		mesh.receiveShadow = true;
+		scene.add( mesh );
+
+// device
+		geometry = new THREE.BoxGeometry( 80, 16, 30);
+		material = new THREE.MeshLambertMaterial( {color: 0x888888 } );
+		var device = new THREE.Mesh( geometry, material );
+		mesh.position.y = 8;
+		mesh.castShadow = true;
+		mesh.receiveShadow = true;
+		scene.add( mesh );
+
+// interaction box
+		geometry = new THREE.BoxGeometry( 1, 1, 1, 5, 5, 5 );
+		material = new THREE.MeshBasicMaterial( {color: 0x888888, wireframe: true } );
+		// material = new THREE.MeshLambertMaterial( {color: 0x888888, opacity: 0.1, side: THREE.DoubleSide, transparent: true } );
+		interactionBox = new THREE.Mesh( geometry, material );
+		scene.add( interactionBox );
+
+// Frame cubes
+		geometry = new THREE.BoxGeometry( 50, 50, 50 );
+		// material = new THREE.MeshNormalMaterial();
+		frameCubesText =['frRot1','frRot2','frRot3','frScl','frPos'];
+		for (var i = 0; i < 5; i++) {
+			var texture = canvasText( frameCubesText[i], { backgroundColor: 'random', color: 'random', fontSize: '48pt', globalAlpha: 0.5, height: 200, lineWidth: 2, textAlign: 'center', textBaseline: 'middle', width: 200, X: 100, Y: 100} );
+			material = new THREE.MeshPhongMaterial( { map: texture, color: Math.random() * 0xffffff, specular: 0x333333, shininess: 20, side: THREE.DoubleSide, transparent: true } );
+
+			mesh = new THREE.Mesh( geometry, material );
+			mesh.position.set( i * 100 - 200, 50, -100 );
+			scene.add( mesh );
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			frameCubes.push( mesh );
+		}
+
+// Hands
+		for (var i = 0; i < 2; i++) {
+			geometry = new THREE.BoxGeometry( 50, 20, 80 );
+			geometry.applyMatrix( new THREE.Matrix4().makeTranslation( -10, 0, -80 ) );
+			// material = new THREE.MeshNormalMaterial();
+			material = new THREE.MeshLambertMaterial( { } );
+			material.color.setHSL( 0.99, 1, 0.5 );
+			mesh = new THREE.Mesh( geometry, material );
+			scene.add( mesh );
+			mesh.castShadow = true;
+			mesh.receiveShadow = true;
+			palms.push( mesh );
+
+			geometry = new THREE.SphereGeometry( 10 );
+			material = new THREE.MeshNormalMaterial( { wireframe: true } );
+			mesh = new THREE.Mesh( geometry, material );
+			scene.add( mesh );
+			sphereCenters.push( mesh );
+
+			for (var j = 0; j < 5; j++) {
+				geometry = new THREE.BoxGeometry( 16, 12, 1 );
+				geometry.applyMatrix( new THREE.Matrix4().makeRotationY( Math.PI ) );
+				var texture = canvasText( j, { backgroundColor: 'random', color: '#000000', fontSize: '48pt', globalAlpha: 0.8, height: 200, lineWidth: 2, textAlign: 'center', textBaseline: 'middle', width: 100, X: 50, Y: 100} );
+				material = new THREE.MeshPhongMaterial( { map: texture, color: Math.random() * 0xffffff, specular: 0x333333, shininess: 20, side: THREE.DoubleSide, transparent: true } );
+				mesh = new THREE.Mesh( geometry, material );
+				mesh.castShadow = true;
+				mesh.receiveShadow = true;
+				scene.add( mesh );
+				fingerTips.push( mesh );
+
+				geometry = new THREE.BoxGeometry( 10, 10, 1 );
+				mesh = new THREE.Mesh( geometry, material );
+				mesh.castShadow = true;
+				mesh.receiveShadow = true;
+				scene.add( mesh );
+				fingerJoints.push( mesh );
+			}
+
+			material = new THREE.MeshNormalMaterial();
+			geometry = new THREE.BoxGeometry( 2, 30, 2 );
+			fingerBase = new THREE.Mesh( geometry, material );
+			scene.add( fingerBase );
+			fingerBase.visible = false;
+
+// gestures
+			geometry = new THREE.BoxGeometry( 200, 20, 20 );
+			material = new THREE.MeshBasicMaterial( {color: 0xff8888, opacity: 0.5, side: THREE.DoubleSide, transparent: true } );
+			var swipe = new THREE.Mesh( geometry, material );
+			swipe.position.x = 150 - i * 300;
+			swipe.position.y = 430;
+			scene.add( swipe );
+			swipes.push( swipe );
+
+			geometry = new THREE.TorusGeometry( 70, 15, 20, 20 );
+			material = new THREE.MeshBasicMaterial( {color: 0xff8888, opacity: 0.5, side: THREE.DoubleSide, transparent: true } );
+			var circle = new THREE.Mesh( geometry, material );
+			circle.position.x = 150 - i * 300;
+			circle.position.y = 430;
+			scene.add( circle );
+			circles.push( circle );
+
+			geometry = new THREE.BoxGeometry( 20, 200, 20 );
+			material = new THREE.MeshBasicMaterial( {color: 0xff8888, opacity: 0.5, side: THREE.DoubleSide, transparent: true } );
+			var keyTap = new THREE.Mesh( geometry, material );
+			keyTap.position.x = 150 - i * 300;
+			keyTap.position.y = 430;
+			scene.add( keyTap );
+			keyTaps.push( keyTap );
+
+			geometry = new THREE.BoxGeometry( 20, 20, 200 );
+			material = new THREE.MeshBasicMaterial( {color: 0xff8888, opacity: 0.5, side: THREE.DoubleSide, transparent: true } );
+			var screenTap = new THREE.Mesh( geometry, material );
+			screenTap.position.x = 150 - i * 300;
+			screenTap.position.y = 430;
+			scene.add( screenTap );
+			screenTaps.push( screenTap );
+		}
+
+		// buildToolbar( 60, 100, -20, 3);
+	}
+
+	var fr;
+
+	Leap.loop( { enableGestures: true }, function( frame ) {
+		fr = frame;  // gives you a global for debugging...
+
+		var txt = '';
+		txt += getFrameData( frame );
+//		setFrameCubes( frame );
+		txt += getGestureData( frame, 0 );
+		setGestureIcons( frame, 0 );
+		statusFrame.innerHTML = txt;
+
+		var texts = [ '<h3 style=margin-bottom:0>Hand 1</h3>', '<h3 style=margin-bottom:0>Hand 2</h3>'];
+		for (var i = 0; i < 2; i++) {
+			if ( frame.hands[i] ) {
+				texts[i] += getHandData( frame, i );
+				statuses[i].innerHTML = texts[ i ];
+				setHandPalm ( frame, i );
+			} else {
+				// statuses[i].innerHTML = '';
+				hideHandPalm( i );
+			}
+		}
+		var pointable, len = frame.pointables.length;
+		if ( len > 0 ) {
+			statuses[0].innerHTML = texts[ 0 ] + '<h3 style=margin-bottom:0; >Pointables</h3>';
+			statuses[1].innerHTML = texts[ 1 ] + '<h3 style=margin-bottom:0; >Pointables</h3>';
+			for (var i = 0; i < 10; i++) {
+				if ( i < len ) {
+					pointable = frame.pointables[ i ];
+					if ( pointable.handId === palms[0].id ) {
+						statuses[0].innerHTML += getPointablesData( frame, i);
+					} else {
+						statuses[1].innerHTML += getPointablesData( frame, i);
+					}
+					updateFingers( frame, i, len );
+				} else {
+					fingerTips[i].visible = false;
+					fingerJoints[i].visible = false;
+					fingerBase.visible = false;
+				}
+			}
+		} else {
+			for (var i = 0; i < 10; i++) {
+				fingerTips[i].visible = false;
+				fingerJoints[i].visible = false;
+			}
+			fingerBase.visible = false;
+		}
+	});
+
+	Leap.loopController.setBackground(true);
+
+	function getFrameData( frame ) {
+		var frameString = '<h3 style=margin-bottom:0>Interaction Box</h3>';
+//		frameString += 'Interaction box center: ' + vectorToString(frame.interactionBox.center, 1) + '<br />';
+//		frameString += 'Interaction box size: ' + vectorToString(frame.interactionBox.size, 1) + '';
+		frameString += '<h3 style=margin-bottom:0>Frame</h3>';
+		frameString += 'Rotation<br>';
+//		frameString += '- cube \'frRot1\': ' + frame._rotation[0] + ', ' + frame._rotation[1] + ', ' + frame._rotation[2] + '<br>';
+//		frameString += '- cube \'frRot2\': ' + frame._rotation[3] + ', ' + frame._rotation[4] + ', ' + frame._rotation[5] + '<br>';
+//		frameString += '- cube \'frRot3\': ' + frame._rotation[6] + ', ' + frame._rotation[7] + ', ' + frame._rotation[8] + '<br>';
+		frameString += 'scaleFactor - cube \'frScl\': ' + frame._scaleFactor + '<br>';
+		frameString += 'translation - cube \'frPos\': ' + frame._translation + '<br>';
+		return frameString;
+	}
+
+	function setFrameCubes( frame ) {
+		interactionBox.position.set( frame.interactionBox.center[0], frame.interactionBox.center[1], frame.interactionBox.center[2] );
+		interactionBox.scale.set( frame.interactionBox.size[0], frame.interactionBox.size[1], frame.interactionBox.size[2] );
+
+		var dir = v( frame._rotation[0], frame._rotation[1], frame._rotation[2] );
+		frameCubes[0].lookAt( dir.add( frameCubes[0].position ) );
+
+		dir = v( frame._rotation[3], frame._rotation[4], frame._rotation[5] );
+		frameCubes[1].lookAt( dir.add( frameCubes[1].position ) );
+
+		dir = v( frame._rotation[6], frame._rotation[7], frame._rotation[8] );
+		frameCubes[2].lookAt( dir.add( frameCubes[2].position ) );
+
+		dir = v( frame._rotation[6], frame._rotation[7], frame._rotation[8] );
+		frameCubes[4].position.set( fr._translation[0] / fr._scaleFactor, fr._translation[1] / fr._scaleFactor,  fr._translation[2] / fr._scaleFactor );
+	}
+
+	function getGestureData( frame, index ) {
+		var gestureString = '';
+// can't seem to pick up handIds for the second hand...
+		if ( frame.gestures.length > 0 ) {
+			for (var i = 0, len = frame.gestures.length; i < len; i++) {
+				//if ( frame.gestures[i].handIds.indexOf( hand.id ) > -1 ) {
+					gesture = frame.gestures[i].type;
+					gestureString = '<h3 style=margin-bottom:0>Gestures</h3>New gesture: ' + gesture + '<br>';
+				//}
+				return gestureString;
+			}
+		// } else if ( frame.hands.length > 0 ) {
+		} else {
+			return gestureString = '<h3 style=margin-bottom:0>Gestures</h3>Last recorded gesture: ' + gesture + '<br>';
+		}
+	}
+
+	function setGestureIcons( frame, index ) {
+		var swipe = swipes[index];
+		var circle = circles[index];
+		var keyTap = keyTaps[index];
+		var screenTap = screenTaps[index];
+		for (var i = 0, len = frame.gestures.length; i < len; i++) {
+			//if ( frame.gestures[i].handIds.indexOf( hand.id ) > -1 ) {
+				gesture = frame.gestures[i].type;
+				if ( gesture === 'swipe' ) {
+					swipe.visible = true;
+				} else {
+					swipe.visible = false;
+				}
+				if ( gesture === 'circle' ) {
+					circle.visible = true;
+				} else {
+					circle.visible = false;
+				}
+				if ( gesture === 'keyTap' ) {
+					keyTap.visible = true;
+				} else {
+					keyTap.visible = false;
+				}
+				if ( gesture === 'screenTap' ) {
+					screenTap.visible = true;
+				} else {
+					screenTap.visible = false;
+				}
+			//}
+		}
+	}
+
+	function getHandData( frame, index) {
+		var handString = '' , pointableString, dir;
+		hand = frame.hands[index];
+		handString += 'Direction: ' + vectorToString( hand.direction, 2) + '<br />';
+		handString += 'Fingers: ' + hand.fingers.length + '<br />';
+		handString += 'Hand ID: ' + hand.id + '<br />';
+		handString += 'Palm normal: ' + vectorToString( hand.palmNormal, 2 ) + '<br />';
+		handString += 'Palm position: ' + vectorToString( hand.stabilizedPalmPosition) + '<br />';
+		handString += 'Palm velocity: ' + vectorToString( hand.palmVelocity) + '<br />';
+		handString += 'Pointables: ' + hand.pointables.length + '<br />';
+		handString += 'Sphere center: ' + vectorToString(hand.sphereCenter) + '<br />';
+		handString += 'Sphere radius: ' + hand.sphereRadius.toFixed(1) + '<br />';
+		handString += 'Type: ' + hand.type + '<br />';
+		handString += '_Rotation: ' + hand.frame._rotation[0] + ' ' + hand.frame._rotation[1] + hand.frame._rotation[2] + '<br />';
+		handString += hand.frame._rotation[3] + ' ' + hand.frame._rotation[4] + ' ' + hand.frame._rotation[5] + '<br />';
+		handString += hand.frame._rotation[6] + ' ' + hand.frame._rotation[7] + ' ' + hand.frame._rotation[8] + '<br />';
+		return handString;
+	}
+
+	function setHandPalm( frame, index ) {
+		var palm = palms[index];
+		var sphereCenter = sphereCenters[index];
+
+		palm.id = hand.id;
+		palm.position.set( hand.stabilizedPalmPosition[0], hand.stabilizedPalmPosition[1], hand.stabilizedPalmPosition[2] );
+		dir = v( hand.direction[0], hand.direction[1], hand.direction[2] );  // best so far
+		palm.lookAt( dir.add( palm.position ) );
+
+// Thanks to Joe Ward
+		var roll = Math.atan2( hand.palmNormal[0], -hand.palmNormal[1] );
+		palm.rotateOnAxis(new THREE.Vector3( 0, 0, -1 ), roll);
+
+		palm.scale.z = hand.sphereRadius / 100;
+		palm.visible = true;
+
+		var vel = 1.0 - 100.0 / v( hand.palmVelocity[0], hand.palmVelocity[1], hand.palmVelocity[2] ).length();
+		if ( vel < 0.1 ) vel = 0.1
+
+		var hue = hand.palmVelocity[1];
+		hue = 0.0005 * (hue + 1000);
+
+		var saturation = hand.palmVelocity[0];
+		saturation = 0.0005 * (saturation + 1000);
+
+		var luminence = hand.palmVelocity[2];
+		luminence = 0.0005 * (luminence + 1000);
+		palm.material.color.setHSL( hue, saturation, luminence );
+
+		sphereCenter.position.set( hand.sphereCenter[0], hand.sphereCenter[1], hand.sphereCenter[2] );
+		var scl = 0.05 * hand.sphereRadius;
+		sphereCenter.scale.set( scl, scl, scl );
+		sphereCenter.visible = true;
+	}
+
+	function hideHandPalm( index ) {
+		palms[index].visible = false;
+		sphereCenters[index].visible = false;
+	}
+
+	function getPointablesData( frame, index) {
+		var pointable;
+		var pointableString = '';
+		if ( index === 0) {
+				// pointableString = '<h3 style=margin-bottom:0; >Pointables</h3>' ;
+		}
+		pointable = frame.pointables[ index ];
+		// pointableString += 'Pointable ID: ' + pointable.id + '<br />';
+		pointableString += 'Tip[' + index + '] belongs to hand with ID: ' + pointable.handId + '<br />';
+		pointableString += 'Tip[' + index + '] direction: ' + vectorToString(pointable.direction, 2) + '<br />';
+		pointableString += 'Tip[' + index + '] position: ' + vectorToString(pointable.stabilizedTipPosition) + '<br />';
+		pointableString += 'Tip[' + index + '] length: ' + pointable.length + '<br /><br />';
+		return pointableString;
+	}
+
+	function updateFingers( frame, index, len) {
+		var direction, roll, len, fingerTip, fingerJoint, pointable, distance, clone;
+
+		fingerTip = fingerTips[ index ];
+		fingerJoint = fingerJoints[ index ];
+
+		if ( index === 0) {
+			pointer = pointerTip = fingerTip;
+			// utilsDetectCollision();
+		}
+		if ( index < len ) {
+			pointable = frame.pointables[ index ];
+			fingerTip.position.set( pointable.stabilizedTipPosition[0], pointable.stabilizedTipPosition[1], pointable.stabilizedTipPosition[2] );
+			direction = v( pointable.direction[0], pointable.direction[1], pointable.direction[2]);  // best so far
+			fingerTip.lookAt( direction.add( fingerTip.position ) );
+			fingerTip.scale.z = 0.8 * pointable.length;
+			fingerTip.translateZ( -0.5 * pointable.length  );
+
+			fingerJoint.position.set( pointable.stabilizedTipPosition[0], pointable.stabilizedTipPosition[1], pointable.stabilizedTipPosition[2] );
+			direction = v( pointable.direction[0], pointable.direction[1], pointable.direction[2]);  // best so far
+			fingerJoint.lookAt( direction.add( fingerJoint.position ) );
+			fingerJoint.translateZ( -pointable.length );
+
+			if ( pointable.handId === palms[0].id ) {
+				clone = palms[0].clone();
+			} else {
+				clone = palms[1].clone();
+			}
+
+			fingerBase.position = clone.position;
+
+			fingerBase.rotation.set( clone.rotation.x, clone.rotation.y, clone.rotation.z ) ;
+			fingerBase.translateX( 0 );
+			fingerBase.translateY( -5 );
+			fingerBase.translateZ( 8 );
+
+			fingerJoint.lookAt( fingerBase.position );
+
+			distance = fingerJoint.position.distanceTo( fingerBase.position );
+			fingerJoint.scale.z = 0.5 * distance;
+			fingerJoint.translateZ( 0.25 * distance);
+
+			fingerTip.visible = true;
+			fingerJoint.visible = true;
+			fingerBase.visible = true;
+
+		} else {
+
+			fingerTip.visible = false;
+			fingerJoint.visible = false;
+			fingerBase.visible = false;
+
+		}
+	}
+
+	function animate() {
+		requestAnimationFrame( animate );
+		controls.update();
+		renderer.render( scene, camera );
+		stats.update();
+	}
+
+   function vectorToString(vector, digits) {
+		if (typeof digits === 'undefined') {
+			digits = 1;
+		}
+		return '(' + vector[0].toFixed(digits) + ', ' + vector[1].toFixed(digits) + ', ' + vector[2].toFixed(digits) + ')';
+	}
+
+	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }
+
+	function canvasText ( text, parameters ) {
+// Canvas cheatsheet: http://www.nihilogic.dk/labs/canvas_sheet/HTML5_Canvas_Cheat_Sheet.png
+		var parameters = parameters || {} ;
+		var canvas = document.createElement("canvas");
+		var height = ( parameters.height ) ? parameters.height : 150 ;
+		canvas.height = height;
+		var width = ( parameters.width ) ? parameters.width : 300 ;
+		canvas.width = width;
+
+		var context = canvas.getContext("2d");
+		context.globalAlpha = ( parameters.globalAlpha ) ? parameters.globalAlpha : 1.0 ;
+		if ( parameters.backgroundColor === 'random' ) parameters.backgroundColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
+		context.fillStyle =  ( parameters.backgroundColor ) ? parameters.backgroundColor : 'transparent';
+		context.fillRect( 0, 0, width, height );
+
+		context.lineWidth = ( parameters.lineWidth ) ? parameters.lineWidth : 0 ;
+		context.strokeRect(0, 0, width, height);
+
+		var rotate = ( parameters.rotate ) ? parameters.rotate : 0 ;
+		context.rotate( rotate );
+
+		if ( parameters.color === 'random' ) parameters.color = '#' + Math.floor(Math.random() * 16777215).toString(16);
+		context.fillStyle = ( parameters.color ) ? parameters.color : '#000000';
+		var fontSize = ( parameters.fontSize ) ? parameters.fontSize : '48pt';
+		var fontFamily = ( parameters.fontFamily ) ? parameters.fontFamily : 'Arial';
+		var fontWeight = ( parameters.fontWeight ) ? parameters.fontWeight : 'bold';
+		context.font = fontSize + ' ' + fontFamily + ' ' + fontWeight;
+
+		context.textAlign = ( parameters.textAlign ) ? parameters.textAlign : 'left' ;
+		context.textBaseline = ( parameters.textBaseline ) ? parameters.textBaseline : 'top' ;
+		var X = ( parameters.X ) ? parameters.X : 5 ;
+		var Y = ( parameters.Y ) ? parameters.Y : 0 ;
+
+		context.fillText(text, X, Y);
+
+		var texture = new THREE.Texture( canvas );
+		texture.needsUpdate = true;
+		return texture;
+	}
+
+</script>
+</body>
+</html>
