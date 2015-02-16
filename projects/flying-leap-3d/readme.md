@@ -12,7 +12,7 @@ Live Demo #5: [FGx Plane Spotter ~ Leap]( http://jaanga.github.io/gestification/
 Live Demo #4: [unFlatland ~ Leap]( http://jaanga.github.io/gestification/projects/flying-leap-3d/un-flatland-leap/latest.html )
 
 
-Live Demo #3: [Barfolina Pavillion](http://jaanga.github.io/gestification/projects/flying-leap-3d/barfolina-pavillion/r2/barfolina-pavillion.html)
+Live Demo #3: [Barfolina Pavillion](http://jaanga.github.io/gestification/projects/flying-leap-3d/barfolina-pavillion/r3/barfolina-pavillion.html)
 
 - Worth a visit
 - The entire pavilion - except for the sculpture - is created by procedures. This is the modern way of designing - which we are calling 'archieCode'.
