@@ -82,6 +82,8 @@ This repository contains files that are  at an early and volatile stage. Not all
 	* http://js.leapmotion.com/leap-plugins-0.1.8.js
 * Uses objectification tricks exposed in the Leap sample.html file
 * Much nicer operation overall
+* Two methods for updating the fingers - see the two fingerling functions
+* Demos the display of real-time data
  
 
 2014-06-10 ~ Theo

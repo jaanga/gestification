@@ -92,7 +92,7 @@
 		var line, sep = ',';
 
 		for ( var i = 1; i < length; i++ ) {
-			lines[i] = lines[i].replace(/["']/g, ""); // better to delete in original files
+			lines[i] = lines[i].replace(/["']/g, ""); // better to delete in original files 
 			line = lines[i].split( sep );
 			if ( line[5] > 0 ) { FGx.places.push( line ); }
 		}
@@ -101,7 +101,7 @@
 		FGx.info = info = document.body.appendChild( document.createElement( 'div' ) );
 		info.style.cssText = 'border: 0px solid red; position: absolute; top: 0px; width: 100% ';
 
-		info.innerHTML = info.txt = '<h1 title="FlightGear for amateurs" >FGx Plane Spotter R1.2 ~ ' +
+		info.innerHTML = info.txt = '<h1 title="FlightGear for amateurs" ><a href="">FGx Plane Spotter R1.2</a> ~ ' +
 			'<a href=# title="Get help and info" onclick=help.style.display="block"; ><large>&#x24D8;</large></a></h1>' +
 			'<div style=height{900px; >Camera lat: <input type="text" id="inpLat" value="' + FGx.places[ FGx.startPlace][2] +'" size=8 /> ' +
 				'lng: <input type="text" id="inpLng" value="' + FGx.places[ FGx.startPlace][3] +'" size=8 /> ' +
@@ -245,7 +245,7 @@
 		FGx.elevTileXLng = long2tile( lng, elevZoom );
 
 		FGx.elevationsImage.onload = initCanvas;
-		FGx.elevationsImage.src = "../../../../../cookbook/un-flatland/unicam/topo-" + elevZoom + "-" + FGx.elevTileYLat + "-" + FGx.elevTileXLng + ".png";
+		FGx.elevationsImage.src = "../../../../../../cookbook/un-flatland/unicam/topo-" + elevZoom + "-" + FGx.elevTileYLat + "-" + FGx.elevTileXLng + ".png";
 //console.log( lng, lat, FGx.tileXLng, FGx.tileYLat, FGx.elevTileXLng, FGx.elevTileYLat )
 	}
 
@@ -433,7 +433,7 @@ console.log( 'Load time:', new Date() - FGx.startTime );
 	}
 
 	function getCrossfeed() {
-		FGx.crossfeed = JSON.parse( requestFile( 'http://crossfeed.fgx.ch/flights.json' ) );
+		FGx.crossfeed = JSON.parse( requestFile( 'http://crossfeed.freeflightsim.org/flights.json' ) );
 		if ( FGx.aircraft && FGx.aircraft.children.length > 0) {
 			FGx.scene.remove( FGx.aircraft );
 			FGx.aircraft.children.length = 0;
@@ -515,6 +515,7 @@ console.log( 'Load time:', new Date() - FGx.startTime );
 		imageContext.font = '12px sans-serif';
 		imageContext.fillText( text, 5, 15 );
 		var texture = new THREE.Texture( image );
+		texture.minFilter = texture.magFilter = THREE.NearestFilter;
 		texture.needsUpdate = true;
 		return texture;
 	}
