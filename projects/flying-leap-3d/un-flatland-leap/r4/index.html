@@ -93,7 +93,7 @@
 		UF.info = info = document.body.appendChild( document.createElement( 'div' ) );
 		info.style.cssText = 'border: 0px solid red; position: absolute; top: 0px; width: 100% ';
 
-		info.innerHTML = info.txt = '<h1 title="The fastest, smallest, sweetest 3D map you ever did see" >unFlatLand R4.1 ~ Leap ~ ' +
+		info.innerHTML = info.txt = '<h1 title="The fastest, smallest, sweetest 3D map you ever did see" ><a href="" >unFlatLand R4.1 ~ Leap</a> ~ ' +
 			'<a href=# title="Get help and info" onclick=help.style.display="block"; ><large>&#x24D8;</large></a></h1>' +
 			'<div style=height{900px; >Camera lat: <input type="text" id="inpLat" value="' + UF.places[ UF.startPlace][1] +'" size=8 /> ' +
 				'lng: <input type="text" id="inpLng" value="' + UF.places[ UF.startPlace][2] +'" size=8 /> ' +
@@ -170,6 +170,8 @@
 		camera.position.set( 0, 600, 400 );
 		UF.controls = controls = new THREE.TrackballControls( camera, renderer.domElement );
 
+		THREE.ImageUtils.crossOrigin = 'anonymous';
+
 		UF.stats = stats = new Stats();
 		stats.domElement.style.cssText = 'position: absolute; top: 0px; zIndex: 100; ';
 		document.body.appendChild( stats.domElement );
@@ -230,7 +232,7 @@
 		UF.elevTileXLng = long2tile( lng, elevZoom );
 
 		UF.elevationsImage.onload = initCanvas;
-		UF.elevationsImage.src = "../../../../../cookbook/un-flatland/unicam/topo-" + elevZoom + "-" + UF.elevTileYLat + "-" + UF.elevTileXLng + ".png";
+		UF.elevationsImage.src = "../../../../../../cookbook/un-flatland/unicam/topo-" + elevZoom + "-" + UF.elevTileYLat + "-" + UF.elevTileXLng + ".png";
 //console.log( lng, lat, UF.tileXLng, UF.tileYLat, UF.elevTileXLng, UF.elevTileYLat )
 	}
 
@@ -441,6 +443,7 @@ console.log( 'Load time:', new Date() - UF.startTime );
 		imageContext.font = '12px sans-serif';
 		imageContext.fillText( text, 5, 15 );
 		var texture = new THREE.Texture( image );
+		texture.minFilter = texture.magFilter = THREE.NearestFilter;
 		texture.needsUpdate = true;
 		return texture;
 	}
