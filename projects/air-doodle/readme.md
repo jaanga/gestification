@@ -9,7 +9,6 @@
 
 [airDoodle]( http://jaanga.github.io/gestification/projects/air-doodle/latest/index.html )
 
-
 These objects do not distract. AirDoodles appear only when you want them to appear.
 
 Who loves it when people want things to appear? Teachers, advertisers and search engines...
@@ -30,7 +29,7 @@ copyright &copy; 2015 Jaanga authors ~ MIT License
 2015-08-02 ~ Theo
 
 * R3 added, code clean up
-* Adds slogans
+* Adds slogans to demos
 
 
 2013-10-13 ~ Theo
