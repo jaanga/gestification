@@ -1,12 +1,14 @@
-airDoodle Read Me
+[Jaanga]( http://jaanga.github.io/ ) &raquo;  [gestification]( http://jaanga.github.io/gestification/ ) &raquo; [projects]( http://jaanga.github.io/gestification/projects/ ) &raquo;  
+[airDoodle Read Me]( http://jaanga.github.io/gestification/projects/air-doodle )
 =================
+
+<span style=display:none; >[View as web page]( http://jaanga.github.io/gestification/projects/air-doodle/ "View file as a web page." ) </span>
+<input type=button value='View file as source code on GitHub' onclick=window.location.href='https://github.com/jaanga/gestification/tree/gh-pages/projects/air-doodle'; />
 
 ## Live Demo
 
-[airDoodle]( http://jaanga.github.io/gestification/air-doodle/latest/index.html )
+[airDoodle]( http://jaanga.github.io/gestification/projects/air-doodle/latest/index.html )
 
-Earlier version
-[airDoodle]( air-doodle-1.html )
 
 These objects do not distract. AirDoodles appear only when you want them to appear.
 
