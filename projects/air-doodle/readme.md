@@ -1,18 +1,14 @@
 airDoodle Read Me
 =================
 
-Cropped iframe view of airDoodle home page:
-<iframe src=http://jaanga.github.io/libs/ado/index.html height=510px width=96% style=margin:2% ></iframe>
-An airDoodle is what happens when the whitespace behind a web page is filled with a real-time animated 3D object.
-
 ## Live Demo
 
-[airDoodle]( http://jaanga.github.io/libs/ado/index.html )
+[airDoodle]( http://jaanga.github.io/gestification/air-doodle/latest/index.html )
 
 Earlier version
 [airDoodle]( air-doodle-1.html )
 
-These objects do not distract. airDoodles appear only when you want them to appear.
+These objects do not distract. AirDoodles appear only when you want them to appear.
 
 Who loves it when people want things to appear? Teachers, advertisers and search engines...
 
@@ -25,9 +21,16 @@ An AirDoodle:
 
 ### Copyright, License and Credits
 
-copyright &copy; 2013 Jaanga authors ~ MIT License
+copyright &copy; 2015 Jaanga authors ~ MIT License
 
 ###Change Log
+
+2015-08-02 ~ Theo
+
+* R3 added, code clean up
+* Adds slogans
+
+
 2013-10-13 ~ Theo
 
 * Folder and files uploaded
