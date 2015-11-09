@@ -13,22 +13,22 @@
 <script src=../../../git-repos/three.js/examples/js/libs/stats.min.js></script>
 -->
 <script src=http://mrdoob.github.com/three.js/build/three.min.js></script>
-<script src=http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js></script>
+<script src=http://mrdoob.github.com/three.js/examples/js/controls/OrbitControls.js></script>
 <script src=http://mrdoob.github.com/three.js/examples/js/libs/stats.min.js></script>
-<script src=../FileSaver.min.js >   // see https://github.com/eligrey/FileSaver.js/   </script> 
-<script src=../threejs.js ></script> 
+<script src=../FileSaver.min.js >   // see https://github.com/eligrey/FileSaver.js/   </script>
+<script src=../threejs.js ></script>
 <script>
 	var renderer, scene, camera, controls, stats;
 	var size = 10;
 	var geo = 'cube';
 	var info, drawGeo, palm, fingers = [];
-	
+
 	init();
 	animate();
 
 	function init() {
 		var css, light, geometry, material, mesh;
-		
+
 		css = document.body.appendChild( document.createElement('style') );
 		css.innerHTML = 'body { font: 600 12pt monospace; margin: 0; overflow: hidden; text-align: center; }' +
 		'' ;
@@ -46,17 +46,17 @@
 			'<a href="https://github.com/jaanga/gestification/tree/gh-pages/cookbook/draw-3d-objects" target="_blank">Source code</a>.' +
 			' <button onclick=saveFile() >Save File</button>. <br />' +
 		'<br />';
-		
+
 // Basics
 		renderer = new THREE.WebGLRenderer( { alpha: 1, antialias: true, clearColor: 0xffffff } );
 		renderer.setSize( window.innerWidth, window.innerHeight );
-		renderer.shadowMapEnabled = true;
+		renderer.shadowMap.enabled = true;
 		document.body.appendChild( renderer.domElement );
 		scene = new THREE.Scene();
 
 		camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 3000 );
 		camera.position.set( 0, 250, 600 );
-		controls = new THREE.TrackballControls( camera, renderer.domElement );
+		controls = new THREE.OrbitControls( camera, renderer.domElement );
 		controls.target.set( 0, 100, 0 );
 
 		stats = new Stats();
@@ -67,7 +67,7 @@
 		light.position.set( 500, 500, 0 );
 		// light.castShadow = true;
 		scene.add( light );
-// light.shadowCameraVisible = true;		
+// light.shadowCameraVisible = true;
 
 		light = new THREE.DirectionalLight( 0xffffff, 1 );
 		light.castShadow = true;
@@ -86,7 +86,7 @@
 		mesh.castShadow = true;
 		mesh.receiveShadow = true;
 		scene.add( mesh );
-		
+
 		geometry = new THREE.CubeGeometry( 100, 20, 80 );
 		material = new THREE.MeshNormalMaterial();
 		palm = new THREE.Mesh( geometry, material );
@@ -102,21 +102,21 @@
 			mesh.receiveShadow = true;
 			scene.add( mesh );
 			fingers.push( mesh );
-		}	
+		}
 		buildGeo();
 	}
-	
-	function saveFile() { 
-		var txt = threejsBegin; 
+
+	function saveFile() {
+		var txt = threejsBegin;
 		var objs = scene.children;
 		var positions = [];
 		for (var i = 12, len = objs.length; i < len; i++) {
 			positions.push( '[' + objs[i].position.x,objs[i].position.y,objs[i].position.z + ']'  );
 		}
 		txt += '	var positions = [ ' + positions  + ' ];\n';
-		
+
 		txt +=threejsEnd
-console.log( txt );		
+console.log( txt );
 		var blob = new Blob( [ txt ] , {type: "text/plain;charset=utf-8"} );
 		saveAs(blob, 'draw3d.html');
 	}
@@ -124,17 +124,17 @@ console.log( txt );
 	function buildGeo() {
 		if ( geo === 'tetra' ) {
 			geometry = new THREE.TetrahedronGeometry( size );
-		} else if ( geo === 'sphere' ) {	
+		} else if ( geo === 'sphere' ) {
 			geometry = new THREE.SphereGeometry( size );
 		} else {
 			geometry = new THREE.CubeGeometry( size, size, size );
-		}	
-		material = new THREE.MeshLambertMaterial( { color: 0xffffff * Math.random(), ambient: 0xff0000, opacity: 0.7});
+		}
+		material = new THREE.MeshLambertMaterial( { color: 0xffffff * Math.random(), opacity: 0.7});
 		drawGeo = new THREE.Mesh( geometry, material );
 		drawGeo.castShadow = true;
-		drawGeo.receiveShadow = true;		
+		drawGeo.receiveShadow = true;
 	}
-	
+
 	Leap.loop( function( frame ) {
 		var hand, direction, roll, len, finger, pointable;
 		if ( frame.hands.length > 0) {
@@ -162,35 +162,35 @@ console.log( txt );
 					finger.lookAt( direction.add( finger.position ) );
 					finger.scale.z = 0.05 * pointable.length;
 					finger.visible = true;
-					
+
 					if ( len === 1 && hand ) {
 						hang = v( hand.direction[0], hand.direction[1], hand.direction[2] );
 						pang = v( pointable.direction[0], pointable.direction[1], pointable.direction[2] );
 						dang = hang.angleTo( pang ).toFixed(3);
 						pointing = ( dang < 0.5 ) ? ' I can see that you are pointing a finger!' : 'You are not pointing, because your finger appears to be bent or turned.';
 						info.innerHTML = info.txt + pointing;
-						
+
 						mesh = drawGeo.clone();
-						mesh.position = finger.position.clone();
+						mesh.position.copy( finger.position );
 						mesh.translateZ( -10 - pointable.length );
 						mesh.lookAt( direction.add( finger.position ) );
 						scene.add( mesh );
-						
+
 					} else {
-						info.innerHTML = info.txt + 'You are not pointing, because I see more than one finger. Objects: ' + scene.children.length;	
-						drawGeo.material = new THREE.MeshLambertMaterial( { color: 0xffffff * Math.random(), ambient: 0xff0000, opacity: 0.7});				
-					}					
+						info.innerHTML = info.txt + 'You are not pointing, because I see more than one finger. Objects: ' + scene.children.length;
+						drawGeo.material = new THREE.MeshLambertMaterial( { color: 0xffffff * Math.random(), opacity: 0.7});
+					}
 				} else {
 					fingers[i].visible = false;
 				}
 			}
 		} else if ( palm.hasFingers ) {
 			for (var i = 0; i < 5; i++) {
-				fingers[i].visible = false;	
+				fingers[i].visible = false;
 			}
 			info.innerHTML = info.txt + 'You are not pointing, because I don\'t see any fingers. Objects: ' + scene.children.length;
-			drawGeo.material = new THREE.MeshLambertMaterial( { color: 0xffffff * Math.random(), ambient: 0xff0000, opacity: 0.7});	
-			palm.hasFingers = false;				
+			drawGeo.material = new THREE.MeshLambertMaterial( { color: 0xffffff * Math.random(), opacity: 0.7});
+			palm.hasFingers = false;
 		}
 	});
 

@@ -13,9 +13,10 @@
 <script src=../../../git-repos/three.js/examples/js/libs/stats.min.js></script>
 -->
 <script src=http://mrdoob.github.com/three.js/build/three.min.js></script>
-<script src=http://mrdoob.github.com/three.js/examples/js/controls/OrbitControls.js></script>
+<script src=http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js></script>
 <script src=http://mrdoob.github.com/three.js/examples/js/libs/stats.min.js></script>
-
+<script src=../FileSaver.min.js >   // see https://github.com/eligrey/FileSaver.js/   </script>
+<script src=../threejs.js ></script>
 <script>
 	var renderer, scene, camera, controls, stats;
 	var size = 10;
@@ -34,7 +35,7 @@
 
 		info = document.body.appendChild( document.createElement( 'div' ) );
 		info.style.cssText = 'margin 0; position: absolute; top: 0px; width: 100% ';
-		info.innerHTML = info.txt = '<h1><a href="" >Point with one Finger: Draw Objects in 3D</a></h1>' +
+		info.innerHTML = info.txt = '<h1>Point with one Finger: Draw Objects in 3D</h1>' +
 			'Objects: <a href="#" onclick="geo=\'tetra\';buildGeo(geo,size);">tetrahedron</a> ' +
 			'<a href="#" onclick="geo=\'cube\';buildGeo(geo,size);">cube</a> ' +
 			'<a href="#" onclick="geo=\'sphere\';buildGeo(geo,size);">sphere</a> ' +
@@ -42,21 +43,20 @@
 			'<a href="#" onclick="size=10;buildGeo(geo,size);">10</a> ' +
 			'<a href="#" onclick="size=15;buildGeo(geo,size);">15</a>' +
 			' - Use your mouse to zoom, pan and rotate. ' +
-			'<a href="https://github.com/jaanga/gestification/tree/gh-pages/cookbook/draw-3d-objects" target="_blank">Source code</a>.<br />' +
-
+			'<a href="https://github.com/jaanga/gestification/tree/gh-pages/cookbook/draw-3d-objects" target="_blank">Source code</a>.' +
+			' <button onclick=saveFile() >Save File</button>. <br />' +
 		'<br />';
 
 // Basics
-		renderer = new THREE.WebGLRenderer( { antialias: true, preserveDrawingBuffer: true } );
+		renderer = new THREE.WebGLRenderer( { alpha: 1, antialias: true, clearColor: 0xffffff } );
 		renderer.setSize( window.innerWidth, window.innerHeight );
-		renderer.setClearColor(0xffffff, 1);
 		renderer.shadowMap.enabled = true;
 		document.body.appendChild( renderer.domElement );
 		scene = new THREE.Scene();
 
 		camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 3000 );
 		camera.position.set( 0, 250, 600 );
-		controls = new THREE.OrbitControls( camera, renderer.domElement );
+		controls = new THREE.TrackballControls( camera, renderer.domElement );
 		controls.target.set( 0, 100, 0 );
 
 		stats = new Stats();
@@ -106,6 +106,21 @@
 		buildGeo();
 	}
 
+	function saveFile() {
+		var txt = threejsBegin;
+		var objs = scene.children;
+		var positions = [];
+		for (var i = 12, len = objs.length; i < len; i++) {
+			positions.push( '[' + objs[i].position.x,objs[i].position.y,objs[i].position.z + ']'  );
+		}
+		txt += '	var positions = [ ' + positions  + ' ];\n';
+
+		txt +=threejsEnd
+console.log( txt );
+		var blob = new Blob( [ txt ] , {type: "text/plain;charset=utf-8"} );
+		saveAs(blob, 'draw3d.html');
+	}
+
 	function buildGeo() {
 		if ( geo === 'tetra' ) {
 			geometry = new THREE.TetrahedronGeometry( size );
@@ -121,7 +136,7 @@
 	}
 
 	Leap.loop( function( frame ) {
-//		var hand, direction, roll, len, finger, pointable;
+		var hand, direction, roll, len, finger, pointable;
 		if ( frame.hands.length > 0) {
 			hand = frame.hands[0];
 			palm.position.set( hand.stabilizedPalmPosition[0], hand.stabilizedPalmPosition[1], hand.stabilizedPalmPosition[2] );
@@ -156,7 +171,7 @@
 						info.innerHTML = info.txt + pointing;
 
 						mesh = drawGeo.clone();
-						mesh.position.copy( finger.position );
+						mesh.position.copy(finger.position );
 						mesh.translateZ( -10 - pointable.length );
 						mesh.lookAt( direction.add( finger.position ) );
 						scene.add( mesh );

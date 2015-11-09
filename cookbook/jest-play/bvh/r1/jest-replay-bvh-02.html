@@ -7,7 +7,7 @@
 <body>
 <script src = http://mrdoob.github.io/three.js/examples/js/Detector.js ></script>
 <script src = http://mrdoob.github.io/three.js/build/three.min.js ></script>
-<script src = http://mrdoob.github.io/three.js/examples/js/controls/OrbitControls.js ></script>
+<script src = http://mrdoob.github.io/three.js/examples/js/controls/TrackballControls.js ></script>
 <script src = http://mrdoob.github.io/three.js/examples/js/libs/stats.min.js ></script>
 <script>
 // copyright (c) 2013 jaanga authors ~ mit license
@@ -74,12 +74,12 @@
 		scene = new THREE.Scene();
 		renderer = new THREE.WebGLRenderer( { alpha: 1, antialias: true, clearColor: 0xffffff } );
 		renderer.setSize( 0.53 * window.innerWidth, window.innerHeight - 120 );
-		renderer.shadowMap.enabled = true;
+		renderer.shadowMapEnabled = true;
 		document.body.appendChild( renderer.domElement );
 
 		camera = new THREE.PerspectiveCamera( 40, (0.45 * window.innerWidth) / (window.innerHeight - 150) , 1, 5000 );
 		camera.position.set( -450, 500, 350 );
-		controls = new THREE.OrbitControls( camera, renderer.domElement );
+		controls = new THREE.TrackballControls( camera, renderer.domElement );
 
 		stats = new Stats();
 		stats.domElement.style.cssText = 'position: absolute; right: 0; top: 0px; zIndex: 100; ';
@@ -110,7 +110,7 @@
         scene.add( new THREE.ArrowHelper( v(0, 1, 0), v(0, 0, 0), 20, 0x00cc00) );
         scene.add( new THREE.ArrowHelper( v(0, 0, 1), v(0, 0, 0), 20, 0x0000cc) );
 
-		material = new THREE.MeshNormalMaterial( { opacity: 0.5, side: THREE.DoubleSide, transparent: true  });
+		material = new THREE.MeshNormalMaterial( { color: 0x999999, opacity: 0.5, side: THREE.DoubleSide, transparent: true  });
 		geometry = new THREE.SphereGeometry( 1200 );
 		mesh = new THREE.Mesh( geometry, material );
 		//mesh.position.set( 0, -30, 30 );
@@ -374,7 +374,7 @@
 
 	Bvh.knuckleSpheres = function (name) {
 		obj = new THREE.Object3D();
-		material = new THREE.MeshNormalMaterial( { opacity: 0.5, shading: THREE.SmoothShading, side: THREE.DoubleSide, transparent: true } );
+		material = new THREE.MeshNormalMaterial( { color: 0x888888, opacity: 0.5, shading: THREE.SmoothShading, side: THREE.DoubleSide, transparent: true } );
 		if ( name === 'Site' ) {
 			geometry = new THREE.SphereGeometry( 12, 10, 10 );
 			mesh = new THREE.Mesh(geometry, material);

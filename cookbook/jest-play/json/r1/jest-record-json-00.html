@@ -10,14 +10,14 @@
 <script src=http://mrdoob.github.com/three.js/build/three.min.js></script>
 <script src=http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js></script>
 <script src=http://mrdoob.github.com/three.js/examples/js/libs/stats.min.js></script>
-<script src=../../FileSaver.min.js >   // see https://github.com/eligrey/FileSaver.js/   </script>
+<script src=../../FileSaver.min.js >   // see https://github.com/eligrey/FileSaver.js/   </script> 
 <script>
 // copyright (c) 2013 jaanga authors ~ mit license
 
 	var info;
 	var renderer, scene, camera, controls, stats;
 	var clock = new THREE.Clock();
-	clock.previousTime = 1000000;
+	clock.previousTime = 1000000;	
 	var reader = new FileReader();
 	var outputDiv, textarea, tmpText = '';
 	var data, palm, fingers = [];
@@ -29,39 +29,39 @@
 
 	function init() {
 		var css, light, geometry, material, mesh;
-
+		
 		css = document.body.appendChild( document.createElement('style') );
 		css.innerHTML = 'body { font: 600 12pt monospace; overflow: hidden; }' +
-			'h1 a {text-decoration: none;}' +
-			'input, button { font: 600 12pt monospace; }';
-
+			'h1 a {text-decoration: none;}' + 
+			'input, button { font: 600 12pt monospace; }';		
+	
 		info = document.body.appendChild( document.createElement( 'div' ) );
 		info.innerHTML = info.txt = '<h1 style="display: inline;">jestRecord JSON ~ ' +
 			'<a href=# onclick=toggleInfo() ><large>&#x24D8;</large></a> </h1>' +
 			'Show one hand and fingers to trigger recording. ' +
 			'Press spacebar to pause updates.<br>' +
-
-			'Read data: <input type=file onchange="readFile(this)"  > ' +
-
+	
+			'Read data: <input type=file onchange="readFile(this)"  > ' +		
+			
 			'<button onclick="dataReplay();" >Replay data</button>' +
 			'<button onclick=textarea.value=""; >Clear data</button> - ' +
 			'<button onclick=saveFile() >Save Data to File</button>' +
 		'';
-
+		
 		textareaOutput = document.body.appendChild( document.createElement( 'textarea' ) );
 		textareaOutput.style.cssText = 'display: block; font-size:small; width: ' +  0.98 * window.innerWidth + 'px; ';
 		textareaOutput.rows =  2;
 		textareaOutput.value = '';
-
+		
 		textarea = document.body.appendChild( document.createElement( 'textarea' ) );
 		textarea.style.cssText = 'height: ' + (window.innerHeight - 120) + 'px; width: ' +  0.49 * window.innerWidth + 'px; ';
-		textarea.placeholder = 'Data will appear here after you pass a hand over the Leap device...';
+		textarea.placeholder = 'Data will appear here after you pass a hand over the Leap device...';	
 
 		stats = new Stats();
 		stats.domElement.style.cssText = 'position: absolute; right: 0; top: 0px; zIndex: 100; ';
-		document.body.appendChild( stats.domElement );
+		document.body.appendChild( stats.domElement ); 		
 
-		renderer = new THREE.WebGLRenderer( { antialias: true }  );
+		renderer = new THREE.WebGLRenderer( { antialias: true }  );	
 		renderer.setSize( 0.49 * window.innerWidth, window.innerHeight - 120 );
 		renderer.domElement.style.cssText = 'outline: 1px solid #000;';
 		document.body.appendChild( renderer.domElement );
@@ -97,78 +97,78 @@
 			scene.add( mesh );
 			fingers.push( mesh );
 		}
-	}
+	}	
 
 	function toggleInfo() {
 		info.innerHTML = info.txt +
 			'<div onclick=info.innerHTML=info.txt ' +
 			'style=background-color:#ccc;left:0;opacity:0.85;margin:auto;padding:15px;position:absolute;right:0;text-align:left;width:50%; >' +
-			'jestRecord JSON enables you to record and replay Leap device data.<br><br>' +
+			'jestRecord JSON enables you to record and replay Leap device data.<br><br>' +	
 			'At any time, you can use your pointing device to pan, zoom and rotate the Leap display in the right panel.<br><br>' +
-			'Once data appears in the left panel, you may replay the data, clear the data or save the data to a file. <br><br>' +
+			'Once data appears in the left panel, you may replay the data, clear the data or save the data to a file. <br><br>' + 
 			'To replay a data file previously saved on your computer, press the \'Choose File\' button to select a file. ' +
 			'Once the selected file is loaded, press \'Replay\' to see the action.<br><br>' +
 			'<a href="https://github.com/jaanga/gestification/tree/gh-pages/cookbook/jest-play" target="_blank">Source code.</a><br>' +
 			'<small>credits: <a href="http://threejs.org" target="_blank">three.js</a> - ' +
 			'<a href="http://leapmotion.com" target="_blank">leap motion</a> - ' +
 			'<a href="http://khronos.org/webgl/" target="_blank">webgl</a> - ' +
-			'<a href="http://jaanga.github.io" target="_blank">jaanga</a><br>' +
-			'copyright &copy; 2013 jaanga authors ~ mit license</small<br>' +
+			'<a href="http://jaanga.github.io" target="_blank">jaanga</a><br>' +	
+			'copyright &copy; 2013 jaanga authors ~ mit license</small<br>' + 	
 			'<br><br><i>Click anywhere in this message to hide...</i>' +
 		'</div>';
 	}
-
+	
 	window.onkeypress = function(e) {
-// you pressed the spacebar
-		if (e.charCode == 32) {
+// you pressed the spacebar	
+		if (e.charCode == 32) { 
 			if (pausedFrame == null) {
 				pausedFrame = latestFrame;
 			} else {
 				pausedFrame = null;
 			}
-			textareaOutput.value = 'Paused - ' + textareaOutput.value
+			textareaOutput.value = 'Paused - ' + textareaOutput.value 
 		}
-// you pressed the letter x
+// you pressed the letter x		
 		if ( e.charCode == 120 ) {
 			textarea.value = '';
-		}
-	};
+		}		
+	};	
 
 	function saveFile() {
 		var blob = new Blob( [ '[' + textarea.value.substr(0, textarea.value.length - 3) + ']' ] , {type: "text/plain;charset=utf-8"} );
 		saveAs(blob, 'leapmotion.json');
-	}
-
+	}	
+	
 	function readFile(that){
 		if ( that.files && that.files[0]){
 			var reader = new FileReader();
-			reader.onload = function (e) {
+			reader.onload = function (e) {  
 				textareaOutput.value = 'Replay file loaded. Click on \'Replay\' to view... ';
 				textarea.value = e.target.result;
 				clock.previousTime = 100000;
 			};
 			reader.readAsText(that.files[0]);
 		}
-	}
-
+	} 	
+	
 	Leap.loop( function( frame ) {
 		if ( clock.previousTime === 1000000 ) {
 			latestFrame = frame;
 			var status = 'No motion currently detected - bytes recorded: ';
 			if ( !pausedFrame && frame.hands.length > 0 && frame.pointables.length > 0 ) {
 				status = '*** Recording *** bytes recorded: ';
-				tmpText += JSON.stringify( frame.data ) + ',\n\n';
+				tmpText += JSON.stringify( frame.data ) + ',\n\n';			
 			}else {
 				if ( pausedFrame ) status = '### Paused ### ';
 				textarea.value += tmpText;
 				tmpText  = '';
 			}
-			textareaOutput.value = status + textarea.value.length + ' - Latest Leap frame: ' + JSON.stringify( (pausedFrame || latestFrame).data ) + '';
-			playLoop( frame );
+			textareaOutput.value = status + textarea.value.length + ' - Latest Leap frame: ' + JSON.stringify( (pausedFrame || latestFrame).data ) + '';			
+			playLoop( frame );	
 		}
-	});
+	});	
 
-	function playLoop( frame ) {
+	function playLoop( frame ) {	
 		var hand, direction, len, finger, pointable;
 		if ( frame.hands.length > 0) {
 			hand = frame.hands[0];
@@ -203,10 +203,10 @@
 				fingers[i].visible = false;
 			}
 			palm.hasFingers = false;
-		}
+		}		
 	}
-
-	function dataReplay() {
+	
+	function dataReplay() {	  
 		textareaOutput.value = 'replay... ';
 		var firstChr = textarea.value.substr( 0, 1 );
 		if ( firstChr === '[' ) {
@@ -214,30 +214,30 @@
 		} else {
 			var tmp = '[' + textarea.value.substr(0, textarea.value.length - 3) + ']' ;
 			data = JSON.parse( tmp );
-
+			
 		}
-
+		
 		data.replay = true;
 		data.index = 0;
 
 		var duration = data[ data.length - 1 ].timestamp - data[0].timestamp;
 		clock.step = 0.000001 * duration / data.length;
-		clock.previousTime = 0;
+		clock.previousTime = 0;	
 	};
-
+	
 	function animate() {
 		requestAnimationFrame( animate );
 		controls.update();
 		renderer.render( scene, camera );
-		stats.update();
+		stats.update();		
 		if ( clock.getElapsedTime() - clock.previousTime > clock.step ) {
 			var frame = new Leap.Frame( data[ data.index ] );
 			playLoop(frame);
-			clock.previousTime = clock.getElapsedTime();
+			clock.previousTime = clock.getElapsedTime(); 
 			if ( ++data.index >= data.length ) clock.previousTime = 1000000;
 		}
-	}
-
+	}	
+	
 	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }
 </script>
 </body>

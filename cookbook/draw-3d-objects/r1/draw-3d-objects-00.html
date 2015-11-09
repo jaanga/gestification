@@ -13,7 +13,7 @@
 <script src=../../../git-repos/three.js/examples/js/libs/stats.min.js></script>
 -->
 <script src=http://mrdoob.github.com/three.js/build/three.min.js></script>
-<script src=http://mrdoob.github.com/three.js/examples/js/controls/OrbitControls.js></script>
+<script src=http://mrdoob.github.com/three.js/examples/js/controls/TrackballControls.js></script>
 <script src=http://mrdoob.github.com/three.js/examples/js/libs/stats.min.js></script>
 
 <script>
@@ -34,7 +34,7 @@
 
 		info = document.body.appendChild( document.createElement( 'div' ) );
 		info.style.cssText = 'margin 0; position: absolute; top: 0px; width: 100% ';
-		info.innerHTML = info.txt = '<h1><a href="" >Point with one Finger: Draw Objects in 3D</a></h1>' +
+		info.innerHTML = info.txt = '<h1>Point with one Finger: Draw Objects in 3D</h1>' +
 			'Objects: <a href="#" onclick="geo=\'tetra\';buildGeo(geo,size);">tetrahedron</a> ' +
 			'<a href="#" onclick="geo=\'cube\';buildGeo(geo,size);">cube</a> ' +
 			'<a href="#" onclick="geo=\'sphere\';buildGeo(geo,size);">sphere</a> ' +
@@ -56,7 +56,7 @@
 
 		camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 3000 );
 		camera.position.set( 0, 250, 600 );
-		controls = new THREE.OrbitControls( camera, renderer.domElement );
+		controls = new THREE.TrackballControls( camera, renderer.domElement );
 		controls.target.set( 0, 100, 0 );
 
 		stats = new Stats();
@@ -155,8 +155,12 @@
 						pointing = ( dang < 0.5 ) ? ' I can see that you are pointing a finger!' : 'You are not pointing, because your finger appears to be bent or turned.';
 						info.innerHTML = info.txt + pointing;
 
-						mesh = drawGeo.clone();
-						mesh.position.copy( finger.position );
+//						mesh = drawGeo.clone();
+
+						mesh = new THREE.Mesh( geometry, material );
+//						mesh.position = finger.position.clone();
+
+						mesh.position.set( finger.position.x, finger.position.y, finger.position.z );
 						mesh.translateZ( -10 - pointable.length );
 						mesh.lookAt( direction.add( finger.position ) );
 						scene.add( mesh );

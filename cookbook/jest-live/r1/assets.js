@@ -133,7 +133,7 @@
 
 	Bvh.knuckleSpheres = function (name) {
 		obj = new THREE.Object3D();
-		material = new THREE.MeshNormalMaterial( { color: 0x888888, opacity: 0.5, shading: THREE.SmoothShading, side: THREE.DoubleSide, transparent: true } );
+		material = new THREE.MeshNormalMaterial( { opacity: 0.5, side: THREE.DoubleSide, transparent: true } );
 		if ( name === 'Site' ) {
 			geometry = new THREE.SphereGeometry( 12, 10, 10 );
 			mesh = new THREE.Mesh(geometry, material);
