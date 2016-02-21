@@ -392,10 +392,10 @@
 			handLeap = frame.hands[0];
 			position = v( handLeap.stabilizedPalmPosition[0], handLeap.stabilizedPalmPosition[1], handLeap.stabilizedPalmPosition[2] );
 
-			leapHand3D.position.copy( position );
+			leapHand3D.position = position;
 			leapHand3D.rotation.set( handLeap.pitch(), -handLeap.yaw(), handLeap.roll() );
 
-			hand3D.position.copy( position );
+			hand3D.position = position;
 			direction = v( handLeap.direction[0], handLeap.direction[1], handLeap.direction[2] );
 			hand3D.lookAt( direction.add( hand3D.position ) );
 			hand3D.rotation.z = -handLeap.roll();

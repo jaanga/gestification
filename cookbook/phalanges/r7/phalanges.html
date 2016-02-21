@@ -187,16 +187,16 @@
 			leapHand = frame.hands[0];
 			position = v( leapHand.stabilizedPalmPosition[0], leapHand.stabilizedPalmPosition[1], leapHand.stabilizedPalmPosition[2] );
 
-			leapHand3D.position = position;
+			leapHand3D.position.copy( position );
 			leapHand3D.rotation.set( leapHand.pitch(), -leapHand.yaw(), leapHand.roll() );
 
-			leapHand3DDirection.position = position;
+			leapHand3DDirection.position.copy( position );
 			leapHand3DDirection.setDirection( v( leapHand.direction[0], leapHand.direction[1], leapHand.direction[2] ) );
 
-			leapHand3DNormal.position = position;
+			leapHand3DNormal.position.copy( position );
 			leapHand3DNormal.setDirection( v( leapHand.palmNormal[0], leapHand.palmNormal[1], leapHand.palmNormal[2] ) );
 
-			hand3D.position = position;
+			hand3D.position.copy( position );
 			hand3D.rotation.set( leapHand.pitch(), -leapHand.yaw(), leapHand.roll() );
 
 			leapHand3D.visible = true;

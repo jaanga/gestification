@@ -18,7 +18,7 @@
 
 	function init() {
 		var css, light, geometry, material, mesh;
-		
+
 		css = document.body.appendChild( document.createElement('style') );
 		css.innerHTML = 'body { font: 600 12pt monospace; margin: 0; overflow: hidden; text-align: center; }' ;
 
@@ -28,7 +28,7 @@
 			'<p>Left side: Three.js lookAt & rotateOnAxis</p>' +
 			'<p>Right side: Leap Motion pitch, roll and yaw</p>' +
 		'';
-		
+
 // Basics
 		renderer = new THREE.WebGLRenderer( { alpha: 1, antialias: true, clearColor: 0xffffff } );
 		renderer.setSize( window.innerWidth, window.innerHeight );
@@ -48,7 +48,7 @@
 //  Lights
  		light = new THREE.DirectionalLight( 0xffffff, 1 );
 		light.position.set( 0, 500, 0 );
-		
+
 		light.castShadow = true;
 		light.shadowMapWidth = 2048;
 		light.shadowMaHeight = 2048;
@@ -72,17 +72,17 @@
 		mesh.castShadow = true;
 		mesh.receiveShadow = true;
 		scene.add( mesh );
-		
+
 		geometry = new THREE.BoxGeometry( 100, 20, 80 );
 		material = new THREE.MeshNormalMaterial();
-		
+
 		mesh = new THREE.Mesh( geometry, material );
 		mesh.castShadow = true;
 		mesh.receiveShadow = true;
 		palm1 = new THREE.Object3D();
 		palm1.add( mesh);
 		scene.add( palm1 );
-		
+
 		mesh = new THREE.Mesh( geometry, material );
 		mesh.castShadow = true;
 		mesh.receiveShadow = true;
@@ -97,14 +97,14 @@
 			mesh.receiveShadow = true;
 			fingers1.push( mesh );
 			scene.add( mesh );
-			
+
 			mesh = new THREE.Mesh( geometry, material );
 			mesh.castShadow = true;
 			mesh.receiveShadow = true;
-			
-			fingers2.push( mesh );	
+
+			fingers2.push( mesh );
 			scene.add( mesh );
-		}	
+		}
 	}
 
 	Leap.loop( function( frame ) {
@@ -122,11 +122,11 @@
 		}
 
 		if ( frame.hands.length > 0) {
-			palm2.position.set( 150 + hand.stabilizedPalmPosition[0], hand.stabilizedPalmPosition[1], hand.stabilizedPalmPosition[2] );	
+			palm2.position.set( 150 + hand.stabilizedPalmPosition[0], hand.stabilizedPalmPosition[1], hand.stabilizedPalmPosition[2] );
 			palm2.rotation.set( hand.pitch(), -hand.yaw(), hand.roll() );
 			palm2.visible = true;
-			
-			info.innerHTML = info.txt + 
+
+			info.innerHTML = info.txt +
 				'rotate X: ' + (r2d * palm2.rotation.x).toFixed(2) + ' rotate Z: ' + (r2d * palm2.rotation.z).toFixed(2) + ' rotate Y: ' + (r2d * palm2.rotation.y).toFixed(2)  +'<br>' +
 				// 'pitchAng: ' + (r2d * pitchAng).toFixed(2)  + ' rollAng: ' + (r2d * rollAng).toFixed(2)  + ' yawAng: ' + (r2d * yawAng).toFixed(2) + '<br>' +
 				// 'rotate X: ' + (r2d * ( pi + palm.rotation.x)).toFixed(2) + ' rotate Z: ' + (r2d * palm.rotation.z).toFixed(2) + ' rotate Y: ' + (r2d * ( palm.rotation.y + pi2) ).toFixed(2)  +'<br>' +
@@ -134,11 +134,11 @@
 		} else {
 			palm2.visible = false;
 		}
-		
+
 		len = frame.pointables.length
 		if ( len > 0) {
 			for (var i = 0; i < 5; i++) {
-			
+
 				finger = fingers1[i];
 				if ( i < len ) {
 					pointable = frame.pointables[i];
@@ -150,7 +150,7 @@
 				} else {
 					finger.visible = false;
 				}
-				
+
 				finger = fingers2[i];
 				if ( i < len ) {
 					pointable = frame.pointables[i];
@@ -163,8 +163,8 @@
 					finger.visible = false;
 				}
 			}
-		}	
-		
+		}
+
 	});
 
 	function animate() {
@@ -176,7 +176,7 @@
 
 	function v( x, y, z ){ return new THREE.Vector3( x, y, z ); }
 	var pi = Math.PI, pi2 = 0.5 * Math.PI;
-	var d2r = pi / 180, r2d = 180 / pi;  // degress / radians	
+	var d2r = pi / 180, r2d = 180 / pi;  // degrees / radians
 </script>
 </body>
 </html>

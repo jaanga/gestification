@@ -113,10 +113,10 @@
 		pitch = new THREE.Mesh( geometry, material );
 		pitch.position.set( -150, 350, 0 );
 		scene.add( pitch );
-		
+
 		roll = pitch.clone();
 		roll.position.set( 0, 350, 0 );
-		scene.add( roll );		
+		scene.add( roll );
 
 		yaw = roll.clone();
 		yaw.position.set( 150, 350, 0 );
@@ -156,17 +156,17 @@
 			palmRight.lookAt( nor );
 
 			palmRight.visible = true;
-			
+
 // Pitch, Roll and Yaw
 			var pitchAng = Math.atan2( hand.direction[1] , -hand.direction[2] );
 			pitch.rotation.x = pitchAng;
 
 			var rollAng = Math.atan2( hand.palmNormal[0], -hand.palmNormal[1] );
-			roll.rotation.z = rollAng;		
+			roll.rotation.z = rollAng;
 
 			var yawAng = Math.atan2( hand.direction[0], -hand.direction[1] );
 			yaw.rotation.y = yawAng;
-			
+
 			handString = infoPRY.txt + ' Pitch - radians: ' + pitchAng.toFixed(2) + ' - degrees: ' + (180 *  pitch.rotation.x / Math.PI).toFixed(0) + '<br />';
 			handString += 'Roll  - radians: ' + rollAng.toFixed(2) + ' - degrees: ' + (180 *  rollAng / Math.PI).toFixed(0) + '<br />';
 			handString += 'Yaw   - radians: ' + yawAng.toFixed(2) + ' - degrees: ' + (180 *  yawAng / Math.PI).toFixed(0) + '<br />';

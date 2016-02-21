@@ -44,8 +44,7 @@
 
     camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
 
-    camera.position.set(30, 10, 0);
-    camera.lookAt(scene.position);
+    camera.position.set( 30, 10, 0 );
     camera.lookAt(scene.position);
     scene.add(camera);
 
@@ -121,8 +120,8 @@
             var VectorDir = new THREE.Vector3(leapHand.direction[0], -leapHand.direction[1]+.6, leapHand.direction[2]);
     
             handMesh.lookAt(VectorDir.add(handMesh.position));
-            handMesh.position = this.position;
-            handMesh.bones[1].rotation.set(this.rotation.x, this.rotation.y, this.rotation.z);
+            handMesh.position.copy( this.position );
+ //           handMesh.bones[1].rotation.set(this.rotation.x, this.rotation.y, this.rotation.z);
           }
         };
     
